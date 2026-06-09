@@ -3,15 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kroniki</title>
+  <title>Weekend Warrior Social V4</title>
+  <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <nav class="navbar">
-    <div class="navbar-brand">⚔ WWS</div>
+    <div class="navbar-brand">⚔ Weekend Warrior</div>
     <div class="navbar-menu">
       <a href="index.html" class="nav-item">Arena</a>
-      <a href="feed.html" class="nav-item active">Kroniki</a>
+      <a href="feed.html" class="nav-item">Kroniki</a>
       <a href="challenges.html" class="nav-item">Misje</a>
       <a href="ranking.html" class="nav-item">Chwała</a>
       <a href="profile.html" class="nav-item">Profil</a>
@@ -19,27 +20,15 @@
       <button id="logout-btn" class="nav-item" style="border: 1px solid var(--border-light);">Wyloguj</button>
     </div>
   </nav>
-
+  
   <main id="app">
-    <h1>📜 Kroniki</h1>
-    <p>Ładowanie postów...</p>
+    <h1>Loading...</h1>
   </main>
 
-  <script type="module">
-    import { onAuthChange, logout } from './js/auth.js';
-    import { initFeed } from './js/feed-init.js';
-    
-    onAuthChange(user => {
-      if (!user) {
-        window.location.href = 'login.html';
-        return;
-      }
-      initFeed(user);
-    });
-    
+  <script type="module" src="js/app.js"></script>
+  <script>
     document.getElementById('logout-btn').addEventListener('click', async () => {
-      await logout();
-      window.location.href = 'login.html';
+      if (window.WWS) await window.WWS.logout();
     });
   </script>
 </body>

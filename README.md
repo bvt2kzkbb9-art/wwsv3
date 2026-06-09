@@ -1,25 +1,40 @@
-# Weekend Warrior Social V3
+# 🏰 WEEKEND WARRIOR SOCIAL V4
 
-Polish fitness social app - Arena Wojowników
+**Final release — Medieval RPG Arena Theme**
 
-## Setup
+## Features
 
-1. Install Firebase CLI: `npm install -g firebase-tools`
-2. Configure: `firebase init`
-3. Deploy rules: `firebase deploy --only firestore:rules`
-4. Deploy indexes: `firebase deploy --only firestore:indexes`
-5. Deploy hosting: `firebase deploy --only hosting`
+✅ User Profiles  
+✅ Feed/Posts & Comments  
+✅ Ranking/Leaderboard  
+✅ Challenges System  
+✅ Laga System (New)  
+✅ Messenger/Real-time  
+✅ Notifications  
+✅ Mobile-first responsive  
+✅ PWA ready  
 
-## Development
+## Deployment
 
-- Edit files in `js/` and `css/`
-- Test locally: `firebase emulators:start`
-- Push to GitHub
-- Deploy to production
+```bash
+git add .
+git commit -m "V4: Final release"
+git push origin main
+```
 
-## Architecture V3
+GitHub Pages rebuilds automatically.
 
-- Core modules: firebase.js, auth.js, users.js, feed.js, etc.
-- Clean Firestore schema: 8 collections only
-- No code duplication
-- All logic in JS, HTML markup only
+## Firebase Setup
+
+1. Update Firebase config in `js/app.js`
+2. Deploy rules: `firebase deploy --only firestore:rules`
+3. Deploy indexes: `firebase deploy --only firestore:indexes`
+
+## Styles
+
+- Medieval/RPG theme
+- Dark background (#0B0D12)
+- Gold accents (#D4AF37)
+- Cinzel font
+- No changes to design
+

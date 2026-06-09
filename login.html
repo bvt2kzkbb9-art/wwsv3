@@ -3,52 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Logowanie</title>
+  <title>Weekend Warrior Social V4</title>
+  <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body style="background: var(--bg-primary); display: flex; align-items: center; justify-content: center; min-height: 100vh;">
-  <div class="auth-container">
-    <h1 style="text-align: center; margin-bottom: 2rem;">⚔ Logowanie</h1>
-    
-    <form id="login-form">
-      <input type="email" id="email" placeholder="Email" required>
-      <input type="password" id="password" placeholder="Hasło" required>
-      <button type="submit">Zaloguj się</button>
-    </form>
-
-    <div style="text-align: center; margin: 1rem 0; color: var(--text-muted);">LUB</div>
-
-    <button id="google-btn" class="btn" style="width: 100%; margin-bottom: 1.5rem;">
-      🔵 Zaloguj się przez Google
-    </button>
-
-    <div style="text-align: center; color: var(--text-muted);">
-      Nie masz konta? <a href="register.html" style="color: var(--gold); text-decoration: none;">Zarejestruj się</a>
+<body>
+  <nav class="navbar">
+    <div class="navbar-brand">⚔ Weekend Warrior</div>
+    <div class="navbar-menu">
+      <a href="index.html" class="nav-item">Arena</a>
+      <a href="feed.html" class="nav-item">Kroniki</a>
+      <a href="challenges.html" class="nav-item">Misje</a>
+      <a href="ranking.html" class="nav-item">Chwała</a>
+      <a href="profile.html" class="nav-item">Profil</a>
+      <a href="messenger.html" class="nav-item">Wiadomości</a>
+      <button id="logout-btn" class="nav-item" style="border: 1px solid var(--border-light);">Wyloguj</button>
     </div>
-  </div>
+  </nav>
+  
+  <main id="app">
+    <h1>Loading...</h1>
+  </main>
 
-  <script type="module">
-    import { login, loginWithGoogle } from './js/auth.js';
-    
-    document.getElementById('login-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      try {
-        await login(email, password);
-        window.location.href = 'index.html';
-      } catch (err) {
-        // Error toast shown in login()
-      }
-    });
-    
-    document.getElementById('google-btn').addEventListener('click', async () => {
-      try {
-        await loginWithGoogle();
-        window.location.href = 'index.html';
-      } catch (err) {
-        // Error toast shown in loginWithGoogle()
-      }
+  <script type="module" src="js/app.js"></script>
+  <script>
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+      if (window.WWS) await window.WWS.logout();
     });
   </script>
 </body>

@@ -3,9 +3,7 @@
     {
       "collectionGroup": "posts",
       "queryScope": "COLLECTION",
-      "fields": [
-        {"fieldPath": "createdAt", "order": "DESCENDING"}
-      ]
+      "fields": [{"fieldPath": "createdAt", "order": "DESCENDING"}]
     },
     {
       "collectionGroup": "posts",
@@ -18,9 +16,7 @@
     {
       "collectionGroup": "users",
       "queryScope": "COLLECTION",
-      "fields": [
-        {"fieldPath": "points", "order": "DESCENDING"}
-      ]
+      "fields": [{"fieldPath": "points", "order": "DESCENDING"}]
     },
     {
       "collectionGroup": "conversations",
@@ -32,6 +28,14 @@
     },
     {
       "collectionGroup": "challenge_invites",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {"fieldPath": "targetId", "order": "ASCENDING"},
+        {"fieldPath": "status", "order": "ASCENDING"}
+      ]
+    },
+    {
+      "collectionGroup": "laga_requests",
       "queryScope": "COLLECTION",
       "fields": [
         {"fieldPath": "targetId", "order": "ASCENDING"},
