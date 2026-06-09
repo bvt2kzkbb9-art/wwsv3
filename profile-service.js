@@ -297,15 +297,33 @@ class ProfileService {
 
   static listenToProfile(uid, callback) {
     try {
+      console.log('📋 ProfileService.listenToProfile START:', { uid, dbExists: !!db });
+
       if (!uid) {
+        console.error('❌ ProfileService.listenToProfile: UID is missing');
         callback({ success: false, error: 'UID nie znaleziony' });
         return null;
       }
 
+      if (!db) {
+        console.error('❌ ProfileService.listenToProfile: db is undefined');
+        callback({ success: false, error: 'Firebase Firestore nie zainicjalizowany' });
+        return null;
+      }
+
+      console.log('📋 ProfileService.listenToProfile: Setting up onSnapshot listener for users/' + uid);
       const unsubscribe = db.collection('users').doc(uid).onSnapshot(
         (doc) => {
+          console.log('📋 ProfileService.listenToProfile: onSnapshot fired', { exists: doc.exists, uid });
           if (doc.exists) {
             const userData = doc.data();
+            console.log('📋 ProfileService.listenToProfile: Document data:', {
+              displayName: userData.displayName,
+              email: userData.email,
+              level: userData.level,
+              rank: userData.rank,
+              xp: userData.xp
+            });
             callback({
               success: true,
               data: {
@@ -326,18 +344,28 @@ class ProfileService {
               }
             });
           } else {
+            console.error('❌ ProfileService.listenToProfile: Document does not exist for uid:', uid);
             callback({ success: false, error: 'Profil nie znaleziony' });
           }
         },
         (error) => {
-          console.error('❌ Profile listener error:', error);
+          console.error('❌ ProfileService.listenToProfile: onSnapshot error', {
+            code: error.code,
+            message: error.message,
+            uid
+          });
           callback({ success: false, error: error.message });
         }
       );
 
+      console.log('✅ ProfileService.listenToProfile: Listener setup complete');
       return unsubscribe;
     } catch (error) {
-      console.error('❌ Failed to setup profile listener:', error);
+      console.error('❌ ProfileService.listenToProfile: Exception', {
+        code: error.code,
+        message: error.message,
+        stack: error.stack
+      });
       callback({ success: false, error: error.message });
       return null;
     }

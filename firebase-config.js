@@ -3,7 +3,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyBHwVgFJgsvOp1ZgU4nQetHM_KgzxeXzZI",
   authDomain: "weekend-warrior-social-v3.firebaseapp.com",
   projectId: "weekend-warrior-social-v3",
-  storageBucket: "weekend-warrior-social-v2.firebasestorage.app",
+  storageBucket: "weekend-warrior-social-v3.firebasestorage.app",
   messagingSenderId: "147800031459",
   appId: "1:147800031459:web:d72e1fc2b81b8b152405d6"
 };
@@ -34,12 +34,12 @@ class UserService {
         // User Identity
         uid,
         email,
-        nickname: displayName || 'Warrior',
+        displayName: displayName || 'Warrior',
         specialization: specialization || 'warrior',
 
         // Profile
-        avatar: '',
-        banner: '',
+        photoURL: '',
+        bannerURL: '',
         bio: '',
 
         // Progress & Stats
