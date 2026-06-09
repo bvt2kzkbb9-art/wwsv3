@@ -815,11 +815,20 @@
     function showLoading() {
       document.body.style.opacity = '0.7';
       document.body.style.pointerEvents = 'none';
+      // Auto-unlock po 10s (zabezpieczenie przed stuck state)
+      window.loadingTimeout = setTimeout(() => {
+        hideLoading();
+      }, 10000);
     }
 
     function hideLoading() {
       document.body.style.opacity = '1';
       document.body.style.pointerEvents = 'auto';
+      // Wyczyść timeout
+      if (window.loadingTimeout) {
+        clearTimeout(window.loadingTimeout);
+        window.loadingTimeout = null;
+      }
     }
 
     function formatNumber(num) {
