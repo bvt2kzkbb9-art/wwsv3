@@ -1,8 +1,8 @@
 // Firebase// Firebase Configuration & Initialization
 const firebaseConfig = {
   apiKey: "AIzaSyBHwVgFJgsvOp1ZgU4nQetHM_KgzxeXzZI",
-  authDomain: "weekend-warrior-social-v2.firebaseapp.com",
-  projectId: "weekend-warrior-social-v2",
+  authDomain: "weekend-warrior-social-v3.firebaseapp.com",
+  projectId: "weekend-warrior-social-v3",
   storageBucket: "weekend-warrior-social-v2.firebasestorage.app",
   messagingSenderId: "147800031459",
   appId: "1:147800031459:web:d72e1fc2b81b8b152405d6"
