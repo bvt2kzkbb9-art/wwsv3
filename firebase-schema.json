@@ -1,0 +1,126 @@
+{
+  "collections": {
+    "users": {
+      "uid": "string",
+      "email": "string",
+      "displayName": "string",
+      "username": "string",
+      "photoURL": "string",
+      "bannerURL": "string",
+      "bio": "string",
+      "points": "number",
+      "level": "number",
+      "rank": "string",
+      "streak": "number",
+      "elo": "number",
+      "totalPostsCount": "number",
+      "totalCommentsCount": "number",
+      "totalChallengesCompleted": "number",
+      "totalChallengesSent": "number",
+      "totalWarsWon": "number",
+      "totalWarLosses": "number",
+      "loginStreak": "number",
+      "lastLoginAt": "timestamp",
+      "createdAt": "timestamp"
+    },
+    "posts": {
+      "authorId": "string",
+      "authorName": "string",
+      "authorPhotoURL": "string",
+      "content": "string",
+      "imageURL": "string",
+      "likes": "array",
+      "likesCount": "number",
+      "reactions": "map",
+      "commentsCount": "number",
+      "createdAt": "timestamp"
+    },
+    "posts/{postId}/comments": {
+      "authorId": "string",
+      "authorName": "string",
+      "content": "string",
+      "likes": "array",
+      "createdAt": "timestamp"
+    },
+    "friends": {
+      "userId": "string",
+      "friendId": "string",
+      "status": "string",
+      "createdAt": "timestamp"
+    },
+    "followers": {
+      "userId": "string",
+      "followerId": "string",
+      "createdAt": "timestamp"
+    },
+    "challenges": {
+      "challengerId": "string",
+      "targetId": "string",
+      "challengeId": "string",
+      "challengeTitle": "string",
+      "status": "string",
+      "xpReward": "number",
+      "createdAt": "timestamp"
+    },
+    "zaczepka": {
+      "requesterId": "string",
+      "targetId": "string",
+      "status": "string",
+      "createdAt": "timestamp"
+    },
+    "laga": {
+      "requesterId": "string",
+      "targetId": "string",
+      "status": "string",
+      "createdAt": "timestamp"
+    },
+    "wars": {
+      "warrior1Id": "string",
+      "warrior2Id": "string",
+      "winnerId": "string",
+      "xpReward": "number",
+      "status": "string",
+      "createdAt": "timestamp"
+    },
+    "achievements": {
+      "name": "string",
+      "description": "string",
+      "icon": "string",
+      "xpReward": "number"
+    },
+    "userAchievements": {
+      "userId": "string",
+      "achievementId": "string",
+      "unlockedAt": "timestamp"
+    },
+    "quests": {
+      "type": "string",
+      "title": "string",
+      "description": "string",
+      "xpReward": "number",
+      "resetTime": "string"
+    },
+    "userQuests": {
+      "userId": "string",
+      "questId": "string",
+      "progress": "number",
+      "completed": "boolean",
+      "completedAt": "timestamp"
+    },
+    "notifications": {
+      "userId": "string",
+      "type": "string",
+      "title": "string",
+      "body": "string",
+      "link": "string",
+      "read": "boolean",
+      "createdAt": "timestamp"
+    },
+    "arenaEvents": {
+      "type": "string",
+      "description": "string",
+      "active": "boolean",
+      "createdAt": "timestamp"
+    }
+  }
+}

@@ -3,140 +3,115 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profil - Weekend Warrior Social</title>
-  <link rel="stylesheet" href="css/style.css">
+  <title>Profil - Weekend Warrior V5</title>
+  <link rel="stylesheet" href="css/premium.css">
 </head>
 <body>
   <nav class="navbar">
-    <div class="navbar-brand">⚔ Weekend Warrior</div>
+    <div class="navbar-brand">⚔ WEEKEND WARRIOR V5</div>
     <div class="navbar-menu">
       <a href="index.html" class="nav-item">Arena</a>
       <a href="feed.html" class="nav-item">Kroniki</a>
+      <a href="ranking.html" class="nav-item">Ranking</a>
       <a href="challenges.html" class="nav-item">Misje</a>
-      <a href="ranking.html" class="nav-item">Chwała</a>
+      <a href="friends.html" class="nav-item">Znajomi</a>
+      <a href="achievements.html" class="nav-item">Osiągnięcia</a>
       <a href="profile.html" class="nav-item active">Profil</a>
-      <a href="messenger.html" class="nav-item">Wiadomości</a>
-      <button id="logout-btn" class="nav-item" style="border: 1px solid var(--border-light);">Wyloguj</button>
+      <button id="logout-btn" class="nav-item">Wyloguj</button>
     </div>
   </nav>
-  
-  <main id="app" style="max-width: 600px;">
-    <h1>👤 Profil</h1>
+
+  <main id="app" style="max-width: 800px;">
+    <h1>👤 Mój Profil</h1>
     <p style="text-align: center; color: var(--text-muted);">Ładowanie profilu...</p>
   </main>
 
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="js/app.js"></script>
 
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBHwVgFJgsvOp1ZgU4nQetHM_KgzxeXzZI",
-      authDomain: "weekend-warrior-social-v2.firebaseapp.com",
-      projectId: "weekend-warrior-social-v2",
-      storageBucket: "weekend-warrior-social-v2.firebasestorage.app",
-      messagingSenderId: "147800031459",
-      appId: "1:147800031459:web:d72e1fc2b81b8b152405d6"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-
-    auth.onAuthStateChanged((user) => {
+    auth.onAuthStateChanged(async (user) => {
       if (!user) {
         window.location.href = 'login.html';
         return;
       }
 
+      const stats = await getUserStats(user.uid);
       const app = document.getElementById('app');
 
-      db.collection('users').doc(user.uid).onSnapshot((doc) => {
-        if (!doc.exists) {
-          app.innerHTML = '<p style="color: #EF4444;">Profil nie znaleziony</p>';
-          return;
-        }
+      const html = `
+        <h1>👤 Mój Profil</h1>
 
-        const profile = doc.data();
-
-        let html = `
-          <h1 style="text-align: center;">👤 Profil</h1>
-
-          <div class="card" style="text-align: center; margin: 2rem 0; border: 2px solid var(--gold);">
-            <div style="font-size: 4rem; margin-bottom: 1rem;">👤</div>
-            <h2 style="margin: 0 0 0.5rem 0; color: var(--gold);">${profile.displayName || 'Wojownik'}</h2>
-            <p style="color: var(--text-muted); margin: 0;">@${profile.username || 'user'}</p>
+        <div class="profile-header">
+          <div class="profile-avatar" style="background: var(--gold); color: #000; font-size: 4rem; display: flex; align-items: center; justify-content: center; font-weight: bold;">${user.displayName?.[0] || 'W'}</div>
+          <div style="flex: 1;">
+            <h2 style="margin: 0 0 0.5rem 0;">${user.displayName || 'Wojownik'}</h2>
+            <p style="color: var(--text-muted); margin: 0;">@${stats?.username || 'user'}</p>
+            <p style="margin-top: 1rem; color: var(--text-secondary);">${stats?.bio || 'Bez bio'}</p>
           </div>
+        </div>
 
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 2rem 0;">
-            <div class="card" style="text-align: center;">
-              <div style="color: var(--gold); font-size: 1.8rem; font-weight: bold;">${profile.level || 1}</div>
-              <div style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">Poziom</div>
-            </div>
-
-            <div class="card" style="text-align: center;">
-              <div style="color: var(--gold); font-size: 1.8rem; font-weight: bold;">${profile.rank || 'Rookie'}</div>
-              <div style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">Ranga</div>
-            </div>
-
-            <div class="card" style="text-align: center;">
-              <div style="color: var(--gold); font-size: 1.8rem; font-weight: bold;">${(profile.points || 0).toLocaleString('pl-PL')}</div>
-              <div style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">XP</div>
-            </div>
-
-            <div class="card" style="text-align: center;">
-              <div style="color: var(--gold); font-size: 1.8rem; font-weight: bold;">${profile.streak || 0}</div>
-              <div style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">Seria</div>
-            </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; margin: 2rem 0;">
+          <div class="card" style="text-align: center;">
+            <div style="font-size: 1.8rem; color: var(--gold); font-weight: 900;">${stats?.level || 1}</div>
+            <div style="color: var(--text-muted); font-size: 0.85rem;">Poziom</div>
           </div>
+          <div class="card" style="text-align: center;">
+            <div style="font-size: 1.8rem; color: var(--gold); font-weight: 900;">${stats?.rank || 'Rookie'}</div>
+            <div style="color: var(--text-muted); font-size: 0.85rem;">Ranga</div>
+          </div>
+          <div class="card" style="text-align: center;">
+            <div style="font-size: 1.8rem; color: var(--gold); font-weight: 900;">${(stats?.points || 0).toLocaleString('pl-PL')}</div>
+            <div style="color: var(--text-muted); font-size: 0.85rem;">XP</div>
+          </div>
+          <div class="card" style="text-align: center;">
+            <div style="font-size: 1.8rem; color: var(--gold); font-weight: 900;">${stats?.loginStreak || 1}</div>
+            <div style="color: var(--text-muted); font-size: 0.85rem;">Seria</div>
+          </div>
+        </div>
 
-          <div class="card">
-            <h3 style="margin-bottom: 1rem;">Statystyki</h3>
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
-              <div style="padding: 1rem; background: var(--bg-secondary); border-radius: 6px; text-align: center;">
-                <div style="color: var(--text-muted); font-size: 0.9rem;">Posty</div>
-                <div style="color: var(--gold); font-weight: bold; font-size: 1.3rem; margin-top: 0.5rem;">${profile.totalPostsCount || 0}</div>
-              </div>
-              <div style="padding: 1rem; background: var(--bg-secondary); border-radius: 6px; text-align: center;">
-                <div style="color: var(--text-muted); font-size: 0.9rem;">Komentarze</div>
-                <div style="color: var(--gold); font-weight: bold; font-size: 1.3rem; margin-top: 0.5rem;">${profile.totalCommentsCount || 0}</div>
-              </div>
-              <div style="padding: 1rem; background: var(--bg-secondary); border-radius: 6px; text-align: center;">
-                <div style="color: var(--text-muted); font-size: 0.9rem;">Misje Ukończone</div>
-                <div style="color: var(--gold); font-weight: bold; font-size: 1.3rem; margin-top: 0.5rem;">${profile.totalChallengesCompleted || 0}</div>
-              </div>
-              <div style="padding: 1rem; background: var(--bg-secondary); border-radius: 6px; text-align: center;">
-                <div style="color: var(--text-muted); font-size: 0.9rem;">Misje Wysłane</div>
-                <div style="color: var(--gold); font-weight: bold; font-size: 1.3rem; margin-top: 0.5rem;">${profile.totalChallengesSent || 0}</div>
-              </div>
+        <div class="card">
+          <h3>📊 Statystyki</h3>
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1rem;">
+            <div style="padding: 1rem; background: rgba(212,175,55,0.1); border-radius: 8px;">
+              <div style="color: var(--text-muted); font-size: 0.9rem;">Posty</div>
+              <div style="color: var(--gold); font-weight: 900; font-size: 1.5rem;">${stats?.totalPosts || 0}</div>
+            </div>
+            <div style="padding: 1rem; background: rgba(212,175,55,0.1); border-radius: 8px;">
+              <div style="color: var(--text-muted); font-size: 0.9rem;">Znajomi</div>
+              <div style="color: var(--gold); font-weight: 900; font-size: 1.5rem;">${stats?.totalFriends || 0}</div>
+            </div>
+            <div style="padding: 1rem; background: rgba(212,175,55,0.1); border-radius: 8px;">
+              <div style="color: var(--text-muted); font-size: 0.9rem;">Obserwujący</div>
+              <div style="color: var(--gold); font-weight: 900; font-size: 1.5rem;">${stats?.totalFollowers || 0}</div>
+            </div>
+            <div style="padding: 1rem; background: rgba(212,175,55,0.1); border-radius: 8px;">
+              <div style="color: var(--text-muted); font-size: 0.9rem;">Wojny</div>
+              <div style="color: var(--gold); font-weight: 900; font-size: 1.5rem;">${stats?.totalWarsWon || 0}W</div>
             </div>
           </div>
+        </div>
 
-          <div class="card">
-            <h3 style="margin-bottom: 1rem;">O mnie</h3>
-            <textarea id="bio-input" style="width: 100%; min-height: 80px; padding: 1rem; background: var(--bg-input); border: 1px solid var(--border-light); color: var(--text-primary); border-radius: 4px;">${profile.bio || ''}</textarea>
-            <button onclick="saveBio()" style="background: linear-gradient(135deg, var(--gold) 0%, #E8C547 100%); color: #000; padding: 0.75rem 1.5rem; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; margin-top: 1rem; width: 100%;">Zapisz Bio</button>
-          </div>
-        `;
+        <div class="card">
+          <h3>Bio</h3>
+          <textarea id="bio" style="width: 100%; padding: 1rem; margin-bottom: 1rem; background: var(--bg-input); border: 1px solid var(--border-light); border-radius: 6px; color: var(--text-primary); min-height: 80px;">${stats?.bio || ''}</textarea>
+          <button onclick="saveBio('${user.uid}')" style="width: 100%; background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%); color: #000; padding: 0.75rem; border: none; border-radius: 6px; font-weight: 700; cursor: pointer;">💾 Zapisz Bio</button>
+        </div>
+      `;
 
-        app.innerHTML = html;
-      });
+      app.innerHTML = html;
+
+      window.saveBio = async (uid) => {
+        const bio = document.getElementById('bio').value;
+        await db.collection('users').doc(uid).update({ bio });
+        showToast('Bio zaktualizowane! ✅', 'success');
+      };
     });
 
-    function saveBio() {
-      const bio = document.getElementById('bio-input')?.value || '';
-      db.collection('users').doc(auth.currentUser.uid).update({ bio }).then(() => {
-        alert('Bio zaktualizowane! ✅');
-      });
-    }
-
-    window.saveBio = saveBio;
-
-    // Logout
     document.getElementById('logout-btn').addEventListener('click', () => {
-      auth.signOut().then(() => {
-        window.location.href = 'login.html';
-      });
+      auth.signOut().then(() => window.location.href = 'login.html');
     });
   </script>
 </body>

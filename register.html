@@ -3,70 +3,52 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rejestracja - Weekend Warrior Social</title>
-  <link rel="stylesheet" href="css/style.css">
+  <title>Rejestracja - Weekend Warrior V5</title>
+  <link rel="stylesheet" href="css/premium.css">
   <style>
-    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1rem; }
-    .auth-container { max-width: 400px; width: 100%; background: var(--bg-card); border: 2px solid var(--gold); border-radius: 8px; padding: 2rem; }
-    .auth-container h1 { text-align: center; color: var(--gold); margin-bottom: 2rem; font-size: 2rem; }
+    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    .auth-container { max-width: 400px; width: 100%; background: linear-gradient(135deg, rgba(31,29,26,0.95) 0%, rgba(21,18,16,0.9) 100%); border: 2px solid var(--gold); border-radius: 12px; padding: 2rem; }
     .form-group { margin-bottom: 1.5rem; }
-    .form-group label { display: block; color: var(--text-secondary); margin-bottom: 0.5rem; font-weight: 500; }
-    .form-group input { width: 100%; padding: 0.75rem; background: var(--bg-input); border: 1px solid var(--border-light); color: var(--text-primary); border-radius: 4px; font-size: 1rem; }
-    .form-group input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 8px rgba(212, 175, 55, 0.3); }
-    .btn-primary { width: 100%; padding: 0.75rem; background: linear-gradient(135deg, var(--gold) 0%, #E8C547 100%); color: #000; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; margin-bottom: 1rem; }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(212, 175, 55, 0.4); }
-    .error { color: #EF4444; font-size: 0.9rem; margin-top: 0.5rem; }
-    .link { text-align: center; color: var(--text-muted); margin-top: 1.5rem; }
+    .form-group label { display: block; color: var(--text-secondary); margin-bottom: 0.5rem; font-weight: 600; }
+    .form-group input { width: 100%; padding: 0.75rem; background: var(--bg-input); border: 1px solid var(--border-light); border-radius: 6px; color: var(--text-primary); }
+    .btn-primary { width: 100%; padding: 0.75rem; background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%); color: #000; border: none; border-radius: 6px; font-weight: 700; cursor: pointer; }
+    .error { color: #EF4444; font-size: 0.85rem; margin-top: 0.5rem; }
+    .link { text-align: center; margin-top: 1.5rem; }
     .link a { color: var(--gold); text-decoration: none; }
   </style>
 </head>
 <body>
   <div class="auth-container">
-    <h1>⚔ Rejestracja</h1>
+    <h1 style="text-align: center; color: var(--gold); margin-bottom: 2rem;">⚔ Rejestracja</h1>
     
     <form id="register-form">
       <div class="form-group">
-        <label for="displayName">Nazwa wojownika</label>
+        <label>Nazwa Wojownika</label>
         <input type="text" id="displayName" required placeholder="Twoja nazwa">
       </div>
-
       <div class="form-group">
-        <label for="email">Email</label>
+        <label>Email</label>
         <input type="email" id="email" required placeholder="twój@email.com">
       </div>
-
       <div class="form-group">
-        <label for="password">Hasło (min. 6 znaków)</label>
+        <label>Hasło (min. 6 znaków)</label>
         <input type="password" id="password" required minlength="6" placeholder="••••••••">
-        <div id="password-error" class="error"></div>
+        <div id="error" class="error"></div>
       </div>
-
-      <button type="submit" class="btn-primary">Zarejestruj się</button>
+      <button type="submit" class="btn-primary">Dołącz do Areny ⚔</button>
     </form>
 
     <div class="link">
-      Masz konto? <a href="login.html">Zaloguj się</a>
+      Masz już konto? <a href="login.html">Zaloguj się</a>
     </div>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="js/app.js"></script>
 
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBHwVgFJgsvOp1ZgU4nQetHM_KgzxeXzZI",
-      authDomain: "weekend-warrior-social-v2.firebaseapp.com",
-      projectId: "weekend-warrior-social-v2",
-      storageBucket: "weekend-warrior-social-v2.firebasestorage.app",
-      messagingSenderId: "147800031459",
-      appId: "1:147800031459:web:d72e1fc2b81b8b152405d6"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-
     document.getElementById('register-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const displayName = document.getElementById('displayName').value;
@@ -76,43 +58,16 @@
       try {
         const cred = await auth.createUserWithEmailAndPassword(email, password);
         await cred.user.updateProfile({ displayName });
-        
-        // Create user document
-        await db.collection('users').doc(cred.user.uid).set({
-          uid: cred.user.uid,
-          email,
-          displayName,
-          username: displayName.toLowerCase().replace(/\s+/g, '_'),
-          photoURL: '',
-          bannerURL: '',
-          bio: '',
-          points: 0,
-          level: 1,
-          rank: 'Rookie',
-          streak: 0,
-          totalPostsCount: 0,
-          totalCommentsCount: 0,
-          totalChallengesCompleted: 0,
-          totalChallengesSent: 0,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-          lastLoginAt: firebase.firestore.FieldValue.serverTimestamp(),
-          lastActiveAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-
+        await createUserProfile(cred.user.uid, email, displayName);
         window.location.href = 'index.html';
       } catch (err) {
-        const msg = err.code === 'auth/email-already-in-use' ? 'Ten email już istnieje' : 
-                    err.code === 'auth/weak-password' ? 'Hasło musi mieć co najmniej 6 znaków' : 
-                    err.message;
-        document.getElementById('password-error').textContent = msg;
+        const msg = err.code === 'auth/email-already-in-use' ? 'Ten email już istnieje' : err.message;
+        document.getElementById('error').textContent = msg;
       }
     });
 
-    // Check if already logged in
     auth.onAuthStateChanged((user) => {
-      if (user) {
-        window.location.href = 'index.html';
-      }
+      if (user) window.location.href = 'index.html';
     });
   </script>
 </body>

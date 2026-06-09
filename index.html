@@ -3,57 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weekend Warrior Social</title>
-  <link rel="stylesheet" href="css/style.css">
+  <title>Weekend Warrior Social V5 Premium</title>
+  <link rel="stylesheet" href="css/premium.css">
 </head>
 <body>
   <nav class="navbar">
-    <div class="navbar-brand">⚔ Weekend Warrior</div>
+    <div class="navbar-brand">⚔ WEEKEND WARRIOR V5</div>
     <div class="navbar-menu">
-      <a href="index.html" class="nav-item active">Arena</a>
-      <a href="feed.html" class="nav-item">Kroniki</a>
-      <a href="challenges.html" class="nav-item">Misje</a>
-      <a href="ranking.html" class="nav-item">Chwała</a>
-      <a href="profile.html" class="nav-item">Profil</a>
-      <a href="messenger.html" class="nav-item">Wiadomości</a>
+      <a href="#arena" class="nav-item active">Arena</a>
+      <a href="#feed" class="nav-item">Kroniki</a>
+      <a href="#ranking" class="nav-item">Ranking</a>
+      <a href="#challenges" class="nav-item">Misje</a>
+      <a href="#friends" class="nav-item">Znajomi</a>
+      <a href="#achievements" class="nav-item">Osiągnięcia</a>
+      <a href="#profile" class="nav-item">Profil</a>
       <button id="logout-btn" class="nav-item" style="border: 1px solid var(--border-light);">Wyloguj</button>
     </div>
   </nav>
-  
+
   <main id="app">
-    <h1>⚔ Arena Wojowników</h1>
-    <p>Inicjalizacja...</p>
+    <h1>🏰 Arena Wojowników</h1>
+    <p style="text-align: center; color: var(--text-muted); font-size: 1.1rem;">Ładowanie Premium RPG...</p>
   </main>
 
-  <!-- FIREBASE SDK (Non-module) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="js/app.js"></script>
 
   <script>
-    // Firebase Config
-    const firebaseConfig = {
-      apiKey: "AIzaSyBHwVgFJgsvOp1ZgU4nQetHM_KgzxeXzZI",
-      authDomain: "weekend-warrior-social-v2.firebaseapp.com",
-      projectId: "weekend-warrior-social-v2",
-      storageBucket: "weekend-warrior-social-v2.firebasestorage.app",
-      messagingSenderId: "147800031459",
-      appId: "1:147800031459:web:d72e1fc2b81b8b152405d6"
-    };
+    const app = document.getElementById('app');
 
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-
-    console.log('✅ Firebase initialized');
-
-    // Check Auth State
     auth.onAuthStateChanged(async (user) => {
-      const app = document.getElementById('app');
-
       if (!user) {
-        console.log('No user - redirect to login');
         window.location.href = 'login.html';
         return;
       }
@@ -61,90 +43,107 @@
       console.log('✅ User:', user.displayName);
 
       try {
+        const userStats = await getUserStats(user.uid);
+        
         // Get top users
-        const usersSnap = await db.collection('users')
-          .orderBy('points', 'desc')
-          .limit(10)
-          .get();
-
+        const topUsersSnap = await db.collection('users').orderBy('points', 'desc').limit(10).get();
         const topUsers = [];
-        usersSnap.forEach(doc => {
-          topUsers.push({ id: doc.id, ...doc.data() });
-        });
+        topUsersSnap.forEach((d, i) => topUsers.push({ rank: i + 1, id: d.id, ...d.data() }));
 
-        console.log('✅ Top users loaded:', topUsers.length);
+        // Get arena events
+        const eventsSnap = await db.collection('arenaEvents').where('active', '==', true).limit(3).get();
+        const events = [];
+        eventsSnap.forEach(d => events.push({ id: d.id, ...d.data() }));
 
-        // Render Arena
         let html = `
           <div style="margin: 2rem 0;">
-            <h1 style="color: var(--gold); text-align: center; margin-bottom: 2rem;">⚔ Arena Wojowników</h1>
-            
-            <div class="card" style="text-align: center; margin-bottom: 2rem; border: 2px solid var(--gold);">
-              <h2 style="margin-bottom: 0.5rem; color: var(--gold);">Witaj, ${user.displayName}!</h2>
-              <p style="color: var(--text-muted);">Polska społeczność treningowa</p>
+            <div class="card" style="text-align: center; margin-bottom: 2rem; border: 2px solid var(--gold); padding: 2rem;">
+              <h2 style="margin-bottom: 1rem; color: var(--gold);">🏆 Witaj, ${user.displayName}!</h2>
+              <p style="color: var(--text-muted); font-size: 1.05rem;">Polska społeczność fitness wojowników</p>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+                <div><span style="color: var(--gold); font-size: 1.5rem; font-weight: 900;">${userStats?.level || 1}</span><div style="color: var(--text-muted); font-size: 0.85rem;">Lvl</div></div>
+                <div><span style="color: var(--gold); font-size: 1.5rem; font-weight: 900;">${(userStats?.points || 0).toLocaleString('pl-PL')}</span><div style="color: var(--text-muted); font-size: 0.85rem;">XP</div></div>
+                <div><span style="color: var(--gold); font-size: 1.5rem; font-weight: 900;">${userStats?.loginStreak || 1}</span><div style="color: var(--text-muted); font-size: 0.85rem;">Seria</div></div>
+                <div><span style="color: var(--gold); font-size: 1.5rem; font-weight: 900;">${userStats?.totalFriends || 0}</span><div style="color: var(--text-muted); font-size: 0.85rem;">Znajomi</div></div>
+              </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
-              <div class="card" style="text-align: center; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border-light)'" onclick="window.location.href='feed.html'">
+            ${events.length > 0 ? `
+              <div class="card" style="border-left: 4px solid var(--gold); margin-bottom: 2rem;">
+                <h3 style="margin-bottom: 1rem;">⚡ Aktywne Eventy Areny</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                  ${events.map(e => `
+                    <div style="background: rgba(212,175,55,0.1); padding: 1rem; border-radius: 8px; border: 1px solid var(--gold);">
+                      <div style="font-size: 1.8rem;">${e.icon}</div>
+                      <h4 style="margin-top: 0.5rem; color: var(--gold);">${e.description}</h4>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            ` : ''}
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+              <div class="card" style="text-align: center; cursor: pointer; border-bottom: 3px solid var(--gold);" onclick="window.location.href='feed.html'">
                 <div style="font-size: 2.5rem; margin-bottom: 1rem;">📝</div>
-                <h3 style="margin: 0; color: var(--gold);">Kroniki</h3>
-                <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Posty i dyskusje</p>
+                <h3 style="margin: 0;">Kroniki</h3>
+                <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Posty i aktywność</p>
               </div>
 
-              <div class="card" style="text-align: center; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border-light)'" onclick="window.location.href='challenges.html'">
+              <div class="card" style="text-align: center; cursor: pointer; border-bottom: 3px solid var(--gold);" onclick="window.location.href='challenges.html'">
                 <div style="font-size: 2.5rem; margin-bottom: 1rem;">⚔️</div>
-                <h3 style="margin: 0; color: var(--gold);">Misje</h3>
-                <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Wyzwania</p>
+                <h3 style="margin: 0;">Misje</h3>
+                <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Wyzwania &amp; Wojny</p>
               </div>
 
-              <div class="card" style="text-align: center; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border-light)'" onclick="window.location.href='ranking.html'">
+              <div class="card" style="text-align: center; cursor: pointer; border-bottom: 3px solid var(--gold);" onclick="window.location.href='ranking.html'">
                 <div style="font-size: 2.5rem; margin-bottom: 1rem;">🏆</div>
-                <h3 style="margin: 0; color: var(--gold);">Chwała</h3>
-                <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Ranking XP</p>
+                <h3 style="margin: 0;">Ranking</h3>
+                <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">ELO &amp; Sala Chwały</p>
               </div>
 
-              <div class="card" style="text-align: center; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border-light)'" onclick="window.location.href='profile.html'">
+              <div class="card" style="text-align: center; cursor: pointer; border-bottom: 3px solid var(--gold);" onclick="window.location.href='friends.html'">
+                <div style="font-size: 2.5rem; margin-bottom: 1rem;">👥</div>
+                <h3 style="margin: 0;">Znajomi</h3>
+                <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Sieć społeczna</p>
+              </div>
+
+              <div class="card" style="text-align: center; cursor: pointer; border-bottom: 3px solid var(--gold);" onclick="window.location.href='achievements.html'">
+                <div style="font-size: 2.5rem; margin-bottom: 1rem;">🎖️</div>
+                <h3 style="margin: 0;">Osiągnięcia</h3>
+                <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Odznaki &amp; nagrody</p>
+              </div>
+
+              <div class="card" style="text-align: center; cursor: pointer; border-bottom: 3px solid var(--gold);" onclick="window.location.href='profile.html'">
                 <div style="font-size: 2.5rem; margin-bottom: 1rem;">👤</div>
-                <h3 style="margin: 0; color: var(--gold);">Profil</h3>
-                <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Twoje statystyki</p>
+                <h3 style="margin: 0;">Profil</h3>
+                <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Twoje dane</p>
               </div>
             </div>
+
+            ${topUsers.length > 0 ? `
+              <div class="card">
+                <h2 style="margin-bottom: 1.5rem;">🥇 TOP 10 WOJOWNIKÓW</h2>
+                ${topUsers.slice(0, 10).map((u, i) => {
+                  const medals = ['🥇', '🥈', '🥉'];
+                  const medal = medals[i] || '🏆';
+                  return `
+                    <div class="ranking-entry">
+                      <div class="ranking-position">${medal}</div>
+                      <div>
+                        <h4 style="margin: 0; color: var(--text-primary);">${u.displayName || 'Wojownik'}</h4>
+                        <p style="margin: 0.25rem 0 0 0; color: var(--text-muted); font-size: 0.85rem;">Lvl ${u.level || 1} • ${u.rank || 'Rookie'}</p>
+                      </div>
+                      <div class="ranking-points">
+                        <div class="ranking-value">${(u.points || 0).toLocaleString('pl-PL')}</div>
+                        <div class="ranking-label">XP</div>
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            ` : ''}
+          </div>
         `;
-
-        // Add leaderboard if users exist
-        if (topUsers.length > 0) {
-          html += `
-            <div class="card" style="margin-top: 2rem;">
-              <h2 style="color: var(--gold); margin-bottom: 1.5rem;">🏆 Top Wojownicy</h2>
-              <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-          `;
-          
-          topUsers.slice(0, 10).forEach((u, i) => {
-            const medals = ['🥇', '🥈', '🥉'];
-            const medal = medals[i] || '#';
-            html += `
-              <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--bg-secondary); border-radius: 6px; border: 1px solid var(--border-light);">
-                <div style="display: flex; align-items: center; gap: 1rem;">
-                  <span style="color: var(--gold); font-weight: bold; font-size: 1.3rem; min-width: 40px;">${medal}</span>
-                  <div>
-                    <div style="color: var(--text-primary); font-weight: bold;">${u.displayName || 'Wojownik'}</div>
-                    <div style="color: var(--text-muted); font-size: 0.85rem;">Lvl ${u.level || 1} • ${u.rank || 'Rookie'}</div>
-                  </div>
-                </div>
-                <div style="text-align: right;">
-                  <div style="color: var(--gold); font-weight: bold; font-size: 1.1rem;">${(u.points || 0).toLocaleString('pl-PL')} XP</div>
-                </div>
-              </div>
-            `;
-          });
-          
-          html += `
-              </div>
-            </div>
-          `;
-        }
-
-        html += `</div>`;
 
         app.innerHTML = html;
         console.log('✅ Arena rendered');
