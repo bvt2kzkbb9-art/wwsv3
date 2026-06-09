@@ -3,9 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weekend Warrior Social V4</title>
-  <link rel="manifest" href="manifest.json">
+  <title>Wiadomości - Weekend Warrior Social</title>
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    .messenger-container { display: grid; grid-template-columns: 280px 1fr; gap: 1.5rem; height: calc(100vh - 200px); margin-top: 1rem; }
+    .conversations-list { background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 8px; overflow-y: auto; padding: 1rem; }
+    .conversation-item { padding: 1rem; margin-bottom: 0.5rem; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 6px; cursor: pointer; transition: all 0.2s ease; }
+    .conversation-item:hover { background: var(--bg-tertiary); border-color: var(--gold); }
+    .conversation-item.active { background: var(--bg-tertiary); border-color: var(--gold); }
+    .conversation-name { font-weight: bold; color: var(--text-primary); margin-bottom: 0.25rem; }
+    .messages-view { display: flex; flex-direction: column; background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden; }
+    .messages-header { padding: 1rem; border-bottom: 1px solid var(--border-light); background: var(--bg-secondary); }
+    .messages-content { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 1rem; }
+    .message { display: flex; margin-bottom: 0.5rem; }
+    .message.mine { justify-content: flex-end; }
+    .message-bubble { max-width: 70%; padding: 0.75rem 1rem; border-radius: 8px; background: var(--bg-secondary); border: 1px solid var(--border-light); }
+    .message.mine .message-bubble { background: linear-gradient(135deg, var(--gold) 0%, #E8C547 100%); color: #000; border: none; }
+    .message-time { font-size: 0.75rem; opacity: 0.7; margin-top: 0.25rem; }
+    .messages-input { padding: 1rem; border-top: 1px solid var(--border-light); background: var(--bg-secondary); display: flex; gap: 0.5rem; }
+    .messages-input input { flex: 1; padding: 0.75rem; background: var(--bg-input); border: 1px solid var(--border-light); color: var(--text-primary); border-radius: 4px; }
+    @media (max-width: 768px) { .messenger-container { grid-template-columns: 1fr; } }
+  </style>
 </head>
 <body>
   <nav class="navbar">
@@ -16,19 +34,172 @@
       <a href="challenges.html" class="nav-item">Misje</a>
       <a href="ranking.html" class="nav-item">Chwała</a>
       <a href="profile.html" class="nav-item">Profil</a>
-      <a href="messenger.html" class="nav-item">Wiadomości</a>
+      <a href="messenger.html" class="nav-item active">Wiadomości</a>
       <button id="logout-btn" class="nav-item" style="border: 1px solid var(--border-light);">Wyloguj</button>
     </div>
   </nav>
   
   <main id="app">
-    <h1>Loading...</h1>
+    <h1>💬 Wiadomości</h1>
+    <div class="messenger-container">
+      <div class="conversations-list">
+        <h3 style="margin: 0 0 1rem 0; color: var(--gold);">Konwersacje</h3>
+        <div id="conversations">
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Ładowanie...</p>
+        </div>
+      </div>
+
+      <div class="messages-view">
+        <div class="messages-header">
+          <h3 id="conv-name" style="margin: 0; color: var(--gold);">Wybierz konwersację</h3>
+        </div>
+        <div id="messages-content" class="messages-content">
+          <p style="text-align: center; color: var(--text-muted);">Otwórz konwersację aby pisać wiadomości</p>
+        </div>
+        <div id="messages-input-area" class="messages-input" style="display: none;">
+          <input id="message-input" type="text" placeholder="Wiadomość...">
+          <button onclick="sendMessage()" style="background: linear-gradient(135deg, var(--gold) 0%, #E8C547 100%); color: #000; padding: 0.75rem 1.5rem; border: none; border-radius: 4px; font-weight: 600; cursor: pointer;">Wyślij</button>
+        </div>
+      </div>
+    </div>
   </main>
 
-  <script type="module" src="js/app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
   <script>
-    document.getElementById('logout-btn').addEventListener('click', async () => {
-      if (window.WWS) await window.WWS.logout();
+    const firebaseConfig = {
+      apiKey: "AIzaSyBHwVgFJgsvOp1ZgU4nQetHM_KgzxeXzZI",
+      authDomain: "weekend-warrior-social-v2.firebaseapp.com",
+      projectId: "weekend-warrior-social-v2",
+      storageBucket: "weekend-warrior-social-v2.firebasestorage.app",
+      messagingSenderId: "147800031459",
+      appId: "1:147800031459:web:d72e1fc2b81b8b152405d6"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    let currentConvId = null;
+    let unsubMessages = null;
+
+    auth.onAuthStateChanged((user) => {
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // Load conversations
+      db.collection('conversations')
+        .where('participants', 'array-contains', user.uid)
+        .orderBy('lastMessageAt', 'desc')
+        .onSnapshot((snap) => {
+          const container = document.getElementById('conversations');
+          if (snap.empty) {
+            container.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">Brak konwersacji</p>';
+            return;
+          }
+
+          let html = '';
+          snap.forEach(doc => {
+            const conv = doc.data();
+            const otherId = conv.participants.find(p => p !== user.uid);
+            
+            html += `
+              <div class="conversation-item" onclick="openConversation('${doc.id}', '${otherId}')">
+                <div class="conversation-name">${conv.lastMessage || 'Brak wiadomości'}</div>
+                <div style="color: var(--text-muted); font-size: 0.8rem;">${formatTime(conv.lastMessageAt)}</div>
+              </div>
+            `;
+          });
+
+          container.innerHTML = html;
+        });
+    });
+
+    function openConversation(convId, otherId) {
+      currentConvId = convId;
+      document.getElementById('conv-name').textContent = 'Rozmowa...';
+      document.getElementById('messages-input-area').style.display = 'flex';
+      document.getElementById('message-input').value = '';
+
+      if (unsubMessages) unsubMessages();
+
+      unsubMessages = db.collection('conversations').doc(convId).collection('messages')
+        .orderBy('createdAt', 'asc')
+        .onSnapshot((snap) => {
+          const container = document.getElementById('messages-content');
+          if (snap.empty) {
+            container.innerHTML = '<p style="text-align: center; color: var(--text-muted);">Brak wiadomości</p>';
+            return;
+          }
+
+          let html = '';
+          snap.forEach(doc => {
+            const msg = doc.data();
+            const isMine = msg.senderId === auth.currentUser.uid;
+
+            html += `
+              <div class="message ${isMine ? 'mine' : ''}">
+                <div>
+                  <div class="message-bubble">${escapeHtml(msg.text)}</div>
+                  <div class="message-time">${formatTime(msg.createdAt)}</div>
+                </div>
+              </div>
+            `;
+          });
+
+          container.innerHTML = html;
+          container.scrollTop = container.scrollHeight;
+        });
+    }
+
+    function sendMessage() {
+      if (!currentConvId) return alert('Otwórz konwersację');
+
+      const text = document.getElementById('message-input').value.trim();
+      if (!text) return;
+
+      db.collection('conversations').doc(currentConvId).collection('messages').add({
+        senderId: auth.currentUser.uid,
+        senderName: auth.currentUser.displayName || 'Wojownik',
+        senderPhotoURL: '',
+        text,
+        type: 'text',
+        imageURL: '',
+        read: false,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(() => {
+        document.getElementById('message-input').value = '';
+      });
+    }
+
+    function formatTime(timestamp) {
+      if (!timestamp) return '';
+      const date = timestamp.toDate?.() || new Date(timestamp);
+      const diff = Math.floor((new Date() - date) / 1000);
+      if (diff < 60) return 'teraz';
+      if (diff < 3600) return Math.floor(diff / 60) + 'm';
+      if (diff < 86400) return Math.floor(diff / 3600) + 'h';
+      return date.toLocaleDateString('pl-PL');
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    window.openConversation = openConversation;
+    window.sendMessage = sendMessage;
+
+    // Logout
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      auth.signOut().then(() => {
+        window.location.href = 'login.html';
+      });
     });
   </script>
 </body>
