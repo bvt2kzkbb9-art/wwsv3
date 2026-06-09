@@ -3,32 +3,102 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weekend Warrior Social V4</title>
-  <link rel="manifest" href="manifest.json">
+  <title>Logowanie - Weekend Warrior Social</title>
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1rem; }
+    .auth-container { max-width: 400px; width: 100%; background: var(--bg-card); border: 2px solid var(--gold); border-radius: 8px; padding: 2rem; }
+    .auth-container h1 { text-align: center; color: var(--gold); margin-bottom: 2rem; font-size: 2rem; }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label { display: block; color: var(--text-secondary); margin-bottom: 0.5rem; font-weight: 500; }
+    .form-group input { width: 100%; padding: 0.75rem; background: var(--bg-input); border: 1px solid var(--border-light); color: var(--text-primary); border-radius: 4px; font-size: 1rem; }
+    .form-group input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 8px rgba(212, 175, 55, 0.3); }
+    .btn-primary { width: 100%; padding: 0.75rem; background: linear-gradient(135deg, var(--gold) 0%, #E8C547 100%); color: #000; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; margin-bottom: 1rem; transition: all 0.2s ease; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(212, 175, 55, 0.4); }
+    .btn-secondary { width: 100%; padding: 0.75rem; background: var(--bg-secondary); border: 1px solid var(--border-light); color: var(--text-primary); border-radius: 4px; font-weight: 600; cursor: pointer; margin-bottom: 1rem; transition: all 0.2s ease; }
+    .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+    .divider { text-align: center; color: var(--text-muted); margin: 1.5rem 0; }
+    .link { text-align: center; color: var(--text-muted); margin-top: 1.5rem; }
+    .link a { color: var(--gold); text-decoration: none; }
+    .error { color: #EF4444; font-size: 0.9rem; margin-top: 0.5rem; }
+    .success { color: #16C784; font-size: 0.9rem; margin-top: 0.5rem; }
+  </style>
 </head>
 <body>
-  <nav class="navbar">
-    <div class="navbar-brand">⚔ Weekend Warrior</div>
-    <div class="navbar-menu">
-      <a href="index.html" class="nav-item">Arena</a>
-      <a href="feed.html" class="nav-item">Kroniki</a>
-      <a href="challenges.html" class="nav-item">Misje</a>
-      <a href="ranking.html" class="nav-item">Chwała</a>
-      <a href="profile.html" class="nav-item">Profil</a>
-      <a href="messenger.html" class="nav-item">Wiadomości</a>
-      <button id="logout-btn" class="nav-item" style="border: 1px solid var(--border-light);">Wyloguj</button>
-    </div>
-  </nav>
-  
-  <main id="app">
-    <h1>Loading...</h1>
-  </main>
+  <div class="auth-container">
+    <h1>⚔ Logowanie</h1>
+    
+    <form id="login-form">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required placeholder="twój@email.com">
+        <div id="email-error" class="error"></div>
+      </div>
 
-  <script type="module" src="js/app.js"></script>
+      <div class="form-group">
+        <label for="password">Hasło</label>
+        <input type="password" id="password" name="password" required placeholder="••••••••">
+        <div id="password-error" class="error"></div>
+      </div>
+
+      <button type="submit" class="btn-primary">Zaloguj się</button>
+    </form>
+
+    <button id="google-btn" class="btn-secondary">🔵 Google Login</button>
+
+    <div class="divider">lub</div>
+
+    <div class="link">
+      Nie masz konta? <a href="register.html">Zarejestruj się</a>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script>
-    document.getElementById('logout-btn').addEventListener('click', async () => {
-      if (window.WWS) await window.WWS.logout();
+    const firebaseConfig = {
+      apiKey: "AIzaSyBHwVgFJgsvOp1ZgU4nQetHM_KgzxeXzZI",
+      authDomain: "weekend-warrior-social-v2.firebaseapp.com",
+      projectId: "weekend-warrior-social-v2",
+      storageBucket: "weekend-warrior-social-v2.firebasestorage.app",
+      messagingSenderId: "147800031459",
+      appId: "1:147800031459:web:d72e1fc2b81b8b152405d6"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Email/Password Login
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        await auth.signInWithEmailAndPassword(email, password);
+        window.location.href = 'index.html';
+      } catch (err) {
+        const msg = err.code === 'auth/invalid-credential' ? 'Zły email lub hasło' : err.message;
+        document.getElementById('email-error').textContent = msg;
+      }
+    });
+
+    // Google Login
+    document.getElementById('google-btn').addEventListener('click', async () => {
+      try {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        await auth.signInWithPopup(provider);
+        window.location.href = 'index.html';
+      } catch (err) {
+        alert('Błąd Google Login: ' + err.message);
+      }
+    });
+
+    // Check if already logged in
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        window.location.href = 'index.html';
+      }
     });
   </script>
 </body>
