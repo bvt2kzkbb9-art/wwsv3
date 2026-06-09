@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stwórz Bohatera - Weekend Warrior</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep: #050505;
+      --bg-dark: #0d0d0d;
+      --bg-layer-2: #171717;
+      --accent-red: #8b0000;
+      --accent-gold: #f5d76e;
+      --text-primary: #e0e0e0;
+      --text-secondary: #a8a8a8;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-dark) 100%);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at 10% 20%, rgba(139, 0, 0, 0.15) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .register-container {
+      background: linear-gradient(135deg, var(--bg-layer-2) 0%, var(--bg-dark) 100%);
+      border: 1px solid #660000;
+      border-radius: 12px;
+      padding: 2.5rem;
+      max-width: 450px;
+      width: 100%;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 0 60px rgba(139, 0, 0, 0.4), 0 20px 60px rgba(0, 0, 0, 0.9);
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .register-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .register-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.7));
+    }
+
+    .register-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--accent-gold);
+      margin-bottom: 0.5rem;
+      letter-spacing: 2px;
+    }
+
+    .register-subtitle {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .form-input, .form-select {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      background: linear-gradient(135deg, #0a0a0a 0%, #0f0f12 100%);
+      border: 1px solid #660000;
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .form-input:focus, .form-select:focus {
+      outline: none;
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+    }
+
+    .form-select option {
+      background: var(--bg-deep);
+      color: var(--text-primary);
+    }
+
+    .specialization-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .spec-card {
+      padding: 1rem;
+      background: linear-gradient(135deg, rgba(23, 23, 23, 0.9) 0%, rgba(13, 13, 13, 0.85) 100%);
+      border: 2px solid #660000;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .spec-card:hover, .spec-card.selected {
+      border-color: var(--accent-gold);
+      background: linear-gradient(135deg, rgba(139, 0, 0, 0.2) 0%, rgba(23, 23, 23, 0.95) 100%);
+      box-shadow: 0 0 30px rgba(139, 0, 0, 0.3);
+    }
+
+    .spec-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .spec-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--accent-gold);
+    }
+
+    .btn-register {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, #8b0000 0%, #b30000 100%);
+      color: var(--text-primary);
+      border: 1px solid #cc0000;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 1rem;
+      box-shadow: 0 0 30px rgba(139, 0, 0, 0.3);
+      position: relative;
+    }
+
+    .btn-register:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 50px rgba(139, 0, 0, 0.6);
+    }
+
+    .btn-register:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .form-footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .form-footer a {
+      color: var(--accent-gold);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .error-message {
+      display: none;
+      background: rgba(255, 106, 0, 0.2);
+      border: 1px solid #cc0000;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      color: #ff9999;
+      font-size: 0.9rem;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    .success-message {
+      display: none;
+      background: rgba(0, 102, 51, 0.2);
+      border: 1px solid #00cc66;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      color: #66ff99;
+      font-size: 0.9rem;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top: 2px solid var(--text-primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 480px) {
+      .register-container { padding: 1.5rem; }
+      .specialization-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="register-container">
+    <div class="register-header">
+      <div class="register-icon">👤</div>
+      <h1 class="register-title">STWÓRZ BOHATERA</h1>
+      <p class="register-subtitle">Dołącz do Areny</p>
+    </div>
+
+    <form id="register-form">
+      <div class="error-message" id="error-message"></div>
+      <div class="success-message" id="success-message"></div>
+
+      <div class="form-group">
+        <label class="form-label">Imię Bohatera</label>
+        <input type="text" id="displayName" class="form-input" placeholder="Twoje imię w grze" required minlength="3" maxlength="20">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" id="email" class="form-input" placeholder="twój@email.com" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Hasło (min. 6 znaków)</label>
+        <input type="password" id="password" class="form-input" placeholder="••••••••" required minlength="6">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Specjalizacja</label>
+        <div class="specialization-grid">
+          <div class="spec-card selected" data-spec="warrior">
+            <div class="spec-icon">⚔️</div>
+            <div class="spec-name">Wojownik</div>
+          </div>
+          <div class="spec-card" data-spec="hunter">
+            <div class="spec-icon">🏹</div>
+            <div class="spec-name">Łowca</div>
+          </div>
+          <div class="spec-card" data-spec="berserker">
+            <div class="spec-icon">🗡️</div>
+            <div class="spec-name">Berserker</div>
+          </div>
+          <div class="spec-card" data-spec="monk">
+            <div class="spec-icon">🧘</div>
+            <div class="spec-name">Mnich</div>
+          </div>
+        </div>
+        <input type="hidden" id="specialization" value="warrior" required>
+      </div>
+
+      <button type="submit" id="btn-register" class="btn-register">⚔ STWÓRZ</button>
+    </form>
+
+    <div class="form-footer">
+      Masz konto? <a href="login-auth.html">Zaloguj się</a>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+
+  <script>
+    const form = document.getElementById('register-form');
+    const displayNameInput = document.getElementById('displayName');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const btnRegister = document.getElementById('btn-register');
+    const specCards = document.querySelectorAll('.spec-card');
+    const specializationInput = document.getElementById('specialization');
+    const errorMsg = document.getElementById('error-message');
+    const successMsg = document.getElementById('success-message');
+
+    // ════════════════════════════════════════════════════════════════════════════════
+    // SPECIALIZATION PICKER
+    // ════════════════════════════════════════════════════════════════════════════════
+
+    specCards.forEach(card => {
+      card.addEventListener('click', () => {
+        specCards.forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        specializationInput.value = card.dataset.spec;
+      });
+    });
+
+    // ════════════════════════════════════════════════════════════════════════════════
+    // REGISTRATION
+    // ════════════════════════════════════════════════════════════════════════════════
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const displayName = displayNameInput.value.trim();
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+      const specialization = specializationInput.value;
+
+      // Validation
+      if (!displayName || !email || !password) {
+        showError('Wypełnij wszystkie pola');
+        return;
+      }
+
+      if (displayName.length < 3) {
+        showError('Imię musi mieć co najmniej 3 znaki');
+        return;
+      }
+
+      if (password.length < 6) {
+        showError('Hasło musi mieć co najmniej 6 znaków');
+        return;
+      }
+
+      setLoading(true, btnRegister);
+      errorMsg.classList.remove('show');
+      successMsg.classList.remove('show');
+
+      try {
+        const result = await AuthService.registerUser(
+          email,
+          password,
+          displayName,
+          specialization
+        );
+
+        if (result.success) {
+          showSuccess('Konto utworzone! Przekierowywanie...');
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 1500);
+        } else {
+          showError(result.error || 'Błąd rejestracji');
+        }
+      } catch (error) {
+        console.error('Registration error:', error);
+        // Parse Firebase error messages
+        let errorMessage = 'Błąd rejestracji';
+        if (error.code === 'auth/email-already-in-use') {
+          errorMessage = 'Ten email jest już zarejestrowany';
+        } else if (error.code === 'auth/invalid-email') {
+          errorMessage = 'Nieprawidłowy adres email';
+        } else if (error.code === 'auth/weak-password') {
+          errorMessage = 'Hasło jest zbyt słabe';
+        }
+        showError(errorMessage);
+      } finally {
+        setLoading(false, btnRegister);
+      }
+    });
+
+    // ════════════════════════════════════════════════════════════════════════════════
+    // CHECK AUTH STATE ON PAGE LOAD
+    // ════════════════════════════════════════════════════════════════════════════════
+
+    window.addEventListener('DOMContentLoaded', () => {
+      AuthService.onAuthStateChanged((user) => {
+        if (user) {
+          // Already logged in, redirect to home
+          window.location.href = 'index.html';
+        }
+      });
+    });
+
+    // ════════════════════════════════════════════════════════════════════════════════
+    // HELPERS
+    // ════════════════════════════════════════════════════════════════════════════════
+
+    function showError(message) {
+      errorMsg.textContent = '⚠ ' + message;
+      errorMsg.classList.add('show');
+    }
+
+    function showSuccess(message) {
+      successMsg.textContent = '✅ ' + message;
+      successMsg.classList.add('show');
+    }
+
+    function setLoading(isLoading, button) {
+      button.disabled = isLoading;
+      
+      if (isLoading) {
+        button.dataset.originalText = button.textContent;
+        button.innerHTML = '<span class="loading-spinner"></span>Ładowanie...';
+      } else {
+        button.textContent = button.dataset.originalText || button.textContent;
+      }
+    }
+  </script>
+</body>
+</html>
