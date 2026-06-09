@@ -1,13 +1,16 @@
 /**
  * AUTHENTICATION MODULE
  * Login, Register, Logout, Google OAuth
+ * HOTFIX: Wszystkie importy naprawione
  */
 
-import { auth, db, COL, collection, doc, setDoc, serverTimestamp, 
-         createUserWithEmailAndPassword, signInWithEmailAndPassword, 
-         signOut as fbSignOut, updateProfile, onAuthStateChanged, 
-         signInWithPopup, googleProvider, sendPasswordResetEmail,
-         getDoc } from './firebase.js';
+import { 
+  auth, db, COL, googleProvider,
+  collection, doc, setDoc, serverTimestamp, getDoc,
+  createUserWithEmailAndPassword, signInWithEmailAndPassword, 
+  signOut as fbSignOut, updateProfile, onAuthStateChanged, 
+  signInWithPopup, sendPasswordResetEmail
+} from './firebase.js';
 import { showToast } from './ui.js';
 
 let currentUser = null;

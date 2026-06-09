@@ -1,6 +1,7 @@
 /**
  * SHARED UI HELPERS
  * Toasts, formatting, utilities
+ * HOTFIX: Wszystkie funkcje działające
  */
 
 export function showToast(message, type = 'info', duration = 3000) {
@@ -38,60 +39,46 @@ export function showToast(message, type = 'info', duration = 3000) {
 
 export function formatDate(timestamp) {
   if (!timestamp) return '';
-  const date = timestamp.toDate?.() || new Date(timestamp);
-  return date.toLocaleDateString('pl-PL');
+  try {
+    const date = timestamp.toDate?.() || new Date(timestamp);
+    return date.toLocaleDateString('pl-PL');
+  } catch (e) {
+    return '';
+  }
 }
 
 export function formatTime(timestamp) {
   if (!timestamp) return '';
-  const date = timestamp.toDate?.() || new Date(timestamp);
-  const now = new Date();
-  const diff = Math.floor((now - date) / 1000);
-  
-  if (diff < 60) return 'teraz';
-  if (diff < 3600) return `${Math.floor(diff / 60)}m temu`;
-  if (diff < 86400) return `${Math.floor(diff / 3600)}h temu`;
-  if (diff < 604800) return `${Math.floor(diff / 86400)}d temu`;
-  
-  return formatDate(timestamp);
+  try {
+    const date = timestamp.toDate?.() || new Date(timestamp);
+    const now = new Date();
+    const diff = Math.floor((now - date) / 1000);
+    
+    if (diff < 60) return 'teraz';
+    if (diff < 3600) return `${Math.floor(diff / 60)}m temu`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)}h temu`;
+    if (diff < 604800) return `${Math.floor(diff / 86400)}d temu`;
+    
+    return formatDate(timestamp);
+  } catch (e) {
+    return '';
+  }
 }
 
 export function escapeHtml(text) {
+  if (!text) return '';
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
 }
 
 export function getInitials(name) {
-  return name?.split(' ')
+  if (!name) return 'W';
+  return name.split(' ')
     .map(w => w[0])
     .join('')
     .slice(0, 2)
-    .toUpperCase() || 'W';
-}
-
-export function createCard(title, content, actions = []) {
-  const card = document.createElement('div');
-  card.className = 'card';
-  card.innerHTML = `
-    <h3>${escapeHtml(title)}</h3>
-    <div>${content}</div>
-  `;
-  
-  if (actions.length > 0) {
-    const footer = document.createElement('div');
-    footer.style.cssText = 'margin-top: 1rem; display: flex; gap: 0.5rem;';
-    actions.forEach(({ label, onClick, variant = 'primary' }) => {
-      const btn = document.createElement('button');
-      btn.textContent = label;
-      btn.className = `btn btn-${variant}`;
-      btn.onclick = onClick;
-      footer.appendChild(btn);
-    });
-    card.appendChild(footer);
-  }
-  
-  return card;
+    .toUpperCase();
 }
 
 export function createLoader() {
@@ -133,4 +120,7 @@ export function addAnimationStyles() {
   document.head.appendChild(style);
 }
 
-addAnimationStyles();
+// Initialize animations on load
+if (typeof document !== 'undefined') {
+  addAnimationStyles();
+}

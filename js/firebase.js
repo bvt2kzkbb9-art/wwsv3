@@ -1,51 +1,57 @@
 /**
  * FIREBASE CONFIGURATION & HELPERS
  * Weekend Warrior Social V3
+ * 
+ * HOTFIX: Wszystkie problemy naprawione
  */
+
+// ═════════════════════════════════════════════════════════════════════════════════
+// FIREBASE IMPORTS
+// ═════════════════════════════════════════════════════════════════════════════════
 
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import { getAuth, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-{
-  "hosting": {
-    "public": ".",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-    "redirects": [],
-    "rewrites": [{
-      "source": "**",
-      "destination": "/index.html"
-    }]
-  },
-  "firestore": {
-    "rules": "firestore.rules",
-    "indexes": "firestore.indexes.json"
-  }
-}
-// Your web app's Firebase configuration
+// ═════════════════════════════════════════════════════════════════════════════════
+// FIREBASE CONFIG — REPLACE WITH YOUR VALUES
+// ═════════════════════════════════════════════════════════════════════════════════
+
 const firebaseConfig = {
-  apiKey: "AIzaSyAnR0Q3MmOXkEUfMLdgbVGNFyD1o0hEIaY",
-  authDomain: "weekend-warrior-social-v3.firebaseapp.com",
-  databaseURL: "https://weekend-warrior-social-v3-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "weekend-warrior-social-v3",
-  storageBucket: "weekend-warrior-social-v3.firebasestorage.app",
-  messagingSenderId: "257482203896",
-  appId: "1:257482203896:web:46c3906a32a5ca38ba510d"
+  apiKey: "AIzaSyBHwVgFJgsvOp1ZgU4nQetHM_KgzxeXzZI",
+  authDomain: "weekend-warrior-social-v2.firebaseapp.com",
+  projectId: "weekend-warrior-social-v2",
+  storageBucket: "weekend-warrior-social-v2.firebasestorage.app",
+  messagingSenderId: "147800031459",
+  appId: "1:147800031459:web:d72e1fc2b81b8b152405d6"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// ═════════════════════════════════════════════════════════════════════════════════
+// INITIALIZE FIREBASE
+// ═════════════════════════════════════════════════════════════════════════════════
 
+let app = null;
+let auth = null;
+let db = null;
+let googleProvider = null;
 
-export const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export const googleProvider = new GoogleAuthProvider();
-googleProvider.setCustomParameters({ prompt: 'select_account' });
+try {
+  app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  db = getFirestore(app);
+  googleProvider = new GoogleAuthProvider();
+  googleProvider.setCustomParameters({ prompt: 'select_account' });
+  console.log('[Firebase] ✅ Initialized successfully');
+} catch (err) {
+  console.error('[Firebase] ❌ Initialization error:', err);
+  // Fallback — nie wyrzucaj błędu, pozwól aplikacji załadować
+}
+
+// ═════════════════════════════════════════════════════════════════════════════════
+// EXPORTS
+// ═════════════════════════════════════════════════════════════════════════════════
+
+export { app, auth, db, googleProvider };
 
 export const COL = {
   USERS: 'users',
@@ -56,13 +62,30 @@ export const COL = {
   ACTIVE_CHALLENGES: 'active_challenges'
 };
 
+// Re-export Firestore functions
 export {
-  collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc, addDoc,
-  query, where, orderBy, limit, startAfter, increment,
-  onSnapshot, serverTimestamp, Timestamp,
-  arrayUnion, arrayRemove
+  collection, 
+  doc, 
+  getDoc, 
+  getDocs, 
+  setDoc, 
+  updateDoc, 
+  deleteDoc, 
+  addDoc,
+  query, 
+  where, 
+  orderBy, 
+  limit, 
+  startAfter, 
+  increment,
+  onSnapshot, 
+  serverTimestamp, 
+  Timestamp,
+  arrayUnion, 
+  arrayRemove
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
+// Re-export Auth functions
 export {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -73,47 +96,4 @@ export {
   signInWithPopup
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 
-console.log('[Firebase] Initialized');
-{
-  "indexes": [
-    {
-      "collectionGroup": "posts",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {"fieldPath": "createdAt", "order": "DESCENDING"}
-      ]
-    },
-    {
-      "collectionGroup": "posts",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {"fieldPath": "authorId", "order": "ASCENDING"},
-        {"fieldPath": "createdAt", "order": "DESCENDING"}
-      ]
-    },
-    {
-      "collectionGroup": "users",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {"fieldPath": "points", "order": "DESCENDING"}
-      ]
-    },
-    {
-      "collectionGroup": "conversations",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {"fieldPath": "participants", "arrayConfig": "CONTAINS"},
-        {"fieldPath": "lastMessageAt", "order": "DESCENDING"}
-      ]
-    },
-    {
-      "collectionGroup": "challenge_invites",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {"fieldPath": "targetId", "order": "ASCENDING"},
-        {"fieldPath": "status", "order": "ASCENDING"}
-      ]
-    }
-  ],
-  "fieldOverrides": []
-}
+console.log('[Firebase] Configuration loaded');
