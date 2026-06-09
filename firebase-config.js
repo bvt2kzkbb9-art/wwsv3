@@ -393,4 +393,3 @@ class AuthService {
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { UserService, AuthService, db, auth, storage };
 }
- Configuration & Initializatio
