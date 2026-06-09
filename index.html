@@ -10,7 +10,7 @@
   <nav class="navbar">
     <div class="navbar-brand">⚔ Weekend Warrior</div>
     <div class="navbar-menu">
-      <a href="index.html" class="nav-item">Arena</a>
+      <a href="index.html" class="nav-item active">Arena</a>
       <a href="feed.html" class="nav-item">Kroniki</a>
       <a href="challenges.html" class="nav-item">Misje</a>
       <a href="ranking.html" class="nav-item">Chwała</a>
@@ -22,15 +22,16 @@
   
   <main id="app">
     <h1>⚔ Arena Wojowników</h1>
-    <p>Inicjalizacja aplikacji...</p>
+    <p>Inicjalizacja...</p>
   </main>
 
-  <!-- FIREBASE & APP INIT -->
-  <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-    import { getFirestore, collection, getDocs, query, orderBy, limit } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+  <!-- FIREBASE SDK (Non-module) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
+  <script>
+    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyBHwVgFJgsvOp1ZgU4nQetHM_KgzxeXzZI",
       authDomain: "weekend-warrior-social-v2.firebaseapp.com",
@@ -40,102 +41,125 @@
       appId: "1:147800031459:web:d72e1fc2b81b8b152405d6"
     };
 
-    console.log('[App] Initializing...');
-    
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    
-    console.log('[App] ✅ Firebase initialized');
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
-    onAuthStateChanged(auth, async (user) => {
-      const appDiv = document.getElementById('app');
-      
+    console.log('✅ Firebase initialized');
+
+    // Check Auth State
+    auth.onAuthStateChanged(async (user) => {
+      const app = document.getElementById('app');
+
       if (!user) {
-        console.log('[App] No user, redirect to login');
+        console.log('No user - redirect to login');
         window.location.href = 'login.html';
         return;
       }
 
-      console.log('[App] ✅ User authenticated:', user.displayName);
+      console.log('✅ User:', user.displayName);
 
       try {
         // Get top users
-        const usersRef = collection(db, 'users');
-        const q = query(usersRef, orderBy('points', 'desc'), limit(10));
-        const snapshot = await getDocs(q);
-        
+        const usersSnap = await db.collection('users')
+          .orderBy('points', 'desc')
+          .limit(10)
+          .get();
+
         const topUsers = [];
-        snapshot.forEach(doc => {
+        usersSnap.forEach(doc => {
           topUsers.push({ id: doc.id, ...doc.data() });
         });
 
-        console.log('[App] Top users:', topUsers.length);
+        console.log('✅ Top users loaded:', topUsers.length);
 
         // Render Arena
-        appDiv.innerHTML = `
+        let html = `
           <div style="margin: 2rem 0;">
-            <h1 style="color: var(--gold); text-align: center;">⚔ Arena Wojowników</h1>
+            <h1 style="color: var(--gold); text-align: center; margin-bottom: 2rem;">⚔ Arena Wojowników</h1>
             
-            <div class="card" style="text-align: center; margin: 2rem 0;">
-              <h2 style="margin-bottom: 1rem;">Witaj, ${user.displayName}!</h2>
+            <div class="card" style="text-align: center; margin-bottom: 2rem; border: 2px solid var(--gold);">
+              <h2 style="margin-bottom: 0.5rem; color: var(--gold);">Witaj, ${user.displayName}!</h2>
               <p style="color: var(--text-muted);">Polska społeczność treningowa</p>
             </div>
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
-              <div class="card" style="text-align: center; cursor: pointer;" onclick="window.location.href='feed.html'">
-                <div style="font-size: 2rem; margin-bottom: 1rem;">📝</div>
-                <h3>Kroniki</h3>
-                <p style="color: var(--text-muted); margin-top: 0.5rem;">Posty i dyskusje</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+              <div class="card" style="text-align: center; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border-light)'" onclick="window.location.href='feed.html'">
+                <div style="font-size: 2.5rem; margin-bottom: 1rem;">📝</div>
+                <h3 style="margin: 0; color: var(--gold);">Kroniki</h3>
+                <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Posty i dyskusje</p>
               </div>
 
-              <div class="card" style="text-align: center; cursor: pointer;" onclick="window.location.href='challenges.html'">
-                <div style="font-size: 2rem; margin-bottom: 1rem;">⚔️</div>
-                <h3>Misje</h3>
-                <p style="color: var(--text-muted); margin-top: 0.5rem;">Wyzwania</p>
+              <div class="card" style="text-align: center; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border-light)'" onclick="window.location.href='challenges.html'">
+                <div style="font-size: 2.5rem; margin-bottom: 1rem;">⚔️</div>
+                <h3 style="margin: 0; color: var(--gold);">Misje</h3>
+                <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Wyzwania</p>
               </div>
 
-              <div class="card" style="text-align: center; cursor: pointer;" onclick="window.location.href='ranking.html'">
-                <div style="font-size: 2rem; margin-bottom: 1rem;">🏆</div>
-                <h3>Chwała</h3>
-                <p style="color: var(--text-muted); margin-top: 0.5rem;">Ranking XP</p>
+              <div class="card" style="text-align: center; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border-light)'" onclick="window.location.href='ranking.html'">
+                <div style="font-size: 2.5rem; margin-bottom: 1rem;">🏆</div>
+                <h3 style="margin: 0; color: var(--gold);">Chwała</h3>
+                <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Ranking XP</p>
               </div>
 
-              <div class="card" style="text-align: center; cursor: pointer;" onclick="window.location.href='profile.html'">
-                <div style="font-size: 2rem; margin-bottom: 1rem;">👤</div>
-                <h3>Profil</h3>
-                <p style="color: var(--text-muted); margin-top: 0.5rem;">Twoje statystyki</p>
+              <div class="card" style="text-align: center; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border-light)'" onclick="window.location.href='profile.html'">
+                <div style="font-size: 2.5rem; margin-bottom: 1rem;">👤</div>
+                <h3 style="margin: 0; color: var(--gold);">Profil</h3>
+                <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Twoje statystyki</p>
               </div>
             </div>
-
-            ${topUsers.length > 0 ? `
-              <div class="card">
-                <h2 style="margin-bottom: 1.5rem;">🏆 Top Wojownicy</h2>
-                ${topUsers.slice(0, 5).map((u, i) => `
-                  <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--border-light);">
-                    <div>
-                      <span style="color: var(--gold); font-weight: bold; font-size: 1.2rem;">#${i + 1}</span>
-                      <span style="margin-left: 1rem; color: var(--text-primary);">${u.displayName || 'Wojownik'}</span>
-                    </div>
-                    <span style="color: var(--gold); font-weight: bold;">${u.points || 0} XP</span>
-                  </div>
-                `).join('')}
-              </div>
-            ` : ''}
-          </div>
         `;
 
-        console.log('[App] ✅ Arena rendered');
+        // Add leaderboard if users exist
+        if (topUsers.length > 0) {
+          html += `
+            <div class="card" style="margin-top: 2rem;">
+              <h2 style="color: var(--gold); margin-bottom: 1.5rem;">🏆 Top Wojownicy</h2>
+              <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+          `;
+          
+          topUsers.slice(0, 10).forEach((u, i) => {
+            const medals = ['🥇', '🥈', '🥉'];
+            const medal = medals[i] || '#';
+            html += `
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--bg-secondary); border-radius: 6px; border: 1px solid var(--border-light);">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                  <span style="color: var(--gold); font-weight: bold; font-size: 1.3rem; min-width: 40px;">${medal}</span>
+                  <div>
+                    <div style="color: var(--text-primary); font-weight: bold;">${u.displayName || 'Wojownik'}</div>
+                    <div style="color: var(--text-muted); font-size: 0.85rem;">Lvl ${u.level || 1} • ${u.rank || 'Rookie'}</div>
+                  </div>
+                </div>
+                <div style="text-align: right;">
+                  <div style="color: var(--gold); font-weight: bold; font-size: 1.1rem;">${(u.points || 0).toLocaleString('pl-PL')} XP</div>
+                </div>
+              </div>
+            `;
+          });
+          
+          html += `
+              </div>
+            </div>
+          `;
+        }
+
+        html += `</div>`;
+
+        app.innerHTML = html;
+        console.log('✅ Arena rendered');
+
       } catch (err) {
-        console.error('[App] Render error:', err);
-        appDiv.innerHTML = `<p style="color: red;">Błąd: ${err.message}</p>`;
+        console.error('❌ Error:', err);
+        app.innerHTML = `<p style="color: #EF4444;">❌ Błąd: ${err.message}</p>`;
       }
     });
 
-    // Logout button
-    document.getElementById('logout-btn').addEventListener('click', async () => {
-      await signOut(auth);
-      window.location.href = 'login.html';
+    // Logout
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      auth.signOut().then(() => {
+        window.location.href = 'login.html';
+      });
     });
   </script>
 </body>
