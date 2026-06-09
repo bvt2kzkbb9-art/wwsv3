@@ -601,6 +601,41 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       console.log('📄 PROFILE.HTML: Page loaded');
+
+      // Logout handler - INSIDE DOMContentLoaded so logout-btn element exists
+      const logoutBtn = document.getElementById('logout-btn');
+      console.log('📄 PROFILE.HTML: Setting up logout button', {
+        buttonExists: !!logoutBtn,
+        buttonElement: logoutBtn?.tagName,
+        authExists: !!auth
+      });
+
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+          console.log('📄 PROFILE.HTML: LOGOUT BUTTON CLICKED!');
+          if (!auth) {
+            console.error('❌ PROFILE.HTML: auth is undefined when logout clicked');
+            return;
+          }
+          console.log('📄 PROFILE.HTML: Calling auth.signOut()...');
+          auth.signOut().then(() => {
+            console.log('✅ PROFILE.HTML: Logged out successfully, redirecting to login.html');
+            window.location.href = 'login.html';
+          }).catch((error) => {
+            console.error('❌ PROFILE.HTML: Logout ERROR', {
+              file: 'profile.html',
+              line: 642,
+              errorCode: error.code,
+              errorMessage: error.message,
+              stack: error.stack
+            });
+          });
+        });
+        console.log('✅ PROFILE.HTML: Logout button listener attached');
+      } else {
+        console.error('❌ PROFILE.HTML: logout-btn element not found!');
+      }
+
       AuthService.onAuthStateChanged(async (user) => {
         console.log('📄 PROFILE.HTML: Auth state changed', {
           userExists: !!user,
@@ -620,40 +655,6 @@
         loadProfile();
       });
     });
-
-    // Logout handler
-    const logoutBtn = document.getElementById('logout-btn');
-    console.log('📄 PROFILE.HTML: Setting up logout button', {
-      buttonExists: !!logoutBtn,
-      buttonElement: logoutBtn?.tagName,
-      authExists: !!auth
-    });
-
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', () => {
-        console.log('📄 PROFILE.HTML: LOGOUT BUTTON CLICKED!');
-        if (!auth) {
-          console.error('❌ PROFILE.HTML: auth is undefined when logout clicked');
-          return;
-        }
-        console.log('📄 PROFILE.HTML: Calling auth.signOut()...');
-        auth.signOut().then(() => {
-          console.log('✅ PROFILE.HTML: Logged out successfully, redirecting to login.html');
-          window.location.href = 'login.html';
-        }).catch((error) => {
-          console.error('❌ PROFILE.HTML: Logout ERROR', {
-            file: 'profile.html',
-            line: 642,
-            errorCode: error.code,
-            errorMessage: error.message,
-            stack: error.stack
-          });
-        });
-      });
-      console.log('✅ PROFILE.HTML: Logout button listener attached');
-    } else {
-      console.error('❌ PROFILE.HTML: logout-btn element not found!');
-    }
 
     // ════════════════════════════════════════════════════════════════════════════════
     // LOAD PROFILE

@@ -423,40 +423,42 @@
   <script src="firebase-config.js"></script>
 
   <script>
-    console.log('👤 CHARACTER.HTML: Page loaded');
+    window.addEventListener('DOMContentLoaded', () => {
+      console.log('👤 CHARACTER.HTML: Page loaded');
 
-    AuthService.onAuthStateChanged((user) => {
-      console.log('👤 CHARACTER.HTML: Auth state changed', {
-        userExists: !!user,
-        uid: user?.uid,
-        email: user?.email
+      // ════════════════════════════════════════════════════════════════════════════════
+      // LOGOUT
+      // ════════════════════════════════════════════════════════════════════════════════
+
+      document.getElementById('logout-btn').addEventListener('click', () => {
+        console.log('👤 CHARACTER.HTML: Logout clicked');
+        auth.signOut().then(() => {
+          console.log('✅ CHARACTER.HTML: Logged out, redirecting to login.html');
+          window.location.href = 'login.html';
+        }).catch((error) => {
+          console.error('❌ CHARACTER.HTML: Logout error', {
+            file: 'character.html',
+            line: 444,
+            errorCode: error.code,
+            errorMessage: error.message,
+            stack: error.stack
+          });
+        });
       });
 
-      if (!user) {
-        console.log('👤 CHARACTER.HTML: No user, redirecting to login.html');
-        window.location.href = 'login.html';
-      } else {
-        console.log('✅ CHARACTER.HTML: User authenticated');
-      }
-    });
-
-    // ════════════════════════════════════════════════════════════════════════════════
-    // LOGOUT
-    // ════════════════════════════════════════════════════════════════════════════════
-
-    document.getElementById('logout-btn').addEventListener('click', () => {
-      console.log('👤 CHARACTER.HTML: Logout clicked');
-      auth.signOut().then(() => {
-        console.log('✅ CHARACTER.HTML: Logged out, redirecting to login.html');
-        window.location.href = 'login.html';
-      }).catch((error) => {
-        console.error('❌ CHARACTER.HTML: Logout error', {
-          file: 'character.html',
-          line: 439,
-          errorCode: error.code,
-          errorMessage: error.message,
-          stack: error.stack
+      AuthService.onAuthStateChanged((user) => {
+        console.log('👤 CHARACTER.HTML: Auth state changed', {
+          userExists: !!user,
+          uid: user?.uid,
+          email: user?.email
         });
+
+        if (!user) {
+          console.log('👤 CHARACTER.HTML: No user, redirecting to login.html');
+          window.location.href = 'login.html';
+        } else {
+          console.log('✅ CHARACTER.HTML: User authenticated');
+        }
       });
     });
   </script>

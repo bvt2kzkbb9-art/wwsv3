@@ -462,6 +462,24 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       console.log('📊 RANKING.HTML: Page loaded');
+
+      // Logout handler - INSIDE DOMContentLoaded so logout-btn element exists
+      document.getElementById('logout-btn').addEventListener('click', () => {
+        console.log('📊 RANKING.HTML: Logout clicked');
+        auth.signOut().then(() => {
+          console.log('✅ RANKING.HTML: Logged out, redirecting to login.html');
+          window.location.href = 'login.html';
+        }).catch((error) => {
+          console.error('❌ RANKING.HTML: Logout error', {
+            file: 'ranking.html',
+            line: 686,
+            errorCode: error.code,
+            errorMessage: error.message,
+            stack: error.stack
+          });
+        });
+      });
+
       AuthService.onAuthStateChanged((user) => {
         console.log('📊 RANKING.HTML: Auth state changed', {
           userExists: !!user,
@@ -670,22 +688,6 @@
     // ════════════════════════════════════════════════════════════════════════════════
     // LOGOUT
     // ════════════════════════════════════════════════════════════════════════════════
-
-    document.getElementById('logout-btn').addEventListener('click', () => {
-      console.log('📊 RANKING.HTML: Logout clicked');
-      auth.signOut().then(() => {
-        console.log('✅ RANKING.HTML: Logged out, redirecting to login.html');
-        window.location.href = 'login.html';
-      }).catch((error) => {
-        console.error('❌ RANKING.HTML: Logout error', {
-          file: 'ranking.html',
-          line: 673,
-          errorCode: error.code,
-          errorMessage: error.message,
-          stack: error.stack
-        });
-      });
-    });
 
     // Cleanup
     window.addEventListener('beforeunload', () => {
