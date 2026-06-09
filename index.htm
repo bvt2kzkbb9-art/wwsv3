@@ -2,488 +2,760 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weekend Warrior Social V5 Premium</title>
-  <link rel="stylesheet" href="css/premium.css">
-  <link rel="stylesheet" href="css/graphics.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Weekend Warrior - Premium MMORPG</title>
+  <link rel="manifest" href="manifest.json">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    
+    :root {
+      --bg-deep: #050505;
+      --bg-darker: #090909;
+      --bg-dark: #0d0d0d;
+      --bg-layer-1: #111111;
+      --bg-layer-2: #171717;
+      --bg-layer-3: #1e1e1e;
+      --accent-red-dark: #6b0000;
+      --accent-red: #8b0000;
+      --accent-red-bright: #b30000;
+      --accent-gold-dark: #d4af37;
+      --accent-gold: #f5d76e;
+      --accent-gold-bright: #ffd700;
+      --accent-fire: #ff6a00;
+      --accent-fire-bright: #ff8c00;
+      --text-primary: #e0e0e0;
+      --text-secondary: #a8a8a8;
+      --text-muted: #696969;
+      --glow-red: rgba(139, 0, 0, 0.5);
+      --glow-gold: rgba(212, 175, 55, 0.4);
+      --glow-fire: rgba(255, 106, 0, 0.4);
+      --transition-fast: 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      --transition-normal: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      --transition-slow: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.6);
+      --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.8);
+      --shadow-lg: 0 16px 64px rgba(0, 0, 0, 0.9);
+      --shadow-xl: 0 24px 80px rgba(0, 0, 0, 0.95);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
     html, body {
       width: 100%;
       height: 100%;
-      background: #000000 url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(212,175,55,0.03)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="%23000000"/><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       overflow-x: hidden;
+      position: relative;
     }
 
-    /* PREMIUM NAVBAR */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(ellipse at 10% 20%, rgba(139, 0, 0, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 90% 80%, rgba(102, 51, 153, 0.08) 0%, transparent 50%),
+        repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.02) 0px, transparent 1px, transparent 2px, rgba(0, 0, 0, 0.02) 3px);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0;
+    }
+
+    .particle.ember {
+      width: 3px;
+      height: 3px;
+      background: radial-gradient(circle at 30% 30%, #ff8c00, #ff6a00);
+      box-shadow: 0 0 15px rgba(255, 106, 0, 0.8);
+      animation: float-ember 20s infinite linear;
+    }
+
+    .particle.spark {
+      width: 2px;
+      height: 2px;
+      background: #d4af37;
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+      animation: float-spark 15s infinite linear;
+    }
+
+    @keyframes float-ember {
+      0% { opacity: 0; transform: translateY(-100vh) translateX(0); }
+      10% { opacity: 0.7; }
+      90% { opacity: 0.7; }
+      100% { opacity: 0; transform: translateY(100vh) translateX(150px); }
+    }
+
+    @keyframes float-spark {
+      0% { opacity: 0; transform: translateY(-100vh) translateX(0); }
+      10% { opacity: 0.5; }
+      90% { opacity: 0.5; }
+      100% { opacity: 0; transform: translateY(100vh) translateX(100px); }
+    }
+
+    #app {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
     .navbar {
-      background: linear-gradient(180deg, rgba(10,10,15,0.98) 0%, rgba(15,12,10,0.95) 100%);
-      backdrop-filter: blur(30px);
-      padding: 1rem;
-      border-bottom: 3px solid #D4AF37;
-      box-shadow: 
-        0 8px 32px rgba(212, 175, 55, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
       position: sticky;
       top: 0;
-      z-index: 1000;
+      z-index: 100;
+      background: linear-gradient(180deg, var(--bg-layer-2) 0%, var(--bg-dark) 100%);
+      backdrop-filter: blur(30px);
+      border-bottom: 2px solid var(--accent-red);
+      padding: 1rem 1.5rem;
+      box-shadow: 0 0 50px rgba(139, 0, 0, 0.4), var(--shadow-lg);
     }
 
     .navbar-content {
+      max-width: 1400px;
+      margin: 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      max-width: 1200px;
-      margin: 0 auto;
+      gap: 2rem;
     }
 
-    .navbar-brand {
+    .navbar-logo {
       font-family: 'Cinzel', serif;
-      font-size: 1.5rem;
+      font-size: 1.3rem;
       font-weight: 900;
-      color: #D4AF37;
-      letter-spacing: 2px;
-      text-shadow: 
-        0 0 20px rgba(212, 175, 55, 0.8),
-        0 0 40px rgba(212, 175, 55, 0.4);
+      color: var(--accent-gold);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-shadow: 0 0 30px rgba(212, 175, 55, 0.8);
     }
 
     .navbar-menu {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.5rem;
+      display: flex;
+      gap: 0.8rem;
     }
 
     .nav-item {
-      padding: 0.6rem 1rem;
-      background: rgba(212, 175, 55, 0.08);
-      border: 1.5px solid #D4AF37;
-      color: #FFFFFF;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
+      padding: 0.6rem 1.2rem;
+      background: linear-gradient(135deg, rgba(17,17,17,0.95) 0%, rgba(13,13,13,0.9) 100%);
+      border: 1.5px solid var(--accent-red);
+      color: var(--text-secondary);
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
       text-transform: uppercase;
-      font-size: 0.85rem;
       letter-spacing: 1px;
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+      transition: all var(--transition-normal);
     }
 
-    .nav-item:hover, .nav-item.active {
-      background: #D4AF37;
-      color: #000000;
-      box-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
-      transform: translateY(-2px);
+    .nav-item:hover {
+      background: linear-gradient(135deg, var(--accent-red-dark) 0%, var(--bg-layer-2) 100%);
+      border-color: var(--accent-gold);
+      color: var(--accent-gold);
+      box-shadow: 0 0 40px var(--glow-red);
     }
 
-    /* MAIN CONTENT */
     main {
-      padding: 2rem 1rem 100px;
-      max-width: 1200px;
+      flex: 1;
+      padding: 2rem 1.5rem 180px;
+      max-width: 1400px;
+      width: 100%;
       margin: 0 auto;
-    }
-
-    /* HERO SECTION */
-    .hero-castle {
-      text-align: center;
-      margin-bottom: 3rem;
       animation: fadeInDown 0.8s ease-out;
     }
 
     @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-30px); }
+      from { opacity: 0; transform: translateY(-40px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .hero-emoji {
-      font-size: 6rem;
+    .hero {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .hero-icon {
+      font-size: 5rem;
       margin-bottom: 1.5rem;
-      filter: drop-shadow(0 8px 16px rgba(212, 175, 55, 0.4));
-      animation: bounce 2s ease-in-out infinite;
+      animation: icon-float 4s ease-in-out infinite;
+      filter: drop-shadow(0 0 40px rgba(212, 175, 55, 0.7));
     }
 
-    @keyframes bounce {
+    @keyframes icon-float {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-20px); }
+      50% { transform: translateY(-30px); }
     }
 
-    .hero-title {
+    h1 {
       font-family: 'Cinzel', serif;
-      font-size: 4rem;
+      font-size: 3.5rem;
       font-weight: 900;
-      color: #D4AF37;
+      color: var(--accent-gold);
       margin-bottom: 1rem;
       letter-spacing: 2px;
-      text-shadow: 
-        0 0 30px rgba(212, 175, 55, 0.8),
-        0 0 60px rgba(212, 175, 55, 0.4),
-        0 4px 8px rgba(0, 0, 0, 1);
-      line-height: 1.2;
+      text-shadow: 0 0 40px rgba(212, 175, 55, 0.8), 0 0 80px rgba(139, 0, 0, 0.5);
     }
 
     .hero-subtitle {
-      font-size: 1.1rem;
-      color: #A0A0A0;
+      font-family: 'Cinzel', serif;
+      color: var(--text-secondary);
       letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
+      margin-bottom: 1rem;
+      font-weight: 600;
     }
 
-    .hero-desc {
-      font-size: 1rem;
-      color: #808080;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 2rem;
-      font-weight: 400;
+    .hero-description {
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 2rem;
+      line-height: 1.8;
     }
 
-    /* CTA BUTTONS */
-    .cta-buttons {
+    .button-group {
       display: flex;
-      gap: 1rem;
+      gap: 1.5rem;
       justify-content: center;
       flex-wrap: wrap;
-      margin-bottom: 3rem;
+      margin-bottom: 4rem;
     }
 
-    .btn-primary {
-      padding: 1rem 2.5rem;
-      background: linear-gradient(135deg, #D4AF37 0%, #E8C547 100%);
-      color: #000000;
+    .btn {
+      padding: 1rem 2rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
       border: none;
       border-radius: 8px;
-      font-weight: 700;
-      font-size: 1rem;
-      text-transform: uppercase;
       cursor: pointer;
-      letter-spacing: 1px;
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      box-shadow: 
-        0 8px 24px rgba(212, 175, 55, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-4px);
-      box-shadow: 
-        0 16px 40px rgba(212, 175, 55, 0.6),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    }
-
-    .btn-secondary {
-      padding: 1rem 2.5rem;
-      background: transparent;
-      border: 2px solid #D4AF37;
-      color: #D4AF37;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 1rem;
-      text-transform: uppercase;
-      cursor: pointer;
-      letter-spacing: 1px;
-      transition: all 0.3s ease;
-    }
-
-    .btn-secondary:hover {
-      background: rgba(212, 175, 55, 0.1);
-      box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
-    }
-
-    /* PREMIUM CARD SECTION */
-    .premium-section {
-      background: linear-gradient(135deg, rgba(20,18,15,0.95) 0%, rgba(15,12,10,0.9) 100%);
-      border: 2px solid rgba(212, 175, 55, 0.3);
-      border-radius: 16px;
-      padding: 3rem 2rem;
-      margin-bottom: 3rem;
-      box-shadow: 
-        0 20px 60px rgba(0, 0, 0, 0.8),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
-      animation: slideUp 0.8s ease-out 0.3s both;
-    }
-
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .section-title {
-      font-family: 'Cinzel', serif;
-      font-size: 2.5rem;
-      color: #D4AF37;
-      margin-bottom: 2rem;
-      text-align: center;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      text-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
-    }
-
-    /* FEATURE GRID - PREMIUM */
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1.5rem;
-      margin: 3rem 0;
-    }
-
-    .feature-card {
-      background: linear-gradient(135deg, rgba(30,27,24,0.9) 0%, rgba(20,17,14,0.8) 100%);
-      border: 2px solid rgba(212, 175, 55, 0.25);
-      border-radius: 12px;
-      padding: 2rem 1.5rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: all var(--transition-normal);
       position: relative;
       overflow: hidden;
     }
 
-    .feature-card::before {
+    .btn::before {
       content: '';
       position: absolute;
-      top: -50%;
-      right: -50%;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle, rgba(212,175,55,0.3) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .btn:active::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #8b0000 0%, #b30000 100%);
+      color: var(--text-primary);
+      border: 1px solid var(--accent-red-bright);
+      box-shadow: 0 0 40px var(--glow-red), inset 0 0 20px rgba(139, 0, 0, 0.3), var(--shadow-lg);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 60px var(--glow-red), inset 0 0 30px rgba(179, 0, 0, 0.4), var(--shadow-xl);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, var(--bg-layer-2) 0%, var(--bg-layer-3) 100%);
+      border: 2px solid var(--accent-red);
+      color: var(--accent-gold);
+      box-shadow: 0 0 30px rgba(139, 0, 0, 0.3);
+    }
+
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #6b0000 0%, var(--bg-layer-2) 100%);
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 50px var(--glow-red), inset 0 0 20px rgba(139, 0, 0, 0.2);
+    }
+
+    .card {
+      background: linear-gradient(135deg, rgba(17, 17, 17, 0.95) 0%, rgba(13, 13, 13, 0.9) 100%);
+      border: 1px solid rgba(139, 0, 0, 0.2);
+      border-radius: 12px;
+      padding: 1.5rem;
+      backdrop-filter: blur(15px);
+      transition: all var(--transition-normal);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(139, 0, 0, 0.1);
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
       opacity: 0;
-      transition: opacity 0.3s ease;
     }
 
-    .feature-card:hover {
-      border-color: #D4AF37;
+    .card:hover {
+      border-color: var(--accent-red);
+      background: linear-gradient(135deg, rgba(23, 23, 23, 0.98) 0%, rgba(13, 13, 13, 0.95) 100%);
+      box-shadow: 0 0 50px var(--glow-red), inset 0 1px 0 rgba(139, 0, 0, 0.2), var(--shadow-lg);
       transform: translateY(-8px);
-      box-shadow: 
-        0 16px 40px rgba(212, 175, 55, 0.3),
-        inset 0 0 20px rgba(212, 175, 55, 0.1);
     }
 
-    .feature-card:hover::before {
+    .card::before:hover {
       opacity: 1;
     }
 
-    .feature-icon {
-      font-size: 4rem;
-      margin-bottom: 1rem;
-      filter: drop-shadow(0 4px 8px rgba(212, 175, 55, 0.4));
-      transition: transform 0.3s ease;
-    }
-
-    .feature-card:hover .feature-icon {
-      transform: scale(1.2) rotate(10deg);
-    }
-
-    .feature-title {
+    .section-title {
       font-family: 'Cinzel', serif;
-      color: #D4AF37;
-      font-size: 1.2rem;
-      margin-bottom: 0.5rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--accent-gold);
+      margin-bottom: 2rem;
+      letter-spacing: 2px;
+      text-shadow: 0 0 30px rgba(212, 175, 55, 0.6);
     }
 
-    .feature-desc {
-      color: #A0A0A0;
+    .missions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    .mission-card {
+      position: relative;
+      padding: 2rem;
+    }
+
+    .mission-number {
+      position: absolute;
+      top: 1rem;
+      right: 1.5rem;
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--accent-red) 0%, var(--accent-red-bright) 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      box-shadow: 0 0 30px var(--glow-red);
+    }
+
+    .mission-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      animation: icon-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes icon-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .card-title {
+      font-family: 'Cinzel', serif;
+      color: var(--accent-gold);
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+    }
+
+    .card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.8rem;
+      background: linear-gradient(135deg, rgba(179, 0, 0, 0.2) 0%, rgba(139, 0, 0, 0.1) 100%);
+      border: 1px solid var(--accent-red);
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-family: 'Space Grotesk', monospace;
+      color: var(--accent-gold);
+      margin-bottom: 1rem;
+    }
+
+    .mission-description {
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: linear-gradient(90deg, rgba(139, 0, 0, 0.2) 0%, rgba(102, 51, 153, 0.1) 100%);
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid rgba(139, 0, 0, 0.3);
+      position: relative;
+      margin-bottom: 1rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #d4af37 0%, #f5d76e 100%);
+      transition: width var(--transition-slow);
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.8);
+    }
+
+    .mission-actions {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .ranking-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 4rem;
+    }
+
+    .ranking-item {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      animation: slideInLeft 0.5s ease-out backwards;
+    }
+
+    .ranking-item:nth-child(1) { animation-delay: 0.1s; }
+    .ranking-item:nth-child(2) { animation-delay: 0.2s; }
+    .ranking-item:nth-child(3) { animation-delay: 0.3s; }
+    .ranking-item:nth-child(4) { animation-delay: 0.4s; }
+    .ranking-item:nth-child(5) { animation-delay: 0.5s; }
+
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-40px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .ranking-medal {
+      font-size: 2rem;
+      flex-shrink: 0;
+    }
+
+    .ranking-info {
+      flex: 1;
+    }
+
+    .ranking-name {
+      color: var(--text-primary);
+      font-family: 'Manrope', sans-serif;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .ranking-status {
+      color: var(--text-secondary);
       font-size: 0.9rem;
     }
 
-    /* BOTTOM NAVIGATION */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: linear-gradient(180deg, rgba(10,10,15,0) 0%, rgba(10,10,15,0.98) 30%, rgba(10,10,15,0.99) 100%);
-      border-top: 2px solid #D4AF37;
-      padding: 1rem 0;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 999;
+    .ranking-xp {
+      font-family: 'Space Grotesk', monospace;
+      color: var(--accent-gold-bright);
+      font-size: 1.2rem;
+      font-weight: 800;
     }
 
-    .nav-icon {
+    .floating-dock {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 99;
+      background: linear-gradient(135deg, rgba(17, 17, 17, 0.98) 0%, rgba(13, 13, 13, 0.95) 100%);
+      backdrop-filter: blur(30px);
+      border: 1px solid rgba(139, 0, 0, 0.3);
+      border-radius: 50px;
+      padding: 0.8rem 1.5rem;
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      box-shadow: 0 0 60px rgba(139, 0, 0, 0.4), 0 20px 60px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(139, 0, 0, 0.2);
+      animation: dock-float 3s ease-in-out infinite;
+    }
+
+    @keyframes dock-float {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-8px); }
+    }
+
+    .dock-item {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.5rem;
-      color: #808080;
-      cursor: pointer;
-      transition: all 0.3s ease;
+      gap: 0.4rem;
+      color: var(--text-muted);
       text-decoration: none;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      position: relative;
+      padding: 0.5rem 0;
     }
 
-    .nav-icon:hover, .nav-icon.active {
-      color: #D4AF37;
-      transform: scale(1.1);
+    .dock-item::before {
+      content: '';
+      position: absolute;
+      bottom: -0.8rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #ff6a00, #ff8c00);
+      border-radius: 2px;
+      transition: width var(--transition-normal);
     }
 
-    .nav-icon-emoji {
+    .dock-item:hover, .dock-item.active {
+      color: var(--accent-gold);
+      text-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
+    }
+
+    .dock-item:hover::before, .dock-item.active::before {
+      width: 24px;
+    }
+
+    .dock-icon {
       font-size: 1.5rem;
+      transition: transform var(--transition-fast);
+      filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.6));
     }
 
-    .nav-icon-label {
-      font-size: 0.7rem;
+    .dock-item:hover .dock-icon {
+      transform: scale(1.2) translateY(-4px);
+      filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.6));
+    }
+
+    .dock-label {
+      font-size: 0.65rem;
+      font-family: 'Space Grotesk', monospace;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      font-weight: 600;
+      font-weight: 700;
     }
 
-    /* RESPONSIVE */
     @media (max-width: 768px) {
-      .hero-title { font-size: 2.5rem; }
-      .navbar-menu { grid-template-columns: repeat(2, 1fr); }
-      .feature-grid { grid-template-columns: repeat(2, 1fr); }
-      main { padding-bottom: 120px; }
+      main { padding: 1.5rem 1rem 160px; }
+      h1 { font-size: 2.5rem; }
+      .missions-grid { grid-template-columns: 1fr; }
+      .navbar-menu { gap: 0.5rem; }
+      .nav-item { padding: 0.5rem 0.8rem; font-size: 0.7rem; }
     }
 
     @media (max-width: 480px) {
-      .hero-emoji { font-size: 4rem; }
-      .hero-title { font-size: 2rem; }
-      .navbar-menu { grid-template-columns: 1fr; }
-      .feature-grid { grid-template-columns: 1fr; }
-      .cta-buttons { flex-direction: column; }
+      main { padding: 1.5rem 0.8rem 150px; }
+      .hero-icon { font-size: 3.5rem; }
+      h1 { font-size: 2rem; }
+      .button-group { flex-direction: column; gap: 1rem; }
+      .btn { width: 100%; }
+      .card { padding: 1rem; }
+      .floating-dock { bottom: 1rem; padding: 0.7rem 0.8rem; gap: 0.8rem; }
     }
   </style>
 </head>
 <body>
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="navbar-content">
-      <div class="navbar-brand">⚔ WEEKEND WARRIOR</div>
-      <div class="navbar-menu">
-        <button class="nav-item active" onclick="window.location.href='#arena'">ARENA</button>
-        <button class="nav-item" onclick="window.location.href='ranking.html'">RANKING</button>
-        <button class="nav-item" onclick="window.location.href='profile.html'">PROFIL</button>
+  <div class="particles" id="particles"></div>
+
+  <div id="app">
+    <nav class="navbar">
+      <div class="navbar-content">
+        <div class="navbar-logo">⚔ WEEKEND WARRIOR</div>
+        <div class="navbar-menu">
+          <button class="nav-item">ARENA</button>
+          <button class="nav-item">RANKING</button>
+          <button class="nav-item">PROFIL</button>
+        </div>
       </div>
-    </div>
-  </nav>
+    </nav>
 
-  <!-- MAIN CONTENT -->
-  <main>
-    <!-- HERO SECTION -->
-    <div class="hero-castle">
-      <div class="hero-emoji">🏰</div>
-      <h1 class="hero-title">ARENA<br>WOJOWNIKÓW</h1>
-      <p class="hero-subtitle">WEEKEND WARRIOR</p>
-      <p class="hero-desc">Polska społeczność fitness wojowników RPG</p>
-    </div>
+    <main>
+      <div class="hero">
+        <div class="hero-icon">🏰</div>
+        <h1>ARENA<br>WOJOWNIKÓW</h1>
+        <p class="hero-subtitle">WEEKEND WARRIOR SOCIAL</p>
+        <p class="hero-description">Premium MMORPG dla Rozwoju Osobistego</p>
+      </div>
 
-    <!-- CTA BUTTONS -->
-    <div class="cta-buttons">
-      <button class="btn-primary" onclick="window.location.href='feed.html'">⚔ RZUĆ WYZWANIE</button>
-      <button class="btn-secondary" onclick="window.location.href='challenges.html'">📜 KRONIKI</button>
-    </div>
+      <div class="button-group">
+        <button class="btn btn-primary">⚔ RZUĆ WYZWANIE</button>
+        <button class="btn btn-secondary">📜 KRONIKI</button>
+      </div>
 
-    <!-- ARENA EVENTS SECTION -->
-    <div class="premium-section">
       <h2 class="section-title">⚡ WYZWANIA ARENY</h2>
-      
-      <div class="feature-grid">
-        <a href="challenges.html" class="feature-card" style="text-decoration: none;">
-          <div class="feature-icon">🏹</div>
-          <h3 class="feature-title">ŁOWCA</h3>
-          <p class="feature-desc">+30 XP</p>
-        </a>
-
-        <a href="challenges.html" class="feature-card" style="text-decoration: none;">
-          <div class="feature-icon">🐉</div>
-          <h3 class="feature-title">HYDRA</h3>
-          <p class="feature-desc">+50 XP</p>
-        </a>
-
-        <a href="challenges.html" class="feature-card" style="text-decoration: none;">
-          <div class="feature-icon">⚡</div>
-          <h3 class="feature-title">ZGNIATACZ</h3>
-          <p class="feature-desc">+40 XP</p>
-        </a>
-
-        <a href="challenges.html" class="feature-card" style="text-decoration: none;">
-          <div class="feature-icon">👻</div>
-          <h3 class="feature-title">DUCH</h3>
-          <p class="feature-desc">+100 XP</p>
-        </a>
-      </div>
-    </div>
-
-    <!-- LEADERBOARD SECTION -->
-    <div class="premium-section">
-      <h2 class="section-title">🥇 SALA CHWAŁY</h2>
-      
-      <div class="feature-grid">
-        <div class="feature-card">
-          <div class="feature-icon">🥇</div>
-          <h3 class="feature-title">#1</h3>
-          <p class="feature-desc">15,000 XP</p>
+      <div class="missions-grid">
+        <div class="card mission-card">
+          <div class="mission-number">1</div>
+          <div class="mission-icon">🏹</div>
+          <h3 class="card-title">Łowca Węży</h3>
+          <div class="card-badge">+30 XP</div>
+          <p class="mission-description">Ukończ 10 pompek bez przerwy</p>
+          <div class="progress-bar"><div class="progress-fill" style="width: 65%;"></div></div>
+          <div class="mission-actions">
+            <button class="btn btn-secondary" style="flex: 1; padding: 0.75rem 1rem; font-size: 0.85rem;">🎯 QUIZ</button>
+            <button class="btn btn-primary" style="flex: 1; padding: 0.75rem 1rem; font-size: 0.85rem;">⚔ RZUĆ</button>
+          </div>
         </div>
 
-        <div class="feature-card">
-          <div class="feature-icon">🥈</div>
-          <h3 class="feature-title">#2</h3>
-          <p class="feature-desc">12,000 XP</p>
+        <div class="card mission-card">
+          <div class="mission-number">2</div>
+          <div class="mission-icon">🔍</div>
+          <h3 class="card-title">Tropiciel Hydry</h3>
+          <div class="card-badge">+40 XP</div>
+          <p class="mission-description">5 minut planki bez przerwy</p>
+          <div class="progress-bar"><div class="progress-fill" style="width: 40%;"></div></div>
+          <div class="mission-actions">
+            <button class="btn btn-secondary" style="flex: 1; padding: 0.75rem 1rem; font-size: 0.85rem;">🎯 QUIZ</button>
+            <button class="btn btn-primary" style="flex: 1; padding: 0.75rem 1rem; font-size: 0.85rem;">⚔ RZUĆ</button>
+          </div>
         </div>
 
-        <div class="feature-card">
-          <div class="feature-icon">🥉</div>
-          <h3 class="feature-title">#3</h3>
-          <p class="feature-desc">10,500 XP</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon">🏆</div>
-          <h3 class="feature-title">#4+</h3>
-          <p class="feature-desc">Dołącz!</p>
+        <div class="card mission-card">
+          <div class="mission-number">3</div>
+          <div class="mission-icon">⚔️</div>
+          <h3 class="card-title">Zgniatacz Węży</h3>
+          <div class="card-badge">+50 XP</div>
+          <p class="mission-description">50 przysiadów w 5 minut</p>
+          <div class="progress-bar"><div class="progress-fill" style="width: 20%;"></div></div>
+          <div class="mission-actions">
+            <button class="btn btn-secondary" style="flex: 1; padding: 0.75rem 1rem; font-size: 0.85rem;">🎯 QUIZ</button>
+            <button class="btn btn-primary" style="flex: 1; padding: 0.75rem 1rem; font-size: 0.85rem;">⚔ RZUĆ</button>
+          </div>
         </div>
       </div>
-    </div>
-  </main>
 
-  <!-- BOTTOM NAVIGATION -->
-  <nav class="bottom-nav">
-    <a href="#arena" class="nav-icon active">
-      <div class="nav-icon-emoji">⚔</div>
-      <div class="nav-icon-label">ARENA</div>
-    </a>
-    <a href="feed.html" class="nav-icon">
-      <div class="nav-icon-emoji">📝</div>
-      <div class="nav-icon-label">KRONIKI</div>
-    </a>
-    <a href="challenges.html" class="nav-icon">
-      <div class="nav-icon-emoji">⚡</div>
-      <div class="nav-icon-label">MISJE</div>
-    </a>
-    <a href="ranking.html" class="nav-icon">
-      <div class="nav-icon-emoji">🏆</div>
-      <div class="nav-icon-label">RANKING</div>
-    </a>
-    <a href="profile.html" class="nav-icon">
-      <div class="nav-icon-emoji">👤</div>
-      <div class="nav-icon-label">PROFIL</div>
-    </a>
-  </nav>
+      <h2 class="section-title">🏆 SALA CHWAŁY</h2>
+      <div class="ranking-grid">
+        <div class="card ranking-item">
+          <div class="ranking-medal">👑</div>
+          <div class="ranking-info">
+            <div class="ranking-name">Sztywny Dragal Brudny Grzyb</div>
+            <div class="ranking-status">⚔ WARRIOR - Legenda</div>
+          </div>
+          <div class="ranking-xp">875 XP</div>
+        </div>
+
+        <div class="card ranking-item">
+          <div class="ranking-medal">🥇</div>
+          <div class="ranking-info">
+            <div class="ranking-name">TwojStaryKarabin (TY)</div>
+            <div class="ranking-status">⚔ WARRIOR - Champion</div>
+          </div>
+          <div class="ranking-xp">618 XP</div>
+        </div>
+
+        <div class="card ranking-item">
+          <div class="ranking-medal">🥈</div>
+          <div class="ranking-info">
+            <div class="ranking-name">Champion Arena</div>
+            <div class="ranking-status">🔥 ROOKIE - Warrior</div>
+          </div>
+          <div class="ranking-xp">450 XP</div>
+        </div>
+
+        <div class="card ranking-item">
+          <div class="ranking-medal">🥉</div>
+          <div class="ranking-info">
+            <div class="ranking-name">Battle Master</div>
+            <div class="ranking-status">⚔ WARRIOR - Fighter</div>
+          </div>
+          <div class="ranking-xp">320 XP</div>
+        </div>
+
+        <div class="card ranking-item">
+          <div class="ranking-medal">🏆</div>
+          <div class="ranking-info">
+            <div class="ranking-name">Michcio</div>
+            <div class="ranking-status">🔥 ROOKIE - Newbie</div>
+          </div>
+          <div class="ranking-xp">5 XP</div>
+        </div>
+      </div>
+    </main>
+
+    <nav class="floating-dock">
+      <a class="dock-item active" href="#arena">
+        <div class="dock-icon">⚔</div>
+        <div class="dock-label">ARENA</div>
+      </a>
+      <a class="dock-item" href="#kroniki">
+        <div class="dock-icon">📝</div>
+        <div class="dock-label">KRONIKI</div>
+      </a>
+      <a class="dock-item" href="#misje">
+        <div class="dock-icon">⚡</div>
+        <div class="dock-label">MISJE</div>
+      </a>
+      <a class="dock-item" href="#ranking">
+        <div class="dock-icon">🏆</div>
+        <div class="dock-label">RANKING</div>
+      </a>
+      <a class="dock-item" href="#profil">
+        <div class="dock-icon">👤</div>
+        <div class="dock-label">PROFIL</div>
+      </a>
+    </nav>
+  </div>
 
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 
   <script>
-    const firebaseConfig = {
+    function initParticles() {
+      const container = document.getElementById('particles');
+      const types = ['ember', 'spark'];
+      for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle ' + types[Math.floor(Math.random() * types.length)];
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 10 + 's';
+        container.appendChild(particle);
+      }
+    }
+
+    initParticles();
+
+    firebase.initializeApp({
       apiKey: "AIzaSyBHwVgFJgsvOp1ZgU4nQetHM_KgzxeXzZI",
       authDomain: "weekend-warrior-social-v2.firebaseapp.com",
       projectId: "weekend-warrior-social-v2",
       storageBucket: "weekend-warrior-social-v2.firebasestorage.app",
       messagingSenderId: "147800031459",
       appId: "1:147800031459:web:d72e1fc2b81b8b152405d6"
-    };
+    });
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-
-    auth.onAuthStateChanged((user) => {
-      if (!user) {
-        window.location.href = 'login.html';
-      }
+    firebase.auth().onAuthStateChanged(user => {
+      if (!user) window.location.href = 'login.html';
     });
   </script>
 </body>
