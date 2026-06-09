@@ -367,6 +367,14 @@
       successMsg.classList.remove('show');
 
       try {
+        console.log('📝 REGISTER.HTML: Form submission started', {
+          email,
+          displayName,
+          specialization,
+          file: 'register.html',
+          line: 370
+        });
+
         const result = await AuthService.registerUser(
           email,
           password,
@@ -374,16 +382,32 @@
           specialization
         );
 
+        console.log('📝 REGISTER.HTML: AuthService.registerUser returned:', result);
+
         if (result.success) {
+          console.log('✅ REGISTER.HTML: Registration successful, redirecting to index.html');
           showSuccess('Konto utworzone! Przekierowywanie...');
           setTimeout(() => {
             window.location.href = 'index.html';
           }, 1500);
         } else {
+          console.error('❌ REGISTER.HTML: Registration failed', {
+            file: 'register.html',
+            line: 382,
+            errorCode: result.code,
+            errorMessage: result.error
+          });
           showError(result.error || 'Błąd rejestracji');
         }
       } catch (error) {
-        console.error('Registration error:', error);
+        console.error('❌ REGISTER.HTML: Unexpected error caught', {
+          file: 'register.html',
+          line: 385,
+          errorCode: error.code,
+          errorMessage: error.message,
+          fullError: error,
+          stack: error.stack
+        });
         // Parse Firebase error messages
         let errorMessage = 'Błąd rejestracji';
         if (error.code === 'auth/email-already-in-use') {

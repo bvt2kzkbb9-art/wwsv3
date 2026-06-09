@@ -599,12 +599,22 @@
     // ════════════════════════════════════════════════════════════════════════════════
 
     window.addEventListener('DOMContentLoaded', () => {
+      console.log('📄 PROFILE.HTML: Page loaded');
       AuthService.onAuthStateChanged(async (user) => {
+        console.log('📄 PROFILE.HTML: Auth state changed', {
+          userExists: !!user,
+          uid: user?.uid,
+          email: user?.email,
+          displayName: user?.displayName
+        });
+
         if (!user) {
+          console.log('📄 PROFILE.HTML: No user, redirecting to login.html');
           window.location.href = 'login.html';
           return;
         }
 
+        console.log('✅ PROFILE.HTML: User authenticated, loading profile');
         currentUser = user;
         loadProfile();
       });

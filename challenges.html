@@ -92,12 +92,29 @@
   <script src="js/app.js"></script>
 
   <script>
-    auth.onAuthStateChanged(() => {
-      if (!auth.currentUser) window.location.href = 'login.html';
+    console.log('⚡ CHALLENGES.HTML: Page loaded');
+
+    auth.onAuthStateChanged((user) => {
+      console.log('⚡ CHALLENGES.HTML: Auth state changed', {
+        userExists: !!user,
+        uid: user?.uid,
+        email: user?.email
+      });
+
+      if (!auth.currentUser) {
+        console.log('⚡ CHALLENGES.HTML: No user, redirecting to login.html');
+        window.location.href = 'login.html';
+      } else {
+        console.log('✅ CHALLENGES.HTML: User authenticated');
+      }
     });
 
     document.getElementById('logout-btn').addEventListener('click', () => {
-      auth.signOut().then(() => window.location.href = 'login.html');
+      console.log('⚡ CHALLENGES.HTML: Logout clicked');
+      auth.signOut().then(() => {
+        console.log('✅ CHALLENGES.HTML: Logged out, redirecting to login.html');
+        window.location.href = 'login.html';
+      });
     });
   </script>
 </body>

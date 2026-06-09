@@ -21,8 +21,15 @@ class UserService {
   // Create new user profile
   static async createUserProfile(uid, displayName, email, specialization) {
     try {
+      console.log('📄 createUserProfile START:', { uid, displayName, email, specialization });
+
       const userRef = db.collection('users').doc(uid);
-      
+      console.log('Firestore reference created:', {
+        collection: 'users',
+        docId: uid,
+        path: `users/${uid}`
+      });
+
       const userData = {
         uid,
         email,
@@ -31,19 +38,19 @@ class UserService {
         photoURL: null,
         bannerURL: null,
         bio: '',
-        
+
         // Progress
         level: 1,
         xp: 0,
         totalXp: 0,
         rank: 'Nowicjusz',
         elo: 1200,
-        
+
         // Streaks
         loginStreak: 0,
         longestLoginStreak: 0,
         lastLoginAt: new Date(),
-        
+
         // Stats
         totalPostsCount: 0,
         totalCommentsCount: 0,
@@ -51,17 +58,28 @@ class UserService {
         totalChallengesSent: 0,
         totalWarsWon: 0,
         totalWarLosses: 0,
-        
+
         // Timestamps
         createdAt: new Date(),
         updatedAt: new Date()
       };
 
+      console.log('About to write to Firestore:', userData);
       await userRef.set(userData);
+      console.log('✅ createUserProfile SUCCESS: Document written to users/' + uid);
       return { success: true, data: userData };
     } catch (error) {
-      console.error('❌ Failed to create user profile:', error);
-      return { success: false, error: error.message };
+      console.error('❌ FIRESTORE WRITE FAILED', {
+        file: 'firebase-config.js',
+        line: 22,
+        function: 'UserService.createUserProfile',
+        uid: uid,
+        errorCode: error.code,
+        errorMessage: error.message,
+        fullError: error,
+        stack: error.stack
+      });
+      return { success: false, error: error.message, code: error.code };
     }
   }
 
@@ -270,29 +288,66 @@ class AuthService {
   // Register new user
   static async registerUser(email, password, displayName, specialization) {
     try {
+      console.log('📝 Registration START:', { email, displayName, specialization });
+
+      // Step 1: Create user with email/password
+      console.log('Step 1: Calling createUserWithEmailAndPassword...');
       const cred = await auth.createUserWithEmailAndPassword(email, password);
-      
-      // Update auth profile
+      console.log('✅ Step 1 SUCCESS:', { uid: cred.user.uid, email: cred.user.email });
+      console.log('Return value from createUserWithEmailAndPassword:', {
+        user: {
+          uid: cred.user.uid,
+          email: cred.user.email,
+          emailVerified: cred.user.emailVerified,
+          displayName: cred.user.displayName,
+          photoURL: cred.user.photoURL
+        },
+        credential: cred.credential ? 'EXISTS' : 'NULL'
+      });
+
+      // Step 2: Update auth profile
+      console.log('Step 2: Calling updateProfile...');
       await cred.user.updateProfile({
         displayName
       });
+      console.log('✅ Step 2 SUCCESS: Profile updated');
 
-      // Create user document in Firestore
+      // Step 3: Check if auth.currentUser exists
+      console.log('Step 3: Checking auth.currentUser...');
+      console.log('auth.currentUser:', {
+        uid: auth.currentUser?.uid,
+        email: auth.currentUser?.email,
+        displayName: auth.currentUser?.displayName,
+        exists: !!auth.currentUser
+      });
+
+      // Step 4: Create user document in Firestore
+      console.log('Step 4: Calling createUserProfile (Firestore)...');
       const result = await UserService.createUserProfile(
         cred.user.uid,
         displayName,
         email,
         specialization
       );
+      console.log('✅ Step 4 SUCCESS:', result);
 
       if (!result.success) {
-        throw new Error('Failed to create user profile');
+        throw new Error('Failed to create user profile: ' + result.error);
       }
 
+      console.log('✅ REGISTRATION COMPLETE:', { uid: cred.user.uid });
       return { success: true, uid: cred.user.uid };
     } catch (error) {
-      console.error('❌ Registration failed:', error);
-      return { success: false, error: error.message };
+      console.error('❌ REGISTRATION FAILED', {
+        file: 'firebase-config.js',
+        line: 271,
+        function: 'AuthService.registerUser',
+        errorCode: error.code,
+        errorMessage: error.message,
+        fullError: error,
+        stack: error.stack
+      });
+      return { success: false, error: error.message, code: error.code };
     }
   }
 
