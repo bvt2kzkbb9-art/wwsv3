@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rejestracja</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body style="background: var(--bg-primary); display: flex; align-items: center; justify-content: center; min-height: 100vh;">
+  <div class="auth-container">
+    <h1 style="text-align: center; margin-bottom: 2rem;">⚔ Rejestracja</h1>
+    
+    <form id="register-form">
+      <input type="text" id="displayName" placeholder="Nazwa użytkownika" required>
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Hasło (min. 6 znaków)" required minlength="6">
+      <button type="submit">Zarejestruj się</button>
+    </form>
+
+    <div style="text-align: center; color: var(--text-muted); margin-top: 1.5rem;">
+      Masz konto? <a href="login.html" style="color: var(--gold); text-decoration: none;">Zaloguj się</a>
+    </div>
+  </div>
+
+  <script type="module">
+    import { register } from './js/auth.js';
+    
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const displayName = document.getElementById('displayName').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      try {
+        await register(email, password, displayName);
+        window.location.href = 'index.html';
+      } catch (err) {
+        // Error toast shown in register()
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wiadomości</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-brand">⚔ WWS</div>
+    <div class="navbar-menu">
+      <a href="index.html" class="nav-item">Arena</a>
+      <a href="feed.html" class="nav-item">Kroniki</a>
+      <a href="challenges.html" class="nav-item">Misje</a>
+      <a href="ranking.html" class="nav-item">Chwała</a>
+      <a href="profile.html" class="nav-item">Profil</a>
+      <a href="messenger.html" class="nav-item active">Wiadomości</a>
+      <button id="logout-btn" class="nav-item" style="border: 1px solid var(--border-light);">Wyloguj</button>
+    </div>
+  </nav>
+
+  <main id="app">
+    <h1>💬 Wiadomości</h1>
+    <p>Ładowanie konwersacji...</p>
+  </main>
+
+  <script type="module">
+    import { onAuthChange, logout } from './js/auth.js';
+    import { initMessenger } from './js/messenger-init.js';
+    
+    onAuthChange(user => {
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+      initMessenger(user);
+    });
+    
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+      await logout();
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>

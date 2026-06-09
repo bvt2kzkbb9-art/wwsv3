@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logowanie</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body style="background: var(--bg-primary); display: flex; align-items: center; justify-content: center; min-height: 100vh;">
+  <div class="auth-container">
+    <h1 style="text-align: center; margin-bottom: 2rem;">⚔ Logowanie</h1>
+    
+    <form id="login-form">
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Hasło" required>
+      <button type="submit">Zaloguj się</button>
+    </form>
+
+    <div style="text-align: center; margin: 1rem 0; color: var(--text-muted);">LUB</div>
+
+    <button id="google-btn" class="btn" style="width: 100%; margin-bottom: 1.5rem;">
+      🔵 Zaloguj się przez Google
+    </button>
+
+    <div style="text-align: center; color: var(--text-muted);">
+      Nie masz konta? <a href="register.html" style="color: var(--gold); text-decoration: none;">Zarejestruj się</a>
+    </div>
+  </div>
+
+  <script type="module">
+    import { login, loginWithGoogle } from './js/auth.js';
+    
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      try {
+        await login(email, password);
+        window.location.href = 'index.html';
+      } catch (err) {
+        // Error toast shown in login()
+      }
+    });
+    
+    document.getElementById('google-btn').addEventListener('click', async () => {
+      try {
+        await loginWithGoogle();
+        window.location.href = 'index.html';
+      } catch (err) {
+        // Error toast shown in loginWithGoogle()
+      }
+    });
+  </script>
+</body>
+</html>

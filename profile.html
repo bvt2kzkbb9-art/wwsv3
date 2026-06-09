@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profil</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-brand">⚔ WWS</div>
+    <div class="navbar-menu">
+      <a href="index.html" class="nav-item">Arena</a>
+      <a href="feed.html" class="nav-item">Kroniki</a>
+      <a href="challenges.html" class="nav-item">Misje</a>
+      <a href="ranking.html" class="nav-item">Chwała</a>
+      <a href="profile.html" class="nav-item active">Profil</a>
+      <a href="messenger.html" class="nav-item">Wiadomości</a>
+      <button id="logout-btn" class="nav-item" style="border: 1px solid var(--border-light);">Wyloguj</button>
+    </div>
+  </nav>
+
+  <main id="app">
+    <h1>👤 Profil</h1>
+    <p>Ładowanie profilu...</p>
+  </main>
+
+  <script type="module">
+    import { onAuthChange, logout } from './js/auth.js';
+    import { initProfile } from './js/profile-init.js';
+    
+    onAuthChange(user => {
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+      initProfile(user);
+    });
+    
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+      await logout();
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>
