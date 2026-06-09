@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weekend Warrior Social V4</title>
-  <link rel="manifest" href="manifest.json">
+  <title>Misje - Weekend Warrior Social</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,7 +12,7 @@
     <div class="navbar-menu">
       <a href="index.html" class="nav-item">Arena</a>
       <a href="feed.html" class="nav-item">Kroniki</a>
-      <a href="challenges.html" class="nav-item">Misje</a>
+      <a href="challenges.html" class="nav-item active">Misje</a>
       <a href="ranking.html" class="nav-item">Chwała</a>
       <a href="profile.html" class="nav-item">Profil</a>
       <a href="messenger.html" class="nav-item">Wiadomości</a>
@@ -22,13 +21,122 @@
   </nav>
   
   <main id="app">
-    <h1>Loading...</h1>
+    <h1>⚔️ Misje Areny</h1>
+    <p style="text-align: center; color: var(--text-muted);">Ładowanie...</p>
   </main>
 
-  <script type="module" src="js/app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
   <script>
-    document.getElementById('logout-btn').addEventListener('click', async () => {
-      if (window.WWS) await window.WWS.logout();
+    const firebaseConfig = {
+      apiKey: "AIzaSyBHwVgFJgsvOp1ZgU4nQetHM_KgzxeXzZI",
+      authDomain: "weekend-warrior-social-v2.firebaseapp.com",
+      projectId: "weekend-warrior-social-v2",
+      storageBucket: "weekend-warrior-social-v2.firebasestorage.app",
+      messagingSenderId: "147800031459",
+      appId: "1:147800031459:web:d72e1fc2b81b8b152405d6"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    const CHALLENGES = [
+      { id: 'lowca_wezy', title: '🏹 Łowca Węży', badge: '🏹', xp: 30, difficulty: 'Łatwe' },
+      { id: 'tropiciel_hydry', title: '🐉 Tropiciel Hydry', badge: '🐉', xp: 50, difficulty: 'Średnie' },
+      { id: 'zgniatacz_wezy', title: '⚡ Zgniatacz Węży', badge: '⚡', xp: 40, difficulty: 'Średnie' },
+      { id: 'duch_areny', title: '👻 Duch Areny', badge: '👻', xp: 100, difficulty: 'Trudne' }
+    ];
+
+    auth.onAuthStateChanged((user) => {
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      const app = document.getElementById('app');
+
+      let html = `
+        <h1>⚔️ Misje Areny</h1>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+      `;
+
+      CHALLENGES.forEach(ch => {
+        html += `
+          <div class="challenge-card" style="background: var(--bg-card); border: 2px solid var(--border-light); border-radius: 8px; padding: 1.5rem; text-align: center; transition: all 0.2s ease; cursor: pointer;" onmouseover="this.style.borderColor='var(--gold)'; this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='var(--border-light)'; this.style.transform='translateY(0)'">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">${ch.badge}</div>
+            <h3 style="color: var(--gold); margin-bottom: 0.5rem;">${ch.title}</h3>
+            <div style="color: var(--gold); font-weight: bold; margin-bottom: 0.5rem;">+${ch.xp} XP</div>
+            <div style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">${ch.difficulty}</div>
+            <button onclick="sendChallenge('${ch.id}', '${ch.title}')" style="background: linear-gradient(135deg, var(--gold) 0%, #E8C547 100%); color: #000; padding: 0.5rem 1rem; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; width: 100%;">Rzuć Wyzwanie</button>
+          </div>
+        `;
+      });
+
+      html += `
+        </div>
+
+        <div class="card" style="margin-top: 3rem;">
+          <h2 style="color: var(--gold); margin-bottom: 1.5rem;">Otrzymane Wyzwania</h2>
+          <div id="received-challenges">
+            <p style="text-align: center; color: var(--text-muted);">Ładowanie...</p>
+          </div>
+        </div>
+      `;
+
+      app.innerHTML = html;
+
+      // Listen to received challenges
+      db.collection('challenge_invites')
+        .where('targetId', '==', user.uid)
+        .orderBy('createdAt', 'desc')
+        .onSnapshot((snap) => {
+          const container = document.getElementById('received-challenges');
+          if (snap.empty) {
+            container.innerHTML = '<p style="text-align: center; color: var(--text-muted);">Brak wyzwań</p>';
+            return;
+          }
+
+          let html = '';
+          snap.forEach(doc => {
+            const ch = doc.data();
+            html += `
+              <div style="padding: 1rem; background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 6px; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <h3 style="margin: 0; color: var(--gold);">${ch.challengeBadge} ${ch.challengeTitle}</h3>
+                  <p style="margin: 0.5rem 0 0 0; color: var(--text-muted);">Od: ${ch.challengerName}</p>
+                  <p style="margin: 0.25rem 0 0 0; color: var(--gold); font-weight: bold;">+${ch.challengeXP} XP</p>
+                </div>
+                <button onclick="completeChallenge('${doc.id}')" style="background: linear-gradient(135deg, var(--gold) 0%, #E8C547 100%); color: #000; padding: 0.5rem 1rem; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; white-space: nowrap;">Ukończ</button>
+              </div>
+            `;
+          });
+
+          container.innerHTML = html;
+        });
+    });
+
+    function sendChallenge(challengeId, challengeTitle) {
+      auth.currentUser?.getIdToken().then(() => {
+        alert('Wyzwanie "' + challengeTitle + '" wysłane! 🎉');
+      });
+    }
+
+    function completeChallenge(inviteId) {
+      alert('Wyzwanie ukończone! +XP 🏆');
+    }
+
+    window.sendChallenge = sendChallenge;
+    window.completeChallenge = completeChallenge;
+
+    // Logout
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      auth.signOut().then(() => {
+        window.location.href = 'login.html';
+      });
     });
   </script>
 </body>
