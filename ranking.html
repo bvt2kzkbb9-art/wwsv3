@@ -387,6 +387,7 @@
   <nav class="navbar">
     <div class="navbar-content">
       <button class="navbar-btn" onclick="window.location.href='index.html'">← WRÓĆ</button>
+      <button id="logout-btn" class="navbar-btn">Wyloguj</button>
     </div>
   </nav>
 
@@ -460,15 +461,64 @@
     // ════════════════════════════════════════════════════════════════════════════════
 
     window.addEventListener('DOMContentLoaded', () => {
-      AuthService.onAuthStateChanged((user) => {
-        if (!user) {
-          window.location.href = 'login.html';
-          return;
-        }
+      console.log('📊 RANKING.HTML: Page loaded');
 
-        currentUser = user;
-        loadRankings();
+      // Logout handler - INSIDE DOMContentLoaded so logout-btn element exists
+      document.getElementById('logout-btn').addEventListener('click', () => {
+        console.log('📊 RANKING.HTML: Logout clicked');
+        auth.signOut().then(() => {
+          console.log('✅ RANKING.HTML: Logged out, redirecting to login.html');
+          window.location.href = 'login.html';
+        }).catch((error) => {
+          console.error('❌ RANKING.HTML: Logout error', {
+            file: 'ranking.html',
+            line: 686,
+            errorCode: error.code,
+            errorMessage: error.message,
+            stack: error.stack
+          });
+        });
       });
+
+      // Wait for AuthService to be available
+      if (typeof AuthService === 'undefined') {
+        console.error('❌ RANKING.HTML: AuthService not loaded yet, waiting...');
+        const checkInterval = setInterval(() => {
+          if (typeof AuthService !== 'undefined') {
+            clearInterval(checkInterval);
+            console.log('✅ RANKING.HTML: AuthService now available');
+            setupAuthListener();
+          }
+        }, 100);
+        setTimeout(() => {
+          clearInterval(checkInterval);
+          if (typeof AuthService === 'undefined') {
+            console.error('❌ RANKING.HTML: AuthService failed to load');
+          }
+        }, 5000);
+      } else {
+        setupAuthListener();
+      }
+
+      function setupAuthListener() {
+        AuthService.onAuthStateChanged((user) => {
+          console.log('📊 RANKING.HTML: Auth state changed', {
+            userExists: !!user,
+            uid: user?.uid,
+            email: user?.email
+          });
+
+          if (!user) {
+            console.log('📊 RANKING.HTML: No user, redirecting to login.html');
+            window.location.href = 'login.html';
+            return;
+          }
+
+          console.log('✅ RANKING.HTML: User authenticated, loading rankings');
+          currentUser = user;
+          loadRankings();
+        });
+      }
     });
 
     // ════════════════════════════════════════════════════════════════════════════════
@@ -656,6 +706,10 @@
       div.textContent = text;
       return div.innerHTML;
     }
+
+    // ════════════════════════════════════════════════════════════════════════════════
+    // LOGOUT
+    // ════════════════════════════════════════════════════════════════════════════════
 
     // Cleanup
     window.addEventListener('beforeunload', () => {

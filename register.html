@@ -312,6 +312,10 @@
   <script src="firebase-config.js"></script>
 
   <script>
+    console.log('📝 REGISTER.HTML: Script started, checking dependencies...');
+    console.log('📝 REGISTER.HTML: AuthService available?', { exists: typeof AuthService !== 'undefined', AuthService });
+    console.log('📝 REGISTER.HTML: firebase available?', { exists: typeof firebase !== 'undefined' });
+
     const form = document.getElementById('register-form');
     const displayNameInput = document.getElementById('displayName');
     const emailInput = document.getElementById('email');
@@ -321,6 +325,14 @@
     const specializationInput = document.getElementById('specialization');
     const errorMsg = document.getElementById('error-message');
     const successMsg = document.getElementById('success-message');
+
+    console.log('📝 REGISTER.HTML: DOM elements loaded', {
+      form: !!form,
+      displayNameInput: !!displayNameInput,
+      emailInput: !!emailInput,
+      passwordInput: !!passwordInput,
+      btnRegister: !!btnRegister
+    });
 
     // ════════════════════════════════════════════════════════════════════════════════
     // SPECIALIZATION PICKER
@@ -367,6 +379,14 @@
       successMsg.classList.remove('show');
 
       try {
+        console.log('📝 REGISTER.HTML: Form submission started', {
+          email,
+          displayName,
+          specialization,
+          file: 'register.html',
+          line: 370
+        });
+
         const result = await AuthService.registerUser(
           email,
           password,
@@ -374,16 +394,32 @@
           specialization
         );
 
+        console.log('📝 REGISTER.HTML: AuthService.registerUser returned:', result);
+
         if (result.success) {
+          console.log('✅ REGISTER.HTML: Registration successful, redirecting to index.html');
           showSuccess('Konto utworzone! Przekierowywanie...');
           setTimeout(() => {
             window.location.href = 'index.html';
           }, 1500);
         } else {
+          console.error('❌ REGISTER.HTML: Registration failed', {
+            file: 'register.html',
+            line: 382,
+            errorCode: result.code,
+            errorMessage: result.error
+          });
           showError(result.error || 'Błąd rejestracji');
         }
       } catch (error) {
-        console.error('Registration error:', error);
+        console.error('❌ REGISTER.HTML: Unexpected error caught', {
+          file: 'register.html',
+          line: 385,
+          errorCode: error.code,
+          errorMessage: error.message,
+          fullError: error,
+          stack: error.stack
+        });
         // Parse Firebase error messages
         let errorMessage = 'Błąd rejestracji';
         if (error.code === 'auth/email-already-in-use') {
@@ -404,12 +440,33 @@
     // ════════════════════════════════════════════════════════════════════════════════
 
     window.addEventListener('DOMContentLoaded', () => {
-      AuthService.onAuthStateChanged((user) => {
-        if (user) {
-          // Already logged in, redirect to home
-          window.location.href = 'index.html';
-        }
-      });
+      // Wait for AuthService to be available (loaded from firebase-config.js)
+      if (typeof AuthService === 'undefined') {
+        console.error('❌ REGISTER.HTML: AuthService not loaded yet, waiting...');
+        const checkInterval = setInterval(() => {
+          if (typeof AuthService !== 'undefined') {
+            clearInterval(checkInterval);
+            console.log('✅ REGISTER.HTML: AuthService now available, setting up auth listener');
+            AuthService.onAuthStateChanged((user) => {
+              if (user) {
+                window.location.href = 'index.html';
+              }
+            });
+          }
+        }, 100);
+        setTimeout(() => {
+          clearInterval(checkInterval);
+          if (typeof AuthService === 'undefined') {
+            console.error('❌ REGISTER.HTML: AuthService failed to load after 5 seconds');
+          }
+        }, 5000);
+      } else {
+        AuthService.onAuthStateChanged((user) => {
+          if (user) {
+            window.location.href = 'index.html';
+          }
+        });
+      }
     });
 
     // ════════════════════════════════════════════════════════════════════════════════

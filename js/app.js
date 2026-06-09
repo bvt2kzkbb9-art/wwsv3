@@ -1,8 +1,8 @@
 const firebaseConfig = {
   apiKey: "AIzaSyBHwVgFJgsvOp1ZgU4nQetHM_KgzxeXzZI",
-  authDomain: "weekend-warrior-social-v2.firebaseapp.com",
-  projectId: "weekend-warrior-social-v2",
-  storageBucket: "weekend-warrior-social-v2.firebasestorage.app",
+  authDomain: "weekend-warrior-social-v3.firebaseapp.com",
+  projectId: "weekend-warrior-social-v3",
+  storageBucket: "weekend-warrior-social-v3.firebasestorage.app",
   messagingSenderId: "147800031459",
   appId: "1:147800031459:web:d72e1fc2b81b8b152405d6"
 };
@@ -16,10 +16,10 @@ async function createUserProfile(uid, email, displayName, photoURL = '') {
   const now = firebase.firestore.FieldValue.serverTimestamp();
   await db.collection('users').doc(uid).set({
     uid, email, displayName, username: displayName.toLowerCase().replace(/\s+/g, '_'),
-    photoURL, bannerURL: '', bio: '', level: 1, rank: 'Rookie', points: 0, elo: 1200,
-    streak: 0, loginStreak: 1, totalPostsCount: 0, totalCommentsCount: 0,
+    photoURL, bannerURL: '', bio: '', level: 1, rank: 'Nowicjusz', xp: 0, totalXp: 0, elo: 1200,
+    loginStreak: 1, longestLoginStreak: 1, totalPostsCount: 0, totalCommentsCount: 0,
     totalChallengesCompleted: 0, totalChallengesSent: 0, totalWarsWon: 0, totalWarLosses: 0,
-    createdAt: now, lastLoginAt: now, lastActiveAt: now
+    createdAt: now, lastLoginAt: now, updatedAt: now
   });
 }
 
@@ -32,14 +32,17 @@ async function awardXP(uid, amount) {
   const ref = db.collection('users').doc(uid);
   const snap = await ref.get();
   if (!snap.exists) return;
-  const current = snap.data().points || 0;
-  const newPoints = current + amount;
-  const newLevel = Math.floor(newPoints / 500) + 1;
-  let rank = 'Rookie';
-  if (newPoints >= 10000) rank = 'Legend';
-  else if (newPoints >= 2000) rank = 'Champion';
-  else if (newPoints >= 500) rank = 'Warrior';
-  await ref.update({ points: newPoints, level: newLevel, rank, lastActiveAt: firebase.firestore.FieldValue.serverTimestamp() });
+  const userData = snap.data();
+  const currentXp = userData.xp || 0;
+  const currentTotalXp = userData.totalXp || 0;
+  const newXp = currentXp + amount;
+  const newTotalXp = currentTotalXp + amount;
+  const newLevel = Math.floor(newTotalXp / 1000) + 1;
+  let rank = 'Nowicjusz';
+  if (newLevel >= 50) rank = 'Legenda';
+  else if (newLevel >= 30) rank = 'Champion';
+  else if (newLevel >= 15) rank = 'Warrior';
+  await ref.update({ xp: newXp, totalXp: newTotalXp, level: newLevel, rank, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
 }
 
 // ===================== SYSTEM 2: FRIENDS SYSTEM =====================
@@ -192,7 +195,7 @@ function listenELORanking(callback) {
 
 // ===================== SYSTEM 9: HALL OF FAME (TOP 100) =====================
 function listenHallOfFame(callback) {
-  return db.collection('users').orderBy('points', 'desc').limit(100).onSnapshot(snap => {
+  return db.collection('users').orderBy('totalXp', 'desc').limit(100).onSnapshot(snap => {
     const top = [];
     snap.forEach((d, i) => top.push({ rank: i + 1, id: d.id, ...d.data() }));
     callback(top);

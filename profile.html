@@ -486,6 +486,7 @@
   <nav class="navbar">
     <div class="navbar-content">
       <button class="navbar-btn" onclick="window.location.href='index.html'">← WRÓĆ</button>
+      <button id="logout-btn" class="navbar-btn">Wyloguj</button>
     </div>
   </nav>
 
@@ -599,15 +600,82 @@
     // ════════════════════════════════════════════════════════════════════════════════
 
     window.addEventListener('DOMContentLoaded', () => {
-      AuthService.onAuthStateChanged(async (user) => {
-        if (!user) {
-          window.location.href = 'login.html';
-          return;
-        }
+      console.log('📄 PROFILE.HTML: Page loaded');
 
-        currentUser = user;
-        loadProfile();
+      // Logout handler - INSIDE DOMContentLoaded so logout-btn element exists
+      const logoutBtn = document.getElementById('logout-btn');
+      console.log('📄 PROFILE.HTML: Setting up logout button', {
+        buttonExists: !!logoutBtn,
+        buttonElement: logoutBtn?.tagName,
+        authExists: !!auth
       });
+
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+          console.log('📄 PROFILE.HTML: LOGOUT BUTTON CLICKED!');
+          if (!auth) {
+            console.error('❌ PROFILE.HTML: auth is undefined when logout clicked');
+            return;
+          }
+          console.log('📄 PROFILE.HTML: Calling auth.signOut()...');
+          auth.signOut().then(() => {
+            console.log('✅ PROFILE.HTML: Logged out successfully, redirecting to login.html');
+            window.location.href = 'login.html';
+          }).catch((error) => {
+            console.error('❌ PROFILE.HTML: Logout ERROR', {
+              file: 'profile.html',
+              line: 642,
+              errorCode: error.code,
+              errorMessage: error.message,
+              stack: error.stack
+            });
+          });
+        });
+        console.log('✅ PROFILE.HTML: Logout button listener attached');
+      } else {
+        console.error('❌ PROFILE.HTML: logout-btn element not found!');
+      }
+
+      // Wait for AuthService to be available
+      if (typeof AuthService === 'undefined') {
+        console.error('❌ PROFILE.HTML: AuthService not loaded yet, waiting...');
+        const checkInterval = setInterval(() => {
+          if (typeof AuthService !== 'undefined') {
+            clearInterval(checkInterval);
+            console.log('✅ PROFILE.HTML: AuthService now available');
+            setupAuthListener();
+          }
+        }, 100);
+        setTimeout(() => {
+          clearInterval(checkInterval);
+          if (typeof AuthService === 'undefined') {
+            console.error('❌ PROFILE.HTML: AuthService failed to load');
+          }
+        }, 5000);
+      } else {
+        setupAuthListener();
+      }
+
+      function setupAuthListener() {
+        AuthService.onAuthStateChanged(async (user) => {
+          console.log('📄 PROFILE.HTML: Auth state changed', {
+            userExists: !!user,
+            uid: user?.uid,
+            email: user?.email,
+            displayName: user?.displayName
+          });
+
+          if (!user) {
+            console.log('📄 PROFILE.HTML: No user, redirecting to login.html');
+            window.location.href = 'login.html';
+            return;
+          }
+
+          console.log('✅ PROFILE.HTML: User authenticated, loading profile');
+          currentUser = user;
+          loadProfile();
+        });
+      }
     });
 
     // ════════════════════════════════════════════════════════════════════════════════
@@ -615,59 +683,88 @@
     // ════════════════════════════════════════════════════════════════════════════════
 
     function loadProfile() {
-      if (!currentUser) return;
+      console.log('📄 PROFILE.HTML: loadProfile called', {
+        currentUserExists: !!currentUser,
+        uid: currentUser?.uid
+      });
 
+      if (!currentUser) {
+        console.error('❌ PROFILE.HTML: loadProfile called but currentUser is missing');
+        return;
+      }
+
+      console.log('📄 PROFILE.HTML: Calling ProfileService.listenToProfile for uid:', currentUser.uid);
       profileUnsubscribe = ProfileService.listenToProfile(currentUser.uid, (result) => {
+        console.log('📄 PROFILE.HTML: ProfileService callback fired', { success: result.success, error: result.error });
         if (!result.success) {
+          console.error('❌ PROFILE.HTML: ProfileService returned error:', result.error);
           showError(result.error);
           return;
         }
 
+        console.log('📄 PROFILE.HTML: ProfileService returned success, updating display');
         const profile = result.data;
         updateProfileDisplay(profile);
       });
     }
 
     function updateProfileDisplay(profile) {
-      // Name
-      document.getElementById('profile-name').textContent = profile.displayName || 'Wojownik';
-      document.getElementById('nick-input').value = profile.displayName || '';
+      console.log('📄 PROFILE.HTML: updateProfileDisplay called', {
+        displayName: profile.displayName,
+        level: profile.level,
+        rank: profile.rank,
+        xp: profile.xp
+      });
 
-      // Rank
-      document.getElementById('profile-rank').textContent = `${profile.specialization === 'warrior' ? '⚔️' : ''} ${profile.rank} - Lvl ${profile.level}`;
+      try {
+        // Name
+        document.getElementById('profile-name').textContent = profile.displayName || 'Wojownik';
+        document.getElementById('nick-input').value = profile.displayName || '';
 
-      // Stats
-      document.getElementById('stat-level').textContent = profile.level;
-      document.getElementById('stat-xp').textContent = formatNumber(profile.xp);
-      document.getElementById('stat-elo').textContent = formatNumber(profile.elo);
-      document.getElementById('stat-streak').textContent = profile.loginStreak + 'd';
+        // Rank
+        document.getElementById('profile-rank').textContent = `${profile.specialization === 'warrior' ? '⚔️' : ''} ${profile.rank} - Lvl ${profile.level}`;
 
-      // Avatar
-      const avatarContent = document.getElementById('avatar-content');
-      if (profile.photoURL) {
-        avatarContent.innerHTML = `<img src="${profile.photoURL}" alt="Avatar">`;
-      } else {
-        avatarContent.innerHTML = '⚔';
+        // Stats
+        document.getElementById('stat-level').textContent = profile.level;
+        document.getElementById('stat-xp').textContent = formatNumber(profile.xp);
+        document.getElementById('stat-elo').textContent = formatNumber(profile.elo);
+        document.getElementById('stat-streak').textContent = profile.loginStreak + 'd';
+
+        // Avatar
+        const avatarContent = document.getElementById('avatar-content');
+        if (profile.photoURL) {
+          avatarContent.innerHTML = `<img src="${profile.photoURL}" alt="Avatar">`;
+        } else {
+          avatarContent.innerHTML = '⚔';
+        }
+
+        // Banner
+        const banner = document.getElementById('banner-click');
+        if (profile.bannerURL) {
+          banner.style.backgroundImage = `url('${profile.bannerURL}')`;
+          banner.style.backgroundSize = 'cover';
+          banner.style.backgroundPosition = 'center';
+        }
+
+        // Bio
+        const bioDisplay = document.getElementById('bio-display');
+        if (profile.bio && profile.bio.trim()) {
+          bioDisplay.innerHTML = profile.bio;
+          bioDisplay.classList.remove('bio-empty');
+        } else {
+          bioDisplay.innerHTML = '<div class="bio-empty">Brak biografii. Kliknij aby dodać.</div>';
+        }
+        document.getElementById('bio-input').value = profile.bio || '';
+        updateCharCount();
+
+        console.log('✅ PROFILE.HTML: updateProfileDisplay completed successfully');
+      } catch (error) {
+        console.error('❌ PROFILE.HTML: updateProfileDisplay error', {
+          message: error.message,
+          stack: error.stack
+        });
+        showError('Błąd podczas ładowania profilu: ' + error.message);
       }
-
-      // Banner
-      const banner = document.getElementById('banner-click');
-      if (profile.bannerURL) {
-        banner.style.backgroundImage = `url('${profile.bannerURL}')`;
-        banner.style.backgroundSize = 'cover';
-        banner.style.backgroundPosition = 'center';
-      }
-
-      // Bio
-      const bioDisplay = document.getElementById('bio-display');
-      if (profile.bio && profile.bio.trim()) {
-        bioDisplay.innerHTML = profile.bio;
-        bioDisplay.classList.remove('bio-empty');
-      } else {
-        bioDisplay.innerHTML = '<div class="bio-empty">Brak biografii. Kliknij aby dodać.</div>';
-      }
-      document.getElementById('bio-input').value = profile.bio || '';
-      updateCharCount();
     }
 
     // ════════════════════════════════════════════════════════════════════════════════

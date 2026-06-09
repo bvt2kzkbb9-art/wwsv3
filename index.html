@@ -595,6 +595,7 @@
           <button class="nav-item">ARENA</button>
           <button class="nav-item">RANKING</button>
           <button class="nav-item">PROFIL</button>
+          <button id="logout-btn" class="nav-item">WYLOGUJ</button>
         </div>
       </div>
     </nav>
@@ -729,6 +730,7 @@
 
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="firebase-config.js"></script>
 
   <script>
     function initParticles() {
@@ -745,17 +747,65 @@
 
     initParticles();
 
-    firebase.initializeApp({
-      apiKey: "AIzaSyBHwVgFJgsvOp1ZgU4nQetHM_KgzxeXzZI",
-      authDomain: "weekend-warrior-social-v2.firebaseapp.com",
-      projectId: "weekend-warrior-social-v2",
-      storageBucket: "weekend-warrior-social-v2.firebasestorage.app",
-      messagingSenderId: "147800031459",
-      appId: "1:147800031459:web:d72e1fc2b81b8b152405d6"
-    });
+    window.addEventListener('DOMContentLoaded', () => {
+      console.log('⚡ INDEX.HTML: Page loaded');
 
-    firebase.auth().onAuthStateChanged(user => {
-      if (!user) window.location.href = 'login.html';
+      // ════════════════════════════════════════════════════════════════════════════════
+      // LOGOUT
+      // ════════════════════════════════════════════════════════════════════════════════
+
+      document.getElementById('logout-btn').addEventListener('click', () => {
+        console.log('⚡ INDEX.HTML: Logout clicked');
+        auth.signOut().then(() => {
+          console.log('✅ INDEX.HTML: Logged out, redirecting to login.html');
+          window.location.href = 'login.html';
+        }).catch((error) => {
+          console.error('❌ INDEX.HTML: Logout error', {
+            file: 'index.html',
+            line: 764,
+            errorCode: error.code,
+            errorMessage: error.message,
+            stack: error.stack
+          });
+        });
+      });
+
+      // Wait for AuthService to be available
+      if (typeof AuthService === 'undefined') {
+        console.error('❌ INDEX.HTML: AuthService not loaded yet, waiting...');
+        const checkInterval = setInterval(() => {
+          if (typeof AuthService !== 'undefined') {
+            clearInterval(checkInterval);
+            console.log('✅ INDEX.HTML: AuthService now available');
+            setupAuthListener();
+          }
+        }, 100);
+        setTimeout(() => {
+          clearInterval(checkInterval);
+          if (typeof AuthService === 'undefined') {
+            console.error('❌ INDEX.HTML: AuthService failed to load');
+          }
+        }, 5000);
+      } else {
+        setupAuthListener();
+      }
+
+      function setupAuthListener() {
+        AuthService.onAuthStateChanged((user) => {
+          console.log('⚡ INDEX.HTML: Auth state changed', {
+            userExists: !!user,
+            uid: user?.uid,
+            email: user?.email
+          });
+
+          if (!user) {
+            console.log('⚡ INDEX.HTML: No user, redirecting to login.html');
+            window.location.href = 'login.html';
+          } else {
+            console.log('✅ INDEX.HTML: User authenticated');
+          }
+        });
+      }
     });
   </script>
 </body>

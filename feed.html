@@ -32,14 +32,34 @@
   <script src="js/app.js"></script>
 
   <script>
+    console.log('📜 FEED.HTML: Script started, checking dependencies...');
+    console.log('📜 FEED.HTML: auth available?', { exists: typeof auth !== 'undefined', authType: typeof auth });
+    console.log('📜 FEED.HTML: getUserProfile available?', { exists: typeof getUserProfile !== 'undefined' });
+    console.log('📜 FEED.HTML: firebase available?', { exists: typeof firebase !== 'undefined' });
+
+    if (!auth) {
+      console.error('❌ FEED.HTML: auth is undefined! js/app.js did not initialize properly');
+    }
+    if (typeof getUserProfile !== 'function') {
+      console.error('❌ FEED.HTML: getUserProfile is not a function!');
+    }
+
     auth.onAuthStateChanged(async (user) => {
+      console.log('📜 FEED.HTML: Auth state changed', { userExists: !!user, uid: user?.uid });
       if (!user) {
+        console.log('📜 FEED.HTML: No user, redirecting to login.html');
         window.location.href = 'login.html';
         return;
       }
 
       const app = document.getElementById('app');
+      console.log('📜 FEED.HTML: Loading user profile for uid:', user.uid);
       const userProfile = await getUserProfile(user.uid);
+      console.log('📜 FEED.HTML: User profile loaded:', {
+        exists: !!userProfile,
+        displayName: userProfile?.displayName,
+        photoURL: userProfile?.photoURL
+      });
 
       app.innerHTML = `
         <h1>📜 Kroniki Areny</h1>
@@ -98,9 +118,26 @@
       });
     });
 
-    document.getElementById('logout-btn').addEventListener('click', () => {
-      auth.signOut().then(() => window.location.href = 'login.html');
+    const logoutBtn = document.getElementById('logout-btn');
+    console.log('📜 FEED.HTML: Setting up logout button', {
+      exists: !!logoutBtn,
+      authExists: !!auth
     });
+
+    if (logoutBtn && auth) {
+      logoutBtn.addEventListener('click', () => {
+        console.log('📜 FEED.HTML: Logout button clicked');
+        auth.signOut().then(() => {
+          console.log('✅ FEED.HTML: Logged out, redirecting');
+          window.location.href = 'login.html';
+        }).catch((error) => {
+          console.error('❌ FEED.HTML: Logout error:', error);
+        });
+      });
+      console.log('✅ FEED.HTML: Logout button listener attached');
+    } else {
+      console.error('❌ FEED.HTML: Cannot attach logout listener', { logoutBtnExists: !!logoutBtn, authExists: !!auth });
+    }
   </script>
 </body>
 </html>

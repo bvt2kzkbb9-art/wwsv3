@@ -328,6 +328,7 @@
 <body>
   <nav class="navbar">
     <button class="navbar-btn" onclick="window.location.href='index.html'">← WRÓĆ</button>
+    <button id="logout-btn" class="navbar-btn">Wyloguj</button>
   </nav>
 
   <main>
@@ -419,19 +420,68 @@
 
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="firebase-config.js"></script>
 
   <script>
-    firebase.initializeApp({
-      apiKey: "AIzaSyBHwVgFJgsvOp1ZgU4nQetHM_KgzxeXzZI",
-      authDomain: "weekend-warrior-social-v2.firebaseapp.com",
-      projectId: "weekend-warrior-social-v2",
-      storageBucket: "weekend-warrior-social-v2.firebasestorage.app",
-      messagingSenderId: "147800031459",
-      appId: "1:147800031459:web:d72e1fc2b81b8b152405d6"
-    });
+    window.addEventListener('DOMContentLoaded', () => {
+      console.log('👤 CHARACTER.HTML: Page loaded');
 
-    firebase.auth().onAuthStateChanged(user => {
-      if (!user) window.location.href = 'login.html';
+      // ════════════════════════════════════════════════════════════════════════════════
+      // LOGOUT
+      // ════════════════════════════════════════════════════════════════════════════════
+
+      document.getElementById('logout-btn').addEventListener('click', () => {
+        console.log('👤 CHARACTER.HTML: Logout clicked');
+        auth.signOut().then(() => {
+          console.log('✅ CHARACTER.HTML: Logged out, redirecting to login.html');
+          window.location.href = 'login.html';
+        }).catch((error) => {
+          console.error('❌ CHARACTER.HTML: Logout error', {
+            file: 'character.html',
+            line: 444,
+            errorCode: error.code,
+            errorMessage: error.message,
+            stack: error.stack
+          });
+        });
+      });
+
+      // Wait for AuthService to be available
+      if (typeof AuthService === 'undefined') {
+        console.error('❌ CHARACTER.HTML: AuthService not loaded yet, waiting...');
+        const checkInterval = setInterval(() => {
+          if (typeof AuthService !== 'undefined') {
+            clearInterval(checkInterval);
+            console.log('✅ CHARACTER.HTML: AuthService now available');
+            setupAuthListener();
+          }
+        }, 100);
+        setTimeout(() => {
+          clearInterval(checkInterval);
+          if (typeof AuthService === 'undefined') {
+            console.error('❌ CHARACTER.HTML: AuthService failed to load');
+          }
+        }, 5000);
+      } else {
+        setupAuthListener();
+      }
+
+      function setupAuthListener() {
+        AuthService.onAuthStateChanged((user) => {
+          console.log('👤 CHARACTER.HTML: Auth state changed', {
+            userExists: !!user,
+            uid: user?.uid,
+            email: user?.email
+          });
+
+          if (!user) {
+            console.log('👤 CHARACTER.HTML: No user, redirecting to login.html');
+            window.location.href = 'login.html';
+          } else {
+            console.log('✅ CHARACTER.HTML: User authenticated');
+          }
+        });
+      }
     });
   </script>
 </body>

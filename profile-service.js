@@ -256,15 +256,19 @@ class ProfileService {
       }
 
       const userData = userSnap.data();
+      // Support both old and new field names
+      const displayName = userData.displayName || userData.nickname || 'Wojownik';
+      const photoURL = userData.photoURL || userData.avatar || null;
+      const bannerURL = userData.bannerURL || userData.banner || null;
 
       return {
         success: true,
         data: {
           uid: userData.uid,
-          displayName: userData.displayName || 'Wojownik',
+          displayName,
           email: userData.email || '',
-          photoURL: userData.photoURL || null,
-          bannerURL: userData.bannerURL || null,
+          photoURL,
+          bannerURL,
           bio: userData.bio || '',
           specialization: userData.specialization || 'warrior',
           level: userData.level || 1,
@@ -297,23 +301,53 @@ class ProfileService {
 
   static listenToProfile(uid, callback) {
     try {
+      console.log('📋 ProfileService.listenToProfile START:', { uid, dbExists: !!db });
+
       if (!uid) {
+        console.error('❌ ProfileService.listenToProfile: UID is missing');
         callback({ success: false, error: 'UID nie znaleziony' });
         return null;
       }
 
+      if (!db) {
+        console.error('❌ ProfileService.listenToProfile: db is undefined');
+        callback({ success: false, error: 'Firebase Firestore nie zainicjalizowany' });
+        return null;
+      }
+
+      console.log('📋 ProfileService.listenToProfile: Setting up onSnapshot listener for users/' + uid);
+      console.log('📋 ProfileService.listenToProfile: About to call db.collection().doc().onSnapshot()...');
+
       const unsubscribe = db.collection('users').doc(uid).onSnapshot(
         (doc) => {
+          console.log('📋 ProfileService.listenToProfile: onSnapshot CALLBACK FIRED!', {
+            exists: doc.exists,
+            uid,
+            docId: doc.id,
+            docExists: !!doc
+          });
           if (doc.exists) {
             const userData = doc.data();
+            // Support both old (nickname, avatar, banner) and new (displayName, photoURL, bannerURL) field names
+            const displayName = userData.displayName || userData.nickname || 'Wojownik';
+            const photoURL = userData.photoURL || userData.avatar || null;
+            const bannerURL = userData.bannerURL || userData.banner || null;
+
+            console.log('📋 ProfileService.listenToProfile: Document data:', {
+              displayName,
+              email: userData.email,
+              level: userData.level,
+              rank: userData.rank,
+              xp: userData.xp
+            });
             callback({
               success: true,
               data: {
                 uid: userData.uid,
-                displayName: userData.displayName || 'Wojownik',
+                displayName,
                 email: userData.email || '',
-                photoURL: userData.photoURL || null,
-                bannerURL: userData.bannerURL || null,
+                photoURL,
+                bannerURL,
                 bio: userData.bio || '',
                 specialization: userData.specialization || 'warrior',
                 level: userData.level || 1,
@@ -326,18 +360,30 @@ class ProfileService {
               }
             });
           } else {
+            console.error('❌ ProfileService.listenToProfile: Document does not exist for uid:', uid);
             callback({ success: false, error: 'Profil nie znaleziony' });
           }
         },
         (error) => {
-          console.error('❌ Profile listener error:', error);
-          callback({ success: false, error: error.message });
+          console.error('❌ ProfileService.listenToProfile: onSnapshot ERROR CALLBACK FIRED!', {
+            code: error.code,
+            message: error.message,
+            fullError: error.toString(),
+            stack: error.stack,
+            uid
+          });
+          callback({ success: false, error: 'Firestore error: ' + error.message });
         }
       );
 
+      console.log('✅ ProfileService.listenToProfile: Listener setup complete');
       return unsubscribe;
     } catch (error) {
-      console.error('❌ Failed to setup profile listener:', error);
+      console.error('❌ ProfileService.listenToProfile: Exception', {
+        code: error.code,
+        message: error.message,
+        stack: error.stack
+      });
       callback({ success: false, error: error.message });
       return null;
     }
