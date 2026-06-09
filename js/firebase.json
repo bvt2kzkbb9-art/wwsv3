@@ -11,5 +11,51 @@
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
-  }
+  
+{
+  "indexes": [
+    {
+      "collectionGroup": "posts",
+      "queryScope": "COLLECTION",
+      "fields": [{"fieldPath": "createdAt", "order": "DESCENDING"}]
+    },
+    {
+      "collectionGroup": "posts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {"fieldPath": "authorId", "order": "ASCENDING"},
+        {"fieldPath": "createdAt", "order": "DESCENDING"}
+      ]
+    },
+    {
+      "collectionGroup": "users",
+      "queryScope": "COLLECTION",
+      "fields": [{"fieldPath": "points", "order": "DESCENDING"}]
+    },
+    {
+      "collectionGroup": "conversations",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {"fieldPath": "participants", "arrayConfig": "CONTAINS"},
+        {"fieldPath": "lastMessageAt", "order": "DESCENDING"}
+      ]
+    },
+    {
+      "collectionGroup": "challenge_invites",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {"fieldPath": "targetId", "order": "ASCENDING"},
+        {"fieldPath": "status", "order": "ASCENDING"}
+      ]
+    },
+    {
+      "collectionGroup": "laga_requests",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {"fieldPath": "targetId", "order": "ASCENDING"},
+        {"fieldPath": "status", "order": "ASCENDING"}
+      ]
+    }
+  ],
+  "fieldOverrides": []
 }
