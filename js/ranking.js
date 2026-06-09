@@ -31,10 +31,14 @@ class RankingService {
           return; // Skip invalid users
         }
 
+        // Support both old (nickname, avatar) and new (displayName, photoURL) field names
+        const displayName = user.displayName || user.nickname || 'Unknown';
+        const photoURL = user.photoURL || user.avatar || null;
+
         users.push({
           uid: user.uid,
-          displayName: user.displayName || 'Unknown',
-          photoURL: user.photoURL || null,
+          displayName,
+          photoURL,
           level: parseInt(user.level) || 1,
           xp: parseInt(user.xp) || 0,
           totalXp: parseInt(user.totalXp) || 0,
@@ -191,19 +195,21 @@ class RankingService {
       const users = [];
       usersSnap.forEach((doc) => {
         const user = doc.data();
+        const displayName = user.displayName || user.nickname || 'Unknown';
 
-        if (!user.uid || !user.displayName) {
+        if (!user.uid || !displayName) {
           return;
         }
 
         // Get activity from last 7 days
         const lastLoginAt = user.lastLoginAt ? new Date(user.lastLoginAt.toDate?.() || user.lastLoginAt) : null;
         const isActive = lastLoginAt && lastLoginAt > sevenDaysAgo;
+        const photoURL = user.photoURL || user.avatar || null;
 
         users.push({
           uid: user.uid,
-          displayName: user.displayName || 'Unknown',
-          photoURL: user.photoURL || null,
+          displayName,
+          photoURL,
           level: parseInt(user.level) || 1,
           xp: parseInt(user.xp) || 0,
           totalXp: parseInt(user.totalXp) || 0,
@@ -307,8 +313,8 @@ class RankingService {
   static validateUser(user) {
     return {
       uid: user.uid || null,
-      displayName: user.displayName || 'Unknown',
-      photoURL: user.photoURL || null,
+      displayName: user.displayName || user.nickname || 'Unknown',
+      photoURL: user.photoURL || user.avatar || null,
       level: Math.max(1, parseInt(user.level) || 1),
       xp: Math.max(0, parseInt(user.xp) || 0),
       totalXp: Math.max(0, parseInt(user.totalXp) || 0),

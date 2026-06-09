@@ -256,15 +256,19 @@ class ProfileService {
       }
 
       const userData = userSnap.data();
+      // Support both old and new field names
+      const displayName = userData.displayName || userData.nickname || 'Wojownik';
+      const photoURL = userData.photoURL || userData.avatar || null;
+      const bannerURL = userData.bannerURL || userData.banner || null;
 
       return {
         success: true,
         data: {
           uid: userData.uid,
-          displayName: userData.displayName || 'Wojownik',
+          displayName,
           email: userData.email || '',
-          photoURL: userData.photoURL || null,
-          bannerURL: userData.bannerURL || null,
+          photoURL,
+          bannerURL,
           bio: userData.bio || '',
           specialization: userData.specialization || 'warrior',
           level: userData.level || 1,
@@ -317,8 +321,13 @@ class ProfileService {
           console.log('📋 ProfileService.listenToProfile: onSnapshot fired', { exists: doc.exists, uid });
           if (doc.exists) {
             const userData = doc.data();
+            // Support both old (nickname, avatar, banner) and new (displayName, photoURL, bannerURL) field names
+            const displayName = userData.displayName || userData.nickname || 'Wojownik';
+            const photoURL = userData.photoURL || userData.avatar || null;
+            const bannerURL = userData.bannerURL || userData.banner || null;
+
             console.log('📋 ProfileService.listenToProfile: Document data:', {
-              displayName: userData.displayName,
+              displayName,
               email: userData.email,
               level: userData.level,
               rank: userData.rank,
@@ -328,10 +337,10 @@ class ProfileService {
               success: true,
               data: {
                 uid: userData.uid,
-                displayName: userData.displayName || 'Wojownik',
+                displayName,
                 email: userData.email || '',
-                photoURL: userData.photoURL || null,
-                bannerURL: userData.bannerURL || null,
+                photoURL,
+                bannerURL,
                 bio: userData.bio || '',
                 specialization: userData.specialization || 'warrior',
                 level: userData.level || 1,
