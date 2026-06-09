@@ -1,4 +1,4 @@
-// Firebase Configuration & Initialization
+// Firebase// Firebase Configuration & Initialization
 const firebaseConfig = {
   apiKey: "AIzaSyBHwVgFJgsvOp1ZgU4nQetHM_KgzxeXzZI",
   authDomain: "weekend-warrior-social-v2.firebaseapp.com",
@@ -393,3 +393,4 @@ class AuthService {
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { UserService, AuthService, db, auth, storage };
 }
+ Configuration & Initializatio
