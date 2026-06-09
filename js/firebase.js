@@ -11,7 +11,21 @@ import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.12.2/firebas
 import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
-
+{
+  "hosting": {
+    "public": ".",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "redirects": [],
+    "rewrites": [{
+      "source": "**",
+      "destination": "/index.html"
+    }]
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  }
+}
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAnR0Q3MmOXkEUfMLdgbVGNFyD1o0hEIaY",
