@@ -5,30 +5,467 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Weekend Warrior Social V5 Premium</title>
   <link rel="stylesheet" href="css/premium.css">
+  <link rel="stylesheet" href="css/graphics.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000000 url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(212,175,55,0.03)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="%23000000"/><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+      overflow-x: hidden;
+    }
+
+    /* PREMIUM NAVBAR */
+    .navbar {
+      background: linear-gradient(180deg, rgba(10,10,15,0.98) 0%, rgba(15,12,10,0.95) 100%);
+      backdrop-filter: blur(30px);
+      padding: 1rem;
+      border-bottom: 3px solid #D4AF37;
+      box-shadow: 
+        0 8px 32px rgba(212, 175, 55, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .navbar-brand {
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #D4AF37;
+      letter-spacing: 2px;
+      text-shadow: 
+        0 0 20px rgba(212, 175, 55, 0.8),
+        0 0 40px rgba(212, 175, 55, 0.4);
+    }
+
+    .navbar-menu {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+    }
+
+    .nav-item {
+      padding: 0.6rem 1rem;
+      background: rgba(212, 175, 55, 0.08);
+      border: 1.5px solid #D4AF37;
+      color: #FFFFFF;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .nav-item:hover, .nav-item.active {
+      background: #D4AF37;
+      color: #000000;
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
+      transform: translateY(-2px);
+    }
+
+    /* MAIN CONTENT */
+    main {
+      padding: 2rem 1rem 100px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* HERO SECTION */
+    .hero-castle {
+      text-align: center;
+      margin-bottom: 3rem;
+      animation: fadeInDown 0.8s ease-out;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-emoji {
+      font-size: 6rem;
+      margin-bottom: 1.5rem;
+      filter: drop-shadow(0 8px 16px rgba(212, 175, 55, 0.4));
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .hero-title {
+      font-family: 'Cinzel', serif;
+      font-size: 4rem;
+      font-weight: 900;
+      color: #D4AF37;
+      margin-bottom: 1rem;
+      letter-spacing: 2px;
+      text-shadow: 
+        0 0 30px rgba(212, 175, 55, 0.8),
+        0 0 60px rgba(212, 175, 55, 0.4),
+        0 4px 8px rgba(0, 0, 0, 1);
+      line-height: 1.2;
+    }
+
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: #A0A0A0;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .hero-desc {
+      font-size: 1rem;
+      color: #808080;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      font-weight: 400;
+    }
+
+    /* CTA BUTTONS */
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+    }
+
+    .btn-primary {
+      padding: 1rem 2.5rem;
+      background: linear-gradient(135deg, #D4AF37 0%, #E8C547 100%);
+      color: #000000;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 
+        0 8px 24px rgba(212, 175, 55, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-4px);
+      box-shadow: 
+        0 16px 40px rgba(212, 175, 55, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+
+    .btn-secondary {
+      padding: 1rem 2.5rem;
+      background: transparent;
+      border: 2px solid #D4AF37;
+      color: #D4AF37;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(212, 175, 55, 0.1);
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+    }
+
+    /* PREMIUM CARD SECTION */
+    .premium-section {
+      background: linear-gradient(135deg, rgba(20,18,15,0.95) 0%, rgba(15,12,10,0.9) 100%);
+      border: 2px solid rgba(212, 175, 55, 0.3);
+      border-radius: 16px;
+      padding: 3rem 2rem;
+      margin-bottom: 3rem;
+      box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      animation: slideUp 0.8s ease-out 0.3s both;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: 2.5rem;
+      color: #D4AF37;
+      margin-bottom: 2rem;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+    }
+
+    /* FEATURE GRID - PREMIUM */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.5rem;
+      margin: 3rem 0;
+    }
+
+    .feature-card {
+      background: linear-gradient(135deg, rgba(30,27,24,0.9) 0%, rgba(20,17,14,0.8) 100%);
+      border: 2px solid rgba(212, 175, 55, 0.25);
+      border-radius: 12px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(212,175,55,0.3) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .feature-card:hover {
+      border-color: #D4AF37;
+      transform: translateY(-8px);
+      box-shadow: 
+        0 16px 40px rgba(212, 175, 55, 0.3),
+        inset 0 0 20px rgba(212, 175, 55, 0.1);
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+
+    .feature-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      filter: drop-shadow(0 4px 8px rgba(212, 175, 55, 0.4));
+      transition: transform 0.3s ease;
+    }
+
+    .feature-card:hover .feature-icon {
+      transform: scale(1.2) rotate(10deg);
+    }
+
+    .feature-title {
+      font-family: 'Cinzel', serif;
+      color: #D4AF37;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .feature-desc {
+      color: #A0A0A0;
+      font-size: 0.9rem;
+    }
+
+    /* BOTTOM NAVIGATION */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(180deg, rgba(10,10,15,0) 0%, rgba(10,10,15,0.98) 30%, rgba(10,10,15,0.99) 100%);
+      border-top: 2px solid #D4AF37;
+      padding: 1rem 0;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .nav-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: #808080;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .nav-icon:hover, .nav-icon.active {
+      color: #D4AF37;
+      transform: scale(1.1);
+    }
+
+    .nav-icon-emoji {
+      font-size: 1.5rem;
+    }
+
+    .nav-icon-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .hero-title { font-size: 2.5rem; }
+      .navbar-menu { grid-template-columns: repeat(2, 1fr); }
+      .feature-grid { grid-template-columns: repeat(2, 1fr); }
+      main { padding-bottom: 120px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-emoji { font-size: 4rem; }
+      .hero-title { font-size: 2rem; }
+      .navbar-menu { grid-template-columns: 1fr; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .cta-buttons { flex-direction: column; }
+    }
+  </style>
 </head>
 <body>
+  <!-- NAVBAR -->
   <nav class="navbar">
-    <div class="navbar-brand">⚔ WEEKEND WARRIOR V5</div>
-    <div class="navbar-menu">
-      <a href="#arena" class="nav-item active">Arena</a>
-      <a href="#feed" class="nav-item">Kroniki</a>
-      <a href="#ranking" class="nav-item">Ranking</a>
-      <a href="#challenges" class="nav-item">Misje</a>
-      <a href="#friends" class="nav-item">Znajomi</a>
-      <a href="#achievements" class="nav-item">Osiągnięcia</a>
-      <a href="#profile" class="nav-item">Profil</a>
-      <button id="logout-btn" class="nav-item" style="border: 1px solid var(--border-light);">Wyloguj</button>
+    <div class="navbar-content">
+      <div class="navbar-brand">⚔ WEEKEND WARRIOR</div>
+      <div class="navbar-menu">
+        <button class="nav-item active" onclick="window.location.href='#arena'">ARENA</button>
+        <button class="nav-item" onclick="window.location.href='ranking.html'">RANKING</button>
+        <button class="nav-item" onclick="window.location.href='profile.html'">PROFIL</button>
+      </div>
     </div>
   </nav>
 
-  <main id="app">
-    <h1>🏰 Arena Wojowników</h1>
-    <p style="text-align: center; color: var(--text-muted); font-size: 1.1rem;">Ładowanie...</p>
+  <!-- MAIN CONTENT -->
+  <main>
+    <!-- HERO SECTION -->
+    <div class="hero-castle">
+      <div class="hero-emoji">🏰</div>
+      <h1 class="hero-title">ARENA<br>WOJOWNIKÓW</h1>
+      <p class="hero-subtitle">WEEKEND WARRIOR</p>
+      <p class="hero-desc">Polska społeczność fitness wojowników RPG</p>
+    </div>
+
+    <!-- CTA BUTTONS -->
+    <div class="cta-buttons">
+      <button class="btn-primary" onclick="window.location.href='feed.html'">⚔ RZUĆ WYZWANIE</button>
+      <button class="btn-secondary" onclick="window.location.href='challenges.html'">📜 KRONIKI</button>
+    </div>
+
+    <!-- ARENA EVENTS SECTION -->
+    <div class="premium-section">
+      <h2 class="section-title">⚡ WYZWANIA ARENY</h2>
+      
+      <div class="feature-grid">
+        <a href="challenges.html" class="feature-card" style="text-decoration: none;">
+          <div class="feature-icon">🏹</div>
+          <h3 class="feature-title">ŁOWCA</h3>
+          <p class="feature-desc">+30 XP</p>
+        </a>
+
+        <a href="challenges.html" class="feature-card" style="text-decoration: none;">
+          <div class="feature-icon">🐉</div>
+          <h3 class="feature-title">HYDRA</h3>
+          <p class="feature-desc">+50 XP</p>
+        </a>
+
+        <a href="challenges.html" class="feature-card" style="text-decoration: none;">
+          <div class="feature-icon">⚡</div>
+          <h3 class="feature-title">ZGNIATACZ</h3>
+          <p class="feature-desc">+40 XP</p>
+        </a>
+
+        <a href="challenges.html" class="feature-card" style="text-decoration: none;">
+          <div class="feature-icon">👻</div>
+          <h3 class="feature-title">DUCH</h3>
+          <p class="feature-desc">+100 XP</p>
+        </a>
+      </div>
+    </div>
+
+    <!-- LEADERBOARD SECTION -->
+    <div class="premium-section">
+      <h2 class="section-title">🥇 SALA CHWAŁY</h2>
+      
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🥇</div>
+          <h3 class="feature-title">#1</h3>
+          <p class="feature-desc">15,000 XP</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🥈</div>
+          <h3 class="feature-title">#2</h3>
+          <p class="feature-desc">12,000 XP</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🥉</div>
+          <h3 class="feature-title">#3</h3>
+          <p class="feature-desc">10,500 XP</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🏆</div>
+          <h3 class="feature-title">#4+</h3>
+          <p class="feature-desc">Dołącz!</p>
+        </div>
+      </div>
+    </div>
   </main>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="bottom-nav">
+    <a href="#arena" class="nav-icon active">
+      <div class="nav-icon-emoji">⚔</div>
+      <div class="nav-icon-label">ARENA</div>
+    </a>
+    <a href="feed.html" class="nav-icon">
+      <div class="nav-icon-emoji">📝</div>
+      <div class="nav-icon-label">KRONIKI</div>
+    </a>
+    <a href="challenges.html" class="nav-icon">
+      <div class="nav-icon-emoji">⚡</div>
+      <div class="nav-icon-label">MISJE</div>
+    </a>
+    <a href="ranking.html" class="nav-icon">
+      <div class="nav-icon-emoji">🏆</div>
+      <div class="nav-icon-label">RANKING</div>
+    </a>
+    <a href="profile.html" class="nav-icon">
+      <div class="nav-icon-emoji">👤</div>
+      <div class="nav-icon-label">PROFIL</div>
+    </a>
+  </nav>
 
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
   <script>
     const firebaseConfig = {
@@ -42,164 +479,11 @@
 
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
-    const db = firebase.firestore();
 
-    // MOCK TOP USERS (Until Firestore is fixed)
-    const MOCK_TOP_USERS = [
-      { rank: 1, displayName: 'Wojownik Legendy', level: 25, rank: 'Legend', points: 15000, photoURL: '' },
-      { rank: 2, displayName: 'Champion Arena', level: 22, rank: 'Champion', points: 12000, photoURL: '' },
-      { rank: 3, displayName: 'Mistrz Wojen', level: 20, rank: 'Champion', points: 10500, photoURL: '' },
-      { rank: 4, displayName: 'Strażnik Areny', level: 18, rank: 'Warrior', points: 9000, photoURL: '' },
-      { rank: 5, displayName: 'Mysliwiec Potworów', level: 17, rank: 'Warrior', points: 8500, photoURL: '' },
-      { rank: 6, displayName: 'Łęcznik Nocny', level: 16, rank: 'Warrior', points: 8000, photoURL: '' },
-      { rank: 7, displayName: 'Rycerz Światła', level: 15, rank: 'Warrior', points: 7500, photoURL: '' },
-      { rank: 8, displayName: 'Ognisty Duch', level: 14, rank: 'Warrior', points: 7000, photoURL: '' },
-      { rank: 9, displayName: 'Szara Sowa', level: 13, rank: 'Warrior', points: 6500, photoURL: '' },
-      { rank: 10, displayName: 'Mroczny Skoczek', level: 12, rank: 'Warrior', points: 6000, photoURL: '' }
-    ];
-
-    auth.onAuthStateChanged(async (user) => {
+    auth.onAuthStateChanged((user) => {
       if (!user) {
         window.location.href = 'login.html';
-        return;
       }
-
-      const app = document.getElementById('app');
-      
-      console.log('✅ User authenticated:', user.displayName);
-
-      try {
-        // Try real Firestore first, fallback to mock if error
-        let userStats = null;
-        let topUsers = MOCK_TOP_USERS;
-
-        try {
-          const userSnap = await db.collection('users').doc(user.uid).get();
-          if (userSnap.exists) {
-            userStats = userSnap.data();
-          }
-        } catch (err) {
-          console.warn('⚠️ Firestore read error, using mock data:', err);
-        }
-
-        // If no user stats, create mock
-        if (!userStats) {
-          userStats = {
-            level: 1,
-            rank: 'Rookie',
-            points: 0,
-            loginStreak: 1,
-            totalFriends: 0,
-            totalFollowers: 0
-          };
-        }
-
-        // Get real top users if possible
-        try {
-          const topSnap = await db.collection('users').orderBy('points', 'desc').limit(10).get();
-          if (topSnap.size > 0) {
-            topUsers = [];
-            topSnap.forEach((doc, i) => {
-              topUsers.push({
-                rank: i + 1,
-                id: doc.id,
-                ...doc.data()
-              });
-            });
-          }
-        } catch (err) {
-          console.warn('⚠️ Firestore ranking error, using mock data:', err);
-        }
-
-        let html = `
-          <div style="margin: 2rem 0;">
-            <div class="card" style="text-align: center; margin-bottom: 2rem; border: 2px solid var(--gold); padding: 2rem;">
-              <h2 style="margin-bottom: 1rem; color: var(--gold);">🏆 Witaj, ${user.displayName}!</h2>
-              <p style="color: var(--text-muted); font-size: 1.05rem;">Polska społeczność fitness wojowników</p>
-              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
-                <div><span style="color: var(--gold); font-size: 1.5rem; font-weight: 900;">${userStats.level || 1}</span><div style="color: var(--text-muted); font-size: 0.85rem;">Lvl</div></div>
-                <div><span style="color: var(--gold); font-size: 1.5rem; font-weight: 900;">${(userStats.points || 0).toLocaleString('pl-PL')}</span><div style="color: var(--text-muted); font-size: 0.85rem;">XP</div></div>
-                <div><span style="color: var(--gold); font-size: 1.5rem; font-weight: 900;">${userStats.loginStreak || 1}</span><div style="color: var(--text-muted); font-size: 0.85rem;">Seria</div></div>
-                <div><span style="color: var(--gold); font-size: 1.5rem; font-weight: 900;">${userStats.totalFriends || 0}</span><div style="color: var(--text-muted); font-size: 0.85rem;">Znajomi</div></div>
-              </div>
-            </div>
-
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
-              <div class="card" style="text-align: center; cursor: pointer; border-bottom: 3px solid var(--gold);" onclick="window.location.href='feed.html'">
-                <div style="font-size: 2.5rem; margin-bottom: 1rem;">📝</div>
-                <h3 style="margin: 0;">Kroniki</h3>
-                <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Posty i aktywność</p>
-              </div>
-
-              <div class="card" style="text-align: center; cursor: pointer; border-bottom: 3px solid var(--gold);" onclick="window.location.href='challenges.html'">
-                <div style="font-size: 2.5rem; margin-bottom: 1rem;">⚔️</div>
-                <h3 style="margin: 0;">Misje</h3>
-                <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Wyzwania &amp; Wojny</p>
-              </div>
-
-              <div class="card" style="text-align: center; cursor: pointer; border-bottom: 3px solid var(--gold);" onclick="window.location.href='ranking.html'">
-                <div style="font-size: 2.5rem; margin-bottom: 1rem;">🏆</div>
-                <h3 style="margin: 0;">Ranking</h3>
-                <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">ELO &amp; Sala Chwały</p>
-              </div>
-
-              <div class="card" style="text-align: center; cursor: pointer; border-bottom: 3px solid var(--gold);" onclick="window.location.href='friends.html'">
-                <div style="font-size: 2.5rem; margin-bottom: 1rem;">👥</div>
-                <h3 style="margin: 0;">Znajomi</h3>
-                <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Sieć społeczna</p>
-              </div>
-
-              <div class="card" style="text-align: center; cursor: pointer; border-bottom: 3px solid var(--gold);" onclick="window.location.href='achievements.html'">
-                <div style="font-size: 2.5rem; margin-bottom: 1rem;">🎖️</div>
-                <h3 style="margin: 0;">Osiągnięcia</h3>
-                <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Odznaki &amp; nagrody</p>
-              </div>
-
-              <div class="card" style="text-align: center; cursor: pointer; border-bottom: 3px solid var(--gold);" onclick="window.location.href='profile.html'">
-                <div style="font-size: 2.5rem; margin-bottom: 1rem;">👤</div>
-                <h3 style="margin: 0;">Profil</h3>
-                <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Twoje dane</p>
-              </div>
-            </div>
-
-            ${topUsers.length > 0 ? `
-              <div class="card">
-                <h2 style="margin-bottom: 1.5rem;">🥇 TOP 10 WOJOWNIKÓW</h2>
-                ${topUsers.slice(0, 10).map((u, i) => {
-                  const medals = ['🥇', '🥈', '🥉'];
-                  const medal = medals[i] || '🏆';
-                  return `
-                    <div class="ranking-entry">
-                      <div class="ranking-position">${medal}</div>
-                      <div>
-                        <h4 style="margin: 0; color: var(--text-primary);">${u.displayName || 'Wojownik'}</h4>
-                        <p style="margin: 0.25rem 0 0 0; color: var(--text-muted); font-size: 0.85rem;">Lvl ${u.level || 1} • ${u.rank || 'Rookie'}</p>
-                      </div>
-                      <div class="ranking-points">
-                        <div class="ranking-value">${(u.points || 0).toLocaleString('pl-PL')}</div>
-                        <div class="ranking-label">XP</div>
-                      </div>
-                    </div>
-                  `;
-                }).join('')}
-              </div>
-            ` : ''}
-          </div>
-        `;
-
-        app.innerHTML = html;
-        console.log('✅ Arena rendered successfully');
-
-      } catch (err) {
-        console.error('❌ Render error:', err);
-        app.innerHTML = `<p style="color: #EF4444;">❌ Błąd: ${err.message}</p><p style="color: var(--text-muted);">Spróbuj odświeżyć stronę (F5)</p>`;
-      }
-    });
-
-    document.getElementById('logout-btn').addEventListener('click', () => {
-      auth.signOut().then(() => {
-        window.location.href = 'login.html';
-      });
     });
   </script>
 </body>
