@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weekend Warrior Social V4</title>
-  <link rel="manifest" href="manifest.json">
+  <title>Sala Chwały - Weekend Warrior Social</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -14,21 +13,86 @@
       <a href="index.html" class="nav-item">Arena</a>
       <a href="feed.html" class="nav-item">Kroniki</a>
       <a href="challenges.html" class="nav-item">Misje</a>
-      <a href="ranking.html" class="nav-item">Chwała</a>
+      <a href="ranking.html" class="nav-item active">Chwała</a>
       <a href="profile.html" class="nav-item">Profil</a>
       <a href="messenger.html" class="nav-item">Wiadomości</a>
       <button id="logout-btn" class="nav-item" style="border: 1px solid var(--border-light);">Wyloguj</button>
     </div>
   </nav>
   
-  <main id="app">
-    <h1>Loading...</h1>
+  <main id="app" style="max-width: 800px;">
+    <h1>🏆 Sala Chwały</h1>
+    <p style="text-align: center; color: var(--text-muted);">Ładowanie rankingu...</p>
   </main>
 
-  <script type="module" src="js/app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
   <script>
-    document.getElementById('logout-btn').addEventListener('click', async () => {
-      if (window.WWS) await window.WWS.logout();
+    const firebaseConfig = {
+      apiKey: "AIzaSyBHwVgFJgsvOp1ZgU4nQetHM_KgzxeXzZI",
+      authDomain: "weekend-warrior-social-v2.firebaseapp.com",
+      projectId: "weekend-warrior-social-v2",
+      storageBucket: "weekend-warrior-social-v2.firebasestorage.app",
+      messagingSenderId: "147800031459",
+      appId: "1:147800031459:web:d72e1fc2b81b8b152405d6"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    auth.onAuthStateChanged((user) => {
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      const app = document.getElementById('app');
+
+      db.collection('users')
+        .orderBy('points', 'desc')
+        .limit(100)
+        .onSnapshot((snap) => {
+          if (snap.empty) {
+            app.innerHTML = '<h1>🏆 Sala Chwały</h1><p>Brak użytkowników</p>';
+            return;
+          }
+
+          let html = '<h1>🏆 Sala Chwały</h1><div style="margin-top: 2rem;">';
+          const medals = ['🥇', '🥈', '🥉'];
+
+          snap.forEach((doc, idx) => {
+            const u = doc.data();
+            const medal = medals[idx] || '#' + (idx + 1);
+            const isCurrentUser = doc.id === user.uid;
+
+            html += `
+              <div class="ranking-entry" style="display: grid; grid-template-columns: 60px 1fr 120px; gap: 1rem; align-items: center; padding: 1rem; background: ${isCurrentUser ? 'var(--bg-secondary)' : 'var(--bg-card)'}; border: 1px solid ${isCurrentUser ? 'var(--gold)' : 'var(--border-light)'}; border-radius: 8px; margin-bottom: 1rem;">
+                <div style="text-align: center; font-size: 1.5rem; font-weight: bold; color: var(--gold);">${medal}</div>
+                <div>
+                  <div style="color: var(--text-primary); font-weight: bold;">${u.displayName || 'Wojownik'}</div>
+                  <div style="color: var(--text-muted); font-size: 0.85rem;">Lvl ${u.level || 1} • ${u.rank || 'Rookie'}</div>
+                </div>
+                <div style="text-align: right;">
+                  <div style="color: var(--gold); font-weight: bold; font-size: 1.1rem;">${(u.points || 0).toLocaleString('pl-PL')}</div>
+                  <div style="color: var(--text-muted); font-size: 0.85rem;">XP</div>
+                </div>
+              </div>
+            `;
+          });
+
+          html += '</div>';
+          app.innerHTML = html;
+        });
+    });
+
+    // Logout
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      auth.signOut().then(() => {
+        window.location.href = 'login.html';
+      });
     });
   </script>
 </body>
