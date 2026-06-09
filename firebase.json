@@ -18,7 +18,7 @@
       "fields": [
         {"fieldPath": "createdAt", "order": "DESCENDING"}
       ]
-    },
+    
     {
       "collectionGroup": "posts",
       "queryScope": "COLLECTION",
