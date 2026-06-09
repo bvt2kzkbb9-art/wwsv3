@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wejście - Weekend Warrior</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep: #050505;
+      --bg-dark: #0d0d0d;
+      --bg-layer-2: #171717;
+      --accent-red: #8b0000;
+      --accent-gold: #f5d76e;
+      --text-primary: #e0e0e0;
+      --text-secondary: #a8a8a8;
+      --glow-red: rgba(139, 0, 0, 0.5);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-dark) 100%);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(ellipse at 10% 20%, rgba(139, 0, 0, 0.15) 0%, transparent 50%),
+        repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.02) 0px, transparent 2px);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .login-container {
+      background: linear-gradient(135deg, var(--bg-layer-2) 0%, var(--bg-dark) 100%);
+      border: 1px solid #660000;
+      border-radius: 12px;
+      padding: 2.5rem;
+      max-width: 400px;
+      width: 100%;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 0 60px rgba(139, 0, 0, 0.4), inset 0 1px 0 rgba(139, 0, 0, 0.3), 0 20px 60px rgba(0, 0, 0, 0.9);
+      position: relative;
+      z-index: 10;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .login-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.7));
+    }
+
+    .login-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--accent-gold);
+      margin-bottom: 0.5rem;
+      letter-spacing: 2px;
+      text-shadow: 0 0 30px rgba(212, 175, 55, 0.8);
+    }
+
+    .login-subtitle {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      background: linear-gradient(135deg, #0a0a0a 0%, #0f0f12 100%);
+      border: 1px solid #660000;
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--accent-gold);
+      background: linear-gradient(135deg, #1a0000 0%, #0f0f12 100%);
+      box-shadow: 0 0 30px rgba(212, 175, 55, 0.5), inset 0 0 15px rgba(212, 175, 55, 0.2);
+    }
+
+    .form-input::placeholder {
+      color: #585858;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, #8b0000 0%, #b30000 100%);
+      color: var(--text-primary);
+      border: 1px solid #cc0000;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 1rem;
+      box-shadow: 0 0 30px rgba(139, 0, 0, 0.3);
+      position: relative;
+    }
+
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 50px rgba(139, 0, 0, 0.6), inset 0 0 20px rgba(139, 0, 0, 0.3);
+      background: linear-gradient(135deg, #b30000 0%, #ff6666 100%);
+    }
+
+    .btn-login:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-login.loading {
+      pointer-events: none;
+    }
+
+    .form-divider {
+      text-align: center;
+      margin: 2rem 0;
+      color: #585858;
+      font-size: 0.85rem;
+    }
+
+    .btn-google {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, var(--bg-layer-2) 0%, var(--bg-dark) 100%);
+      border: 1px solid #660000;
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn-google:hover {
+      background: linear-gradient(135deg, #660000 0%, var(--bg-layer-2) 100%);
+      border-color: var(--accent-gold);
+      color: var(--accent-gold);
+      box-shadow: 0 0 40px rgba(212, 175, 55, 0.4);
+    }
+
+    .btn-google:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .form-footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .form-footer a {
+      color: var(--accent-gold);
+      text-decoration: none;
+      font-weight: 700;
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+    }
+
+    .form-footer a:hover {
+      text-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
+    }
+
+    .error-message {
+      display: none;
+      background: linear-gradient(135deg, rgba(102, 0, 0, 0.3) 0%, rgba(51, 0, 51, 0.2) 100%);
+      border: 1px solid #cc0000;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      color: #ff9999;
+      font-size: 0.9rem;
+      box-shadow: 0 0 20px rgba(204, 0, 0, 0.3);
+    }
+
+    .error-message.show {
+      display: block;
+      animation: shake 0.3s ease;
+    }
+
+    .success-message {
+      display: none;
+      background: linear-gradient(135deg, rgba(0, 102, 51, 0.3) 0%, rgba(0, 51, 25, 0.2) 100%);
+      border: 1px solid #00cc66;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      color: #66ff99;
+      font-size: 0.9rem;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top: 2px solid var(--text-primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    @media (max-width: 480px) {
+      .login-container { padding: 1.5rem; }
+      .login-title { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-header">
+      <div class="login-icon">🏰</div>
+      <h1 class="login-title">WEJŚCIE</h1>
+      <p class="login-subtitle">Do Areny Wojowników</p>
+    </div>
+
+    <form id="login-form">
+      <div class="error-message" id="error-message"></div>
+      <div class="success-message" id="success-message"></div>
+
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" id="email" class="form-input" placeholder="twój@email.com" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Hasło</label>
+        <input type="password" id="password" class="form-input" placeholder="••••••••" required>
+      </div>
+
+      <button type="submit" id="btn-login" class="btn-login">⚔ WEJDŹ</button>
+    </form>
+
+    <div class="form-divider">/ LUB /</div>
+
+    <button id="google-btn" class="btn-google">🔵 GOOGLE</button>
+
+    <div class="form-footer">
+      Nowy? <a href="register-auth.html">Stwórz bohatera</a>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+
+  <script>
+    const form = document.getElementById('login-form');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const btnLogin = document.getElementById('btn-login');
+    const googleBtn = document.getElementById('google-btn');
+    const errorMsg = document.getElementById('error-message');
+    const successMsg = document.getElementById('success-message');
+
+    // ════════════════════════════════════════════════════════════════════════════════
+    // EMAIL/PASSWORD LOGIN
+    // ════════════════════════════════════════════════════════════════════════════════
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      if (!email || !password) {
+        showError('Wypełnij wszystkie pola');
+        return;
+      }
+
+      setLoading(true, btnLogin);
+      errorMsg.classList.remove('show');
+      successMsg.classList.remove('show');
+
+      try {
+        const result = await AuthService.loginUser(email, password);
+        
+        if (result.success) {
+          showSuccess('Logowanie udane! Przekierowywanie...');
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 1500);
+        } else {
+          showError(result.error || 'Błąd logowania. Sprawdź email i hasło.');
+        }
+      } catch (error) {
+        showError('Błąd: ' + error.message);
+      } finally {
+        setLoading(false, btnLogin);
+      }
+    });
+
+    // ════════════════════════════════════════════════════════════════════════════════
+    // GOOGLE LOGIN
+    // ════════════════════════════════════════════════════════════════════════════════
+
+    googleBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      
+      setLoading(true, googleBtn);
+      errorMsg.classList.remove('show');
+      successMsg.classList.remove('show');
+
+      try {
+        const result = await AuthService.loginWithGoogle();
+        
+        if (result.success) {
+          showSuccess('Logowanie Google udane! Przekierowywanie...');
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 1500);
+        } else {
+          showError(result.error || 'Błąd logowania Google');
+        }
+      } catch (error) {
+        showError('Błąd: ' + error.message);
+      } finally {
+        setLoading(false, googleBtn);
+      }
+    });
+
+    // ════════════════════════════════════════════════════════════════════════════════
+    // CHECK AUTH STATE ON PAGE LOAD
+    // ════════════════════════════════════════════════════════════════════════════════
+
+    window.addEventListener('DOMContentLoaded', () => {
+      AuthService.onAuthStateChanged((user) => {
+        if (user) {
+          // Already logged in, redirect to home
+          window.location.href = 'index.html';
+        }
+      });
+    });
+
+    // ════════════════════════════════════════════════════════════════════════════════
+    // HELPERS
+    // ════════════════════════════════════════════════════════════════════════════════
+
+    function showError(message) {
+      errorMsg.textContent = '⚠ ' + message;
+      errorMsg.classList.add('show');
+    }
+
+    function showSuccess(message) {
+      successMsg.textContent = '✅ ' + message;
+      successMsg.classList.add('show');
+    }
+
+    function setLoading(isLoading, button) {
+      button.disabled = isLoading;
+      button.classList.toggle('loading', isLoading);
+      
+      if (isLoading) {
+        const originalText = button.textContent;
+        button.innerHTML = '<span class="loading-spinner"></span>Ładowanie...';
+        button.dataset.originalText = originalText;
+      } else {
+        button.textContent = button.dataset.originalText || button.textContent;
+      }
+    }
+  </script>
+</body>
+</html>
