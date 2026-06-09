@@ -3,565 +3,382 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Weekend Warrior V5 Premium</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Weekend Warrior V6 - Premium MMORPG</title>
+  <link rel="manifest" href="manifest.json">
+  <link href="v6-design-system.css" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     html, body {
       width: 100%;
       height: 100%;
-      background: #000000;
+      background: var(--bg-deep);
       overflow-x: hidden;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
-    body {
-      background: 
-        radial-gradient(circle at 10% 50%, rgba(180,140,60,0.15) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(180,140,60,0.08) 0%, transparent 50%),
-        #000000;
-    }
-
-    /* ═══ NAVBAR ═══ */
-    .navbar {
-      background: rgba(10, 10, 15, 0.95);
-      backdrop-filter: blur(40px);
-      border-bottom: 2px solid #c9a961;
-      padding: 0.9rem 1rem;
+    #app {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      min-height: 100vh;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 999;
-      box-shadow: 0 10px 40px rgba(201, 169, 97, 0.25);
+      flex-direction: column;
     }
 
-    .navbar-title {
-      font-family: 'Cinzel', serif;
-      font-size: 1.5rem;
-      font-weight: 900;
-      color: #d4af37;
-      letter-spacing: 2px;
-      text-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
-    }
+    /* ════ MAIN CONTENT ════ */
 
-    .navbar-nav {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.4rem;
-    }
-
-    .nav-btn {
-      padding: 0.5rem 0.8rem;
-      background: rgba(212, 175, 55, 0.08);
-      border: 1.5px solid #c9a961;
-      color: #d4af37;
-      border-radius: 5px;
-      font-weight: 600;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      cursor: pointer;
-      letter-spacing: 0.8px;
-      transition: all 0.3s ease;
-    }
-
-    .nav-btn:hover, .nav-btn.active {
-      background: rgba(212, 175, 55, 0.2);
-      border-color: #d4af37;
-      box-shadow: 0 0 12px rgba(212, 175, 55, 0.5);
-    }
-
-    /* ═══ MAIN CONTENT ═══ */
     main {
-      padding: 2rem 1rem 120px;
-      max-width: 100%;
-    }
-
-    /* ═══ HERO SECTION ═══ */
-    .hero {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      margin-bottom: 2rem;
-      padding: 0;
-      gap: 1rem;
-    }
-
-    .castle {
-      font-size: 5rem;
-      filter: drop-shadow(0 10px 20px rgba(212, 175, 55, 0.5));
-      animation: castleFloat 3s ease-in-out infinite;
-    }
-
-    @keyframes castleFloat {
-      0%, 100% { transform: translateY(0px) rotateZ(0deg); }
-      50% { transform: translateY(-20px) rotateZ(2deg); }
-    }
-
-    .hero h1 {
-      font-family: 'Cinzel', serif;
-      font-size: 3.2rem;
-      font-weight: 900;
-      color: #d4af37;
-      margin: 0;
-      letter-spacing: 2px;
-      line-height: 1.15;
-      text-shadow: 
-        0 0 20px rgba(212, 175, 55, 0.7),
-        0 0 40px rgba(212, 175, 55, 0.3),
-        0 4px 8px rgba(0, 0, 0, 0.9);
-    }
-
-    .hero-sub {
-      font-family: 'Cinzel', serif;
-      font-size: 0.95rem;
-      color: #c9a961;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
-    }
-
-    .hero-desc {
-      font-size: 0.9rem;
-      color: #9a9a9a;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    /* ═══ CTA BUTTONS ═══ */
-    .cta-group {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      margin: 2rem 0;
-      flex-wrap: wrap;
-    }
-
-    .btn-gold {
-      padding: 0.85rem 2rem;
-      background: linear-gradient(180deg, #f0e6d2 0%, #d4af37 50%, #a68a3e 100%);
-      color: #000;
-      border: none;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      cursor: pointer;
-      letter-spacing: 1px;
-      box-shadow: 
-        0 12px 30px rgba(212, 175, 55, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3),
-        inset 0 -2px 4px rgba(0, 0, 0, 0.2);
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .btn-gold::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%);
-      transform: rotate(45deg);
-      animation: shine 3s infinite;
-    }
-
-    @keyframes shine {
-      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-    }
-
-    .btn-gold:hover {
-      transform: translateY(-4px);
-      box-shadow: 
-        0 20px 50px rgba(212, 175, 55, 0.6),
-        0 0 30px rgba(212, 175, 55, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5),
-        inset 0 -2px 4px rgba(0, 0, 0, 0.3);
-    }
-
-    .btn-outline {
-      padding: 0.85rem 2rem;
-      background: transparent;
-      border: 2px solid #c9a961;
-      color: #d4af37;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      cursor: pointer;
-      letter-spacing: 1px;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 15px rgba(212, 175, 55, 0.15);
-    }
-
-    .btn-outline:hover {
-      background: rgba(212, 175, 55, 0.1);
-      border-color: #d4af37;
-      box-shadow: 0 0 25px rgba(212, 175, 55, 0.4);
-    }
-
-    /* ═══ PREMIUM CARD ═══ */
-    .premium-card {
-      background: 
-        linear-gradient(135deg, rgba(25, 23, 20, 0.95) 0%, rgba(18, 16, 14, 0.92) 100%),
-        radial-gradient(circle at top left, rgba(212, 175, 55, 0.12) 0%, transparent 50%);
-      border: 2px solid #c9a961;
-      border-radius: 16px;
-      padding: 2.5rem 1.5rem;
-      margin: 2rem 0;
-      box-shadow: 
-        0 20px 60px rgba(0, 0, 0, 0.7),
-        0 0 50px rgba(212, 175, 55, 0.25),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .premium-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(212,175,55,0.3), transparent);
-    }
-
-    .card-title {
-      font-family: 'Cinzel', serif;
-      font-size: 2.2rem;
-      color: #d4af37;
-      text-align: center;
-      margin-bottom: 2rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
-    }
-
-    /* ═══ CHALLENGE GRID ═══ */
-    .challenge-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
-
-    .challenge-item {
-      background: linear-gradient(135deg, rgba(35, 32, 28, 0.9) 0%, rgba(25, 22, 18, 0.85) 100%);
-      border: 1.5px solid #c9a961;
-      border-radius: 12px;
-      padding: 1.5rem 1rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .challenge-item::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at center, rgba(212, 175, 55, 0.2) 0%, transparent 70%);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .challenge-item:hover {
-      border-color: #d4af37;
-      transform: translateY(-8px);
-      box-shadow: 
-        0 20px 50px rgba(212, 175, 55, 0.3),
-        0 0 30px rgba(212, 175, 55, 0.3),
-        inset 0 0 20px rgba(212, 175, 55, 0.05);
-    }
-
-    .challenge-item:hover::before {
-      opacity: 1;
-    }
-
-    .challenge-emoji {
-      font-size: 3rem;
-      margin-bottom: 0.8rem;
-      display: block;
-      filter: drop-shadow(0 5px 10px rgba(212, 175, 55, 0.4));
-      transition: transform 0.3s ease;
-    }
-
-    .challenge-item:hover .challenge-emoji {
-      transform: scale(1.2) rotateZ(15deg);
-    }
-
-    .challenge-name {
-      font-family: 'Cinzel', serif;
-      color: #d4af37;
-      font-size: 0.9rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-    }
-
-    .challenge-xp {
-      color: #d4af37;
-      font-size: 0.85rem;
-      margin-top: 0.5rem;
-      font-weight: 600;
-    }
-
-    /* ═══ LEADERBOARD ═══ */
-    .leaderboard {
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-      margin-top: 1.5rem;
-    }
-
-    .rank-item {
-      display: grid;
-      grid-template-columns: 50px 1fr 80px;
-      gap: 1rem;
-      align-items: center;
-      padding: 1rem;
-      background: linear-gradient(90deg, rgba(212, 175, 55, 0.1) 0%, transparent 50%);
-      border: 1px solid rgba(212, 175, 55, 0.2);
-      border-radius: 10px;
-      transition: all 0.3s ease;
-    }
-
-    .rank-item:hover {
-      border-color: #d4af37;
-      background: linear-gradient(90deg, rgba(212, 175, 55, 0.15) 0%, transparent 50%);
-      box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
-    }
-
-    .rank-medal {
-      font-size: 2rem;
-      text-align: center;
-    }
-
-    .rank-info h4 {
-      margin: 0;
-      color: #fff;
-      font-size: 0.95rem;
-    }
-
-    .rank-info p {
-      margin: 0.3rem 0 0 0;
-      color: #999;
-      font-size: 0.8rem;
-    }
-
-    .rank-xp {
-      text-align: right;
-      color: #d4af37;
-      font-weight: 700;
-    }
-
-    /* ═══ BOTTOM NAV ═══ */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: linear-gradient(180deg, rgba(10,10,15,0) 0%, rgba(10,10,15,0.98) 30%, rgba(10,10,15,1) 100%);
-      border-top: 2px solid #c9a961;
-      padding: 1rem;
-      display: flex;
-      justify-content: space-around;
-      gap: 0.5rem;
-      z-index: 998;
-      box-shadow: 0 -10px 40px rgba(201, 169, 97, 0.2);
-    }
-
-    .nav-item-bottom {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.4rem;
-      color: #707070;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-decoration: none;
-      font-size: 0.65rem;
       flex: 1;
+      padding: 2rem 1.5rem 180px;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* ════ HERO ════ */
+
+    .hero {
       text-align: center;
+      margin-bottom: 4rem;
+      animation: fadeInDown 0.8s ease-out;
     }
 
-    .nav-item-bottom:hover, .nav-item-bottom.active {
-      color: #d4af37;
-      transform: scale(1.1);
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-40px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    .nav-emoji {
-      font-size: 1.5rem;
-      filter: drop-shadow(0 2px 4px rgba(212, 175, 55, 0.3));
-      transition: transform 0.3s ease;
+    .hero-icon {
+      font-size: 5rem;
+      margin-bottom: 1.5rem;
+      animation: icon-float 4s ease-in-out infinite;
+      filter: drop-shadow(0 0 40px rgba(212, 175, 55, 0.7));
     }
 
-    .nav-item-bottom:hover .nav-emoji {
-      transform: scale(1.2);
+    @keyframes icon-float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-30px); }
     }
 
-    .nav-label {
-      text-transform: uppercase;
-      font-weight: 700;
-      letter-spacing: 0.5px;
+    .hero-title {
+      font-size: 3.5rem;
+      color: var(--accent-gold);
+      margin-bottom: 1rem;
+      text-shadow: 
+        0 0 40px rgba(212, 175, 55, 0.8),
+        0 0 80px rgba(139, 0, 0, 0.5);
     }
 
-    /* ═══ RESPONSIVE ═══ */
+    .hero-subtitle {
+      color: var(--text-secondary);
+      letter-spacing: 2px;
+      margin-bottom: 1rem;
+    }
+
+    .hero-description {
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 2rem;
+      line-height: 1.8;
+    }
+
+    /* ════ BUTTONS ════ */
+
+    .button-group {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 4rem;
+    }
+
+    /* ════ SECTIONS ════ */
+
+    .section-title {
+      font-size: 2.2rem;
+      color: var(--accent-gold);
+      margin-bottom: 2rem;
+      text-shadow: 0 0 30px rgba(212, 175, 55, 0.6);
+    }
+
+    /* ════ GRID LAYOUTS ════ */
+
+    .missions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    .ranking-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 4rem;
+    }
+
+    .ranking-item {
+      @apply card;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      animation: slideInLeft 0.5s ease-out backwards;
+    }
+
+    .ranking-item:nth-child(1) { animation-delay: 0.1s; }
+    .ranking-item:nth-child(2) { animation-delay: 0.2s; }
+    .ranking-item:nth-child(3) { animation-delay: 0.3s; }
+    .ranking-item:nth-child(4) { animation-delay: 0.4s; }
+    .ranking-item:nth-child(5) { animation-delay: 0.5s; }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .ranking-medal {
+      font-size: 2rem;
+      flex-shrink: 0;
+    }
+
+    .ranking-info {
+      flex: 1;
+    }
+
+    .ranking-name {
+      color: var(--text-primary);
+      @apply font-heading-2;
+      margin-bottom: 0.3rem;
+    }
+
+    .ranking-status {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .ranking-xp {
+      @apply font-mono;
+      color: var(--accent-gold-bright);
+      font-size: 1.2rem;
+      font-weight: 800;
+    }
+
+    /* ════ RESPONSIVE ════ */
+
     @media (max-width: 768px) {
-      .hero h1 { font-size: 2.5rem; }
-      .castle { font-size: 4rem; }
-      .navbar-nav { grid-template-columns: repeat(2, 1fr); }
-      .challenge-grid { grid-template-columns: repeat(2, 1fr); }
-      main { padding-bottom: 110px; }
+      main { padding: 1.5rem 1rem 160px; }
+      .hero-title { font-size: 2.5rem; }
+      .missions-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 480px) {
-      .hero h1 { font-size: 1.8rem; }
-      .castle { font-size: 3.5rem; }
-      .navbar { padding: 0.75rem 0.75rem; }
-      .navbar-title { font-size: 1.2rem; }
-      .nav-btn { font-size: 0.7rem; padding: 0.4rem 0.6rem; }
-      .cta-group { gap: 0.8rem; margin: 1.5rem 0; }
-      .btn-gold, .btn-outline { padding: 0.7rem 1.5rem; font-size: 0.85rem; }
-      .challenge-grid { grid-template-columns: repeat(2, 1fr); }
-      .premium-card { padding: 1.5rem 1rem; }
-      .card-title { font-size: 1.6rem; }
-      main { padding-bottom: 100px; }
+      main { padding: 1.5rem 0.8rem 150px; }
+      .hero-icon { font-size: 3.5rem; }
+      .hero-title { font-size: 2rem; }
+      .button-group { flex-direction: column; gap: 1rem; }
+      .btn { width: 100%; }
     }
   </style>
 </head>
 <body>
-  <nav class="navbar">
-    <div class="navbar-title">⚔ WEEKEND WARRIOR V5</div>
-    <div class="navbar-nav">
-      <button class="nav-btn active">ARENA</button>
-      <button class="nav-btn">RANKING</button>
-      <button class="nav-btn">PROFIL</button>
-    </div>
-  </nav>
+  <div class="particles" id="particles"></div>
 
-  <main>
-    <div class="hero">
-      <div class="castle">🏰</div>
-      <h1>Arena<br>Wojowników</h1>
-      <p class="hero-sub">WEEKEND WARRIOR</p>
-      <p class="hero-desc">Polska społeczność fitness wojowników RPG</p>
-    </div>
-
-    <div class="cta-group">
-      <button class="btn-gold">⚔ RZUĆ WYZWANIE</button>
-      <button class="btn-outline">📜 KRONIKI</button>
-    </div>
-
-    <div class="premium-card">
-      <div class="card-title">⚡ WYZWANIA ARENY</div>
-      <div class="challenge-grid">
-        <div class="challenge-item">
-          <span class="challenge-emoji">🏹</span>
-          <div class="challenge-name">ŁOWCA</div>
-          <div class="challenge-xp">+30 XP</div>
+  <div id="app">
+    <!-- NAVBAR -->
+    <nav class="navbar" style="
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: linear-gradient(180deg, var(--bg-layer-2) 0%, var(--bg-dark) 100%);
+      backdrop-filter: blur(30px);
+      border-bottom: 2px solid var(--accent-red);
+      padding: 1rem 1.5rem;
+      box-shadow: 0 0 50px rgba(139, 0, 0, 0.4), var(--shadow-lg);
+    ">
+      <div style="max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+        <div class="font-logo" style="font-size: 1.3rem; color: var(--accent-gold); text-shadow: 0 0 30px rgba(212, 175, 55, 0.8);">
+          ⚔ WEEKEND WARRIOR V6
         </div>
-        <div class="challenge-item">
-          <span class="challenge-emoji">🐉</span>
-          <div class="challenge-name">HYDRA</div>
-          <div class="challenge-xp">+50 XP</div>
-        </div>
-        <div class="challenge-item">
-          <span class="challenge-emoji">⚡</span>
-          <div class="challenge-name">ZGNIATACZ</div>
-          <div class="challenge-xp">+40 XP</div>
-        </div>
-        <div class="challenge-item">
-          <span class="challenge-emoji">👻</span>
-          <div class="challenge-name">DUCH</div>
-          <div class="challenge-xp">+100 XP</div>
+        <div style="display: flex; gap: 0.8rem;">
+          <button class="nav-item" style="padding: 0.6rem 1.2rem; background: linear-gradient(135deg, rgba(17,17,17,0.95) 0%, rgba(13,13,13,0.9) 100%); border: 1.5px solid var(--accent-red); color: var(--text-secondary); border-radius: 8px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all var(--transition-normal);">ARENA</button>
+          <button class="nav-item" style="padding: 0.6rem 1.2rem; background: linear-gradient(135deg, rgba(17,17,17,0.95) 0%, rgba(13,13,13,0.9) 100%); border: 1.5px solid var(--accent-red); color: var(--text-secondary); border-radius: 8px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all var(--transition-normal);">RANKING</button>
+          <button class="nav-item" style="padding: 0.6rem 1.2rem; background: linear-gradient(135deg, rgba(17,17,17,0.95) 0%, rgba(13,13,13,0.9) 100%); border: 1.5px solid var(--accent-red); color: var(--text-secondary); border-radius: 8px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all var(--transition-normal);">PROFIL</button>
         </div>
       </div>
-    </div>
+    </nav>
 
-    <div class="premium-card">
-      <div class="card-title">🥇 SALA CHWAŁY</div>
-      <div class="leaderboard">
-        <div class="rank-item">
-          <div class="rank-medal">🥇</div>
-          <div class="rank-info">
-            <h4>Wojownik Legendy</h4>
-            <p>Lvl 25 • Legend</p>
+    <!-- MAIN CONTENT -->
+    <main class="fade-in">
+      <!-- HERO -->
+      <div class="hero">
+        <div class="hero-icon">🏰</div>
+        <h1 class="hero-title font-logo">ARENA<br>WOJOWNIKÓW</h1>
+        <p class="hero-subtitle font-heading">WEEKEND WARRIOR SOCIAL V6</p>
+        <p class="hero-description">Premium MMORPG dla Rozwoju Osobistego. Przebudowywanie Twojej postaci.</p>
+      </div>
+
+      <!-- CTA BUTTONS -->
+      <div class="button-group">
+        <button class="btn btn-primary">⚔ RZUĆ WYZWANIE</button>
+        <button class="btn btn-secondary">📜 KRONIKI</button>
+      </div>
+
+      <!-- MISSIONS SECTION -->
+      <h2 class="section-title">⚡ WYZWANIA ARENY</h2>
+      <div class="missions-grid">
+        <div class="card mission-card">
+          <div style="position: absolute; top: 1rem; right: 1.5rem; width: 48px; height: 48px; background: linear-gradient(135deg, var(--accent-red) 0%, var(--accent-red-bright) 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--text-primary); font-size: 1.5rem; box-shadow: 0 0 30px var(--glow-red);">1</div>
+          <div style="font-size: 2.5rem; margin-bottom: 1rem; animation: icon-pulse 2s ease-in-out infinite;">🏹</div>
+          <h3 style="color: var(--accent-gold); margin-bottom: 0.5rem;">Łowca Węży</h3>
+          <div class="card-badge">+30 XP</div>
+          <p style="color: var(--text-secondary); margin-top: 1rem; font-size: 0.95rem; margin-bottom: 1.5rem;">Ukończ 10 pompek bez przerwy</p>
+          <div class="progress-bar" style="margin-bottom: 1rem;"><div class="progress-fill" style="width: 65%;"></div></div>
+          <div style="display: flex; gap: 1rem;">
+            <button class="btn btn-secondary" style="flex: 1; padding: 0.75rem 1rem; font-size: 0.85rem;">🎯 QUIZ</button>
+            <button class="btn btn-primary" style="flex: 1; padding: 0.75rem 1rem; font-size: 0.85rem;">⚔ RZUĆ</button>
           </div>
-          <div class="rank-xp">15K XP</div>
         </div>
-        <div class="rank-item">
-          <div class="rank-medal">🥈</div>
-          <div class="rank-info">
-            <h4>Champion Arena</h4>
-            <p>Lvl 22 • Champion</p>
+
+        <div class="card mission-card">
+          <div style="position: absolute; top: 1rem; right: 1.5rem; width: 48px; height: 48px; background: linear-gradient(135deg, var(--accent-red) 0%, var(--accent-red-bright) 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--text-primary); font-size: 1.5rem; box-shadow: 0 0 30px var(--glow-red);">2</div>
+          <div style="font-size: 2.5rem; margin-bottom: 1rem; animation: icon-pulse 2s ease-in-out infinite; animation-delay: 0.2s;">🔍</div>
+          <h3 style="color: var(--accent-gold); margin-bottom: 0.5rem;">Tropiciel Hydry</h3>
+          <div class="card-badge">+40 XP</div>
+          <p style="color: var(--text-secondary); margin-top: 1rem; font-size: 0.95rem; margin-bottom: 1.5rem;">5 minut planki bez przerwy</p>
+          <div class="progress-bar" style="margin-bottom: 1rem;"><div class="progress-fill" style="width: 40%;"></div></div>
+          <div style="display: flex; gap: 1rem;">
+            <button class="btn btn-secondary" style="flex: 1; padding: 0.75rem 1rem; font-size: 0.85rem;">🎯 QUIZ</button>
+            <button class="btn btn-primary" style="flex: 1; padding: 0.75rem 1rem; font-size: 0.85rem;">⚔ RZUĆ</button>
           </div>
-          <div class="rank-xp">12K XP</div>
         </div>
-        <div class="rank-item">
-          <div class="rank-medal">🥉</div>
-          <div class="rank-info">
-            <h4>Mistrz Wojen</h4>
-            <p>Lvl 20 • Champion</p>
+
+        <div class="card mission-card">
+          <div style="position: absolute; top: 1rem; right: 1.5rem; width: 48px; height: 48px; background: linear-gradient(135deg, var(--accent-red) 0%, var(--accent-red-bright) 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--text-primary); font-size: 1.5rem; box-shadow: 0 0 30px var(--glow-red);">3</div>
+          <div style="font-size: 2.5rem; margin-bottom: 1rem; animation: icon-pulse 2s ease-in-out infinite; animation-delay: 0.4s;">⚔️</div>
+          <h3 style="color: var(--accent-gold); margin-bottom: 0.5rem;">Zgniatacz Węży</h3>
+          <div class="card-badge">+50 XP</div>
+          <p style="color: var(--text-secondary); margin-top: 1rem; font-size: 0.95rem; margin-bottom: 1.5rem;">50 przysiadów w 5 minut</p>
+          <div class="progress-bar" style="margin-bottom: 1rem;"><div class="progress-fill" style="width: 20%;"></div></div>
+          <div style="display: flex; gap: 1rem;">
+            <button class="btn btn-secondary" style="flex: 1; padding: 0.75rem 1rem; font-size: 0.85rem;">🎯 QUIZ</button>
+            <button class="btn btn-primary" style="flex: 1; padding: 0.75rem 1rem; font-size: 0.85rem;">⚔ RZUĆ</button>
           </div>
-          <div class="rank-xp">10.5K XP</div>
-        </div>
-        <div class="rank-item">
-          <div class="rank-medal">🏆</div>
-          <div class="rank-info">
-            <h4>Strażnik Areny</h4>
-            <p>Lvl 18 • Warrior</p>
-          </div>
-          <div class="rank-xp">9K XP</div>
         </div>
       </div>
-    </div>
-  </main>
 
-  <nav class="bottom-nav">
-    <a class="nav-item-bottom active" href="#arena">
-      <div class="nav-emoji">⚔</div>
-      <div class="nav-label">ARENA</div>
-    </a>
-    <a class="nav-item-bottom" href="feed.html">
-      <div class="nav-emoji">📝</div>
-      <div class="nav-label">KRONIKI</div>
-    </a>
-    <a class="nav-item-bottom" href="challenges.html">
-      <div class="nav-emoji">⚡</div>
-      <div class="nav-label">MISJE</div>
-    </a>
-    <a class="nav-item-bottom" href="ranking.html">
-      <div class="nav-emoji">🏆</div>
-      <div class="nav-label">RANKING</div>
-    </a>
-    <a class="nav-item-bottom" href="profile.html">
-      <div class="nav-emoji">👤</div>
-      <div class="nav-label">PROFIL</div>
-    </a>
-  </nav>
+      <!-- RANKING SECTION -->
+      <h2 class="section-title">🏆 SALA CHWAŁY</h2>
+      <div class="ranking-grid">
+        <div class="ranking-item">
+          <div class="ranking-medal">👑</div>
+          <div class="ranking-info">
+            <div class="ranking-name">Sztywny Dragal Brudny Grzyb</div>
+            <div class="ranking-status">⚔ WARRIOR - Legenda</div>
+          </div>
+          <div class="ranking-xp">875 XP</div>
+        </div>
+
+        <div class="ranking-item">
+          <div class="ranking-medal">🥇</div>
+          <div class="ranking-info">
+            <div class="ranking-name">TwojStaryKarabin (TY)</div>
+            <div class="ranking-status">⚔ WARRIOR - Champion</div>
+          </div>
+          <div class="ranking-xp">618 XP</div>
+        </div>
+
+        <div class="ranking-item">
+          <div class="ranking-medal">🥈</div>
+          <div class="ranking-info">
+            <div class="ranking-name">Champion Arena</div>
+            <div class="ranking-status">🔥 ROOKIE - Warrior</div>
+          </div>
+          <div class="ranking-xp">450 XP</div>
+        </div>
+
+        <div class="ranking-item">
+          <div class="ranking-medal">🥉</div>
+          <div class="ranking-info">
+            <div class="ranking-name">Battle Master</div>
+            <div class="ranking-status">⚔ WARRIOR - Fighter</div>
+          </div>
+          <div class="ranking-xp">320 XP</div>
+        </div>
+
+        <div class="ranking-item">
+          <div class="ranking-medal">🏆</div>
+          <div class="ranking-info">
+            <div class="ranking-name">Michcio</div>
+            <div class="ranking-status">🔥 ROOKIE - Newbie</div>
+          </div>
+          <div class="ranking-xp">5 XP</div>
+        </div>
+      </div>
+    </main>
+
+    <!-- FLOATING DOCK NAVIGATION -->
+    <nav class="floating-dock">
+      <a class="dock-item active" href="#arena">
+        <div class="dock-icon">⚔</div>
+        <div class="dock-label">ARENA</div>
+      </a>
+      <a class="dock-item" href="#kroniki">
+        <div class="dock-icon">📝</div>
+        <div class="dock-label">KRONIKI</div>
+      </a>
+      <a class="dock-item" href="#misje">
+        <div class="dock-icon">⚡</div>
+        <div class="dock-label">MISJE</div>
+      </a>
+      <a class="dock-item" href="#ranking">
+        <div class="dock-icon">🏆</div>
+        <div class="dock-label">RANKING</div>
+      </a>
+      <a class="dock-item" href="#profil">
+        <div class="dock-icon">👤</div>
+        <div class="dock-label">PROFIL</div>
+      </a>
+    </nav>
+  </div>
 
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
   <script>
-    const firebaseConfig = {
+    // Initialize particles
+    function initParticles() {
+      const container = document.getElementById('particles');
+      const types = ['ember', 'spark'];
+      for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle ' + types[Math.floor(Math.random() * types.length)];
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 10 + 's';
+        container.appendChild(particle);
+      }
+    }
+
+    initParticles();
+
+    // Firebase
+    firebase.initializeApp({
       apiKey: "AIzaSyBHwVgFJgsvOp1ZgU4nQetHM_KgzxeXzZI",
       authDomain: "weekend-warrior-social-v2.firebaseapp.com",
       projectId: "weekend-warrior-social-v2",
       storageBucket: "weekend-warrior-social-v2.firebasestorage.app",
       messagingSenderId: "147800031459",
       appId: "1:147800031459:web:d72e1fc2b81b8b152405d6"
-    };
-    firebase.initializeApp(firebaseConfig);
+    });
+
     firebase.auth().onAuthStateChanged(user => {
       if (!user) window.location.href = 'login.html';
     });
