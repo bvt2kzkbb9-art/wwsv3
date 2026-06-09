@@ -31,27 +31,32 @@ class UserService {
       });
 
       const userData = {
+        // User Identity
         uid,
         email,
-        displayName,
-        specialization,
-        photoURL: null,
-        bannerURL: null,
+        nickname: displayName || 'Warrior',
+        specialization: specialization || 'warrior',
+
+        // Profile
+        avatar: '',
+        banner: '',
         bio: '',
 
-        // Progress
-        level: 1,
+        // Progress & Stats
         xp: 0,
-        totalXp: 0,
+        level: 1,
         rank: 'Nowicjusz',
         elo: 1200,
 
-        // Streaks
+        // Activity
+        posts: [],
+        friends: [],
+        followers: [],
         loginStreak: 0,
         longestLoginStreak: 0,
         lastLoginAt: new Date(),
 
-        // Stats
+        // Counters
         totalPostsCount: 0,
         totalCommentsCount: 0,
         totalChallengesCompleted: 0,
