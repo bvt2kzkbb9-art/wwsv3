@@ -2,300 +2,556 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weekend Warrior Social V5 Premium</title>
-  <link rel="stylesheet" href="css/premium.css">
-  <link rel="stylesheet" href="css/graphics.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Weekend Warrior V5 Premium</title>
   <style>
-    /* HERO SECTION */
-    .hero {
-      position: relative;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000000;
+      overflow-x: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    body {
       background: 
-        radial-gradient(circle at 50% 0%, rgba(212,175,55,0.15) 0%, transparent 50%),
-        linear-gradient(180deg, rgba(11,13,18,0.3) 0%, transparent 100%);
-      padding: 4rem 2rem;
-      text-align: center;
-      margin-bottom: 3rem;
-      border-radius: 16px;
-      border: 2px solid rgba(212, 175, 55, 0.2);
-      overflow: hidden;
+        radial-gradient(circle at 10% 50%, rgba(180,140,60,0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(180,140,60,0.08) 0%, transparent 50%),
+        #000000;
     }
 
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      right: -10%;
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 70%);
-      border-radius: 50%;
-      animation: floatHero 8s ease-in-out infinite;
-      pointer-events: none;
+    /* ═══ NAVBAR ═══ */
+    .navbar {
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(40px);
+      border-bottom: 2px solid #c9a961;
+      padding: 0.9rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      box-shadow: 0 10px 40px rgba(201, 169, 97, 0.25);
     }
 
-    .hero::after {
-      content: '';
-      position: absolute;
-      bottom: -30%;
-      left: 5%;
-      width: 500px;
-      height: 500px;
-      background: radial-gradient(circle, rgba(212,175,55,0.08) 0%, transparent 70%);
-      border-radius: 50%;
-      animation: floatHero 10s ease-in-out infinite reverse;
-      pointer-events: none;
+    .navbar-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #d4af37;
+      letter-spacing: 2px;
+      text-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
     }
 
-    @keyframes floatHero {
-      0%, 100% { transform: translate(0, 0); }
-      50% { transform: translate(30px, -30px); }
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 10;
-    }
-
-    .hero h1 {
-      font-size: 3.5rem;
-      margin-bottom: 1rem;
-      animation: slideInDown 0.8s ease-out;
-    }
-
-    @keyframes slideInDown {
-      from { opacity: 0; transform: translateY(-30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .hero-subtitle {
-      font-size: 1.2rem;
-      color: var(--text-secondary);
-      margin-bottom: 2rem;
-      animation: fadeIn 1s ease-in 0.3s both;
-    }
-
-    .user-card {
-      display: inline-block;
-      background: linear-gradient(135deg, rgba(31,29,26,0.95) 0%, rgba(21,18,16,0.85) 100%);
-      border: 2px solid rgba(212, 175, 55, 0.3);
-      border-radius: 12px;
-      padding: 2rem;
-      margin: 2rem 0;
-      max-width: 500px;
-      box-shadow: 0 20px 60px rgba(212, 175, 55, 0.2);
-      animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s both;
-    }
-
-    @keyframes popIn {
-      from { opacity: 0; transform: scale(0.8); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    .user-stats {
+    .navbar-nav {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1rem;
-      margin-top: 1.5rem;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.4rem;
     }
 
-    .user-stat {
-      padding: 1rem;
-      background: rgba(212, 175, 55, 0.05);
-      border: 1px solid rgba(212, 175, 55, 0.2);
-      border-radius: 8px;
+    .nav-btn {
+      padding: 0.5rem 0.8rem;
+      background: rgba(212, 175, 55, 0.08);
+      border: 1.5px solid #c9a961;
+      color: #d4af37;
+      border-radius: 5px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      letter-spacing: 0.8px;
       transition: all 0.3s ease;
     }
 
-    .user-stat:hover {
-      background: rgba(212, 175, 55, 0.15);
-      border-color: var(--gold);
-      transform: translateY(-4px);
+    .nav-btn:hover, .nav-btn.active {
+      background: rgba(212, 175, 55, 0.2);
+      border-color: #d4af37;
+      box-shadow: 0 0 12px rgba(212, 175, 55, 0.5);
     }
 
-    .user-stat-value {
-      font-size: 1.6rem;
-      color: var(--gold);
+    /* ═══ MAIN CONTENT ═══ */
+    main {
+      padding: 2rem 1rem 120px;
+      max-width: 100%;
+    }
+
+    /* ═══ HERO SECTION ═══ */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      margin-bottom: 2rem;
+      padding: 0;
+      gap: 1rem;
+    }
+
+    .castle {
+      font-size: 5rem;
+      filter: drop-shadow(0 10px 20px rgba(212, 175, 55, 0.5));
+      animation: castleFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes castleFloat {
+      0%, 100% { transform: translateY(0px) rotateZ(0deg); }
+      50% { transform: translateY(-20px) rotateZ(2deg); }
+    }
+
+    .hero h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 3.2rem;
       font-weight: 900;
+      color: #d4af37;
+      margin: 0;
+      letter-spacing: 2px;
+      line-height: 1.15;
+      text-shadow: 
+        0 0 20px rgba(212, 175, 55, 0.7),
+        0 0 40px rgba(212, 175, 55, 0.3),
+        0 4px 8px rgba(0, 0, 0, 0.9);
     }
 
-    .user-stat-label {
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      margin-top: 0.5rem;
+    .hero-sub {
+      font-family: 'Cinzel', serif;
+      font-size: 0.95rem;
+      color: #c9a961;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+    }
+
+    .hero-desc {
+      font-size: 0.9rem;
+      color: #9a9a9a;
+      letter-spacing: 1px;
       text-transform: uppercase;
     }
 
-    /* FEATURE GRID */
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.5rem;
+    /* ═══ CTA BUTTONS ═══ */
+    .cta-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
       margin: 2rem 0;
+      flex-wrap: wrap;
     }
 
-    .feature-card {
-      background: linear-gradient(135deg, rgba(31,29,26,0.9) 0%, rgba(21,18,16,0.8) 100%);
-      border: 2px solid rgba(212, 175, 55, 0.15);
-      border-radius: 12px;
-      padding: 2rem 1.5rem;
-      text-align: center;
+    .btn-gold {
+      padding: 0.85rem 2rem;
+      background: linear-gradient(180deg, #f0e6d2 0%, #d4af37 50%, #a68a3e 100%);
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-transform: uppercase;
       cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      letter-spacing: 1px;
+      box-shadow: 
+        0 12px 30px rgba(212, 175, 55, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
       position: relative;
       overflow: hidden;
     }
 
-    .feature-card::before {
+    .btn-gold::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%);
+      transform: rotate(45deg);
+      animation: shine 3s infinite;
+    }
+
+    @keyframes shine {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+
+    .btn-gold:hover {
+      transform: translateY(-4px);
+      box-shadow: 
+        0 20px 50px rgba(212, 175, 55, 0.6),
+        0 0 30px rgba(212, 175, 55, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-outline {
+      padding: 0.85rem 2rem;
+      background: transparent;
+      border: 2px solid #c9a961;
+      color: #d4af37;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.15);
+    }
+
+    .btn-outline:hover {
+      background: rgba(212, 175, 55, 0.1);
+      border-color: #d4af37;
+      box-shadow: 0 0 25px rgba(212, 175, 55, 0.4);
+    }
+
+    /* ═══ PREMIUM CARD ═══ */
+    .premium-card {
+      background: 
+        linear-gradient(135deg, rgba(25, 23, 20, 0.95) 0%, rgba(18, 16, 14, 0.92) 100%),
+        radial-gradient(circle at top left, rgba(212, 175, 55, 0.12) 0%, transparent 50%);
+      border: 2px solid #c9a961;
+      border-radius: 16px;
+      padding: 2.5rem 1.5rem;
+      margin: 2rem 0;
+      box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.7),
+        0 0 50px rgba(212, 175, 55, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .premium-card::before {
       content: '';
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
-      bottom: 0;
-      background: radial-gradient(circle at center, rgba(212,175,55,0.2) 0%, transparent 70%);
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(212,175,55,0.3), transparent);
+    }
+
+    .card-title {
+      font-family: 'Cinzel', serif;
+      font-size: 2.2rem;
+      color: #d4af37;
+      text-align: center;
+      margin-bottom: 2rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+    }
+
+    /* ═══ CHALLENGE GRID ═══ */
+    .challenge-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .challenge-item {
+      background: linear-gradient(135deg, rgba(35, 32, 28, 0.9) 0%, rgba(25, 22, 18, 0.85) 100%);
+      border: 1.5px solid #c9a961;
+      border-radius: 12px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .challenge-item::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(212, 175, 55, 0.2) 0%, transparent 70%);
       opacity: 0;
       transition: opacity 0.3s ease;
     }
 
-    .feature-card:hover {
-      border-color: var(--gold);
+    .challenge-item:hover {
+      border-color: #d4af37;
       transform: translateY(-8px);
-      box-shadow: 0 16px 40px rgba(212, 175, 55, 0.25);
-    }
-
-    .feature-card:hover::before {
-      opacity: 1;
-    }
-
-    .feature-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-      transition: transform 0.3s ease;
-      filter: drop-shadow(0 4px 8px rgba(212, 175, 55, 0.3));
-    }
-
-    .feature-card:hover .feature-icon {
-      transform: scale(1.2) rotate(10deg);
-    }
-
-    .feature-title {
-      color: var(--gold);
-      margin: 0 0 0.5rem 0;
-      font-family: 'Cinzel', serif;
-    }
-
-    .feature-desc {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    /* LEADERBOARD PREMIUM */
-    .leaderboard-premium {
-      background: 
-        linear-gradient(135deg, rgba(31,29,26,0.95) 0%, rgba(21,18,16,0.85) 100%),
-        radial-gradient(ellipse at top, rgba(212,175,55,0.1) 0%, transparent 50%);
-      border: 2px solid rgba(212, 175, 55, 0.2);
-      border-radius: 16px;
-      padding: 2rem;
       box-shadow: 
-        0 20px 60px rgba(0, 0, 0, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        0 20px 50px rgba(212, 175, 55, 0.3),
+        0 0 30px rgba(212, 175, 55, 0.3),
+        inset 0 0 20px rgba(212, 175, 55, 0.05);
     }
 
-    .leaderboard-premium h2 {
-      font-size: 2.5rem;
-      margin-bottom: 2rem;
-      text-align: center;
-      animation: fadeIn 0.6s ease-in;
-    }
-
-    /* SCROLL ANIMATION */
-    .scroll-reveal {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: all 0.6s ease-out;
-    }
-
-    .scroll-reveal.visible {
+    .challenge-item:hover::before {
       opacity: 1;
-      transform: translateY(0);
+    }
+
+    .challenge-emoji {
+      font-size: 3rem;
+      margin-bottom: 0.8rem;
+      display: block;
+      filter: drop-shadow(0 5px 10px rgba(212, 175, 55, 0.4));
+      transition: transform 0.3s ease;
+    }
+
+    .challenge-item:hover .challenge-emoji {
+      transform: scale(1.2) rotateZ(15deg);
+    }
+
+    .challenge-name {
+      font-family: 'Cinzel', serif;
+      color: #d4af37;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .challenge-xp {
+      color: #d4af37;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+      font-weight: 600;
+    }
+
+    /* ═══ LEADERBOARD ═══ */
+    .leaderboard {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-top: 1.5rem;
+    }
+
+    .rank-item {
+      display: grid;
+      grid-template-columns: 50px 1fr 80px;
+      gap: 1rem;
+      align-items: center;
+      padding: 1rem;
+      background: linear-gradient(90deg, rgba(212, 175, 55, 0.1) 0%, transparent 50%);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .rank-item:hover {
+      border-color: #d4af37;
+      background: linear-gradient(90deg, rgba(212, 175, 55, 0.15) 0%, transparent 50%);
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+    }
+
+    .rank-medal {
+      font-size: 2rem;
+      text-align: center;
+    }
+
+    .rank-info h4 {
+      margin: 0;
+      color: #fff;
+      font-size: 0.95rem;
+    }
+
+    .rank-info p {
+      margin: 0.3rem 0 0 0;
+      color: #999;
+      font-size: 0.8rem;
+    }
+
+    .rank-xp {
+      text-align: right;
+      color: #d4af37;
+      font-weight: 700;
+    }
+
+    /* ═══ BOTTOM NAV ═══ */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(180deg, rgba(10,10,15,0) 0%, rgba(10,10,15,0.98) 30%, rgba(10,10,15,1) 100%);
+      border-top: 2px solid #c9a961;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-around;
+      gap: 0.5rem;
+      z-index: 998;
+      box-shadow: 0 -10px 40px rgba(201, 169, 97, 0.2);
+    }
+
+    .nav-item-bottom {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      color: #707070;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      font-size: 0.65rem;
+      flex: 1;
+      text-align: center;
+    }
+
+    .nav-item-bottom:hover, .nav-item-bottom.active {
+      color: #d4af37;
+      transform: scale(1.1);
+    }
+
+    .nav-emoji {
+      font-size: 1.5rem;
+      filter: drop-shadow(0 2px 4px rgba(212, 175, 55, 0.3));
+      transition: transform 0.3s ease;
+    }
+
+    .nav-item-bottom:hover .nav-emoji {
+      transform: scale(1.2);
+    }
+
+    .nav-label {
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    /* ═══ RESPONSIVE ═══ */
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2.5rem; }
+      .castle { font-size: 4rem; }
+      .navbar-nav { grid-template-columns: repeat(2, 1fr); }
+      .challenge-grid { grid-template-columns: repeat(2, 1fr); }
+      main { padding-bottom: 110px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 1.8rem; }
+      .castle { font-size: 3.5rem; }
+      .navbar { padding: 0.75rem 0.75rem; }
+      .navbar-title { font-size: 1.2rem; }
+      .nav-btn { font-size: 0.7rem; padding: 0.4rem 0.6rem; }
+      .cta-group { gap: 0.8rem; margin: 1.5rem 0; }
+      .btn-gold, .btn-outline { padding: 0.7rem 1.5rem; font-size: 0.85rem; }
+      .challenge-grid { grid-template-columns: repeat(2, 1fr); }
+      .premium-card { padding: 1.5rem 1rem; }
+      .card-title { font-size: 1.6rem; }
+      main { padding-bottom: 100px; }
     }
   </style>
 </head>
 <body>
   <nav class="navbar">
-    <div class="navbar-brand">⚔ WEEKEND WARRIOR V5</div>
-    <div class="navbar-menu">
-      <a href="#arena" class="nav-item active">Arena</a>
-      <a href="#feed" class="nav-item">Kroniki</a>
-      <a href="#ranking" class="nav-item">Ranking</a>
-      <a href="#challenges" class="nav-item">Misje</a>
-      <a href="#friends" class="nav-item">Znajomi</a>
-      <a href="#achievements" class="nav-item">Osiągnięcia</a>
-      <a href="#profile" class="nav-item">Profil</a>
-      <button id="logout-btn" class="nav-item" style="border: 1px solid var(--border-light);">Wyloguj</button>
+    <div class="navbar-title">⚔ WEEKEND WARRIOR V5</div>
+    <div class="navbar-nav">
+      <button class="nav-btn active">ARENA</button>
+      <button class="nav-btn">RANKING</button>
+      <button class="nav-btn">PROFIL</button>
     </div>
   </nav>
 
-  <main id="app">
+  <main>
     <div class="hero">
-      <div class="hero-content">
-        <h1>🏰 Arena Wojowników</h1>
-        <p class="hero-subtitle">Polska społeczność fitness wojowników RPG</p>
+      <div class="castle">🏰</div>
+      <h1>Arena<br>Wojowników</h1>
+      <p class="hero-sub">WEEKEND WARRIOR</p>
+      <p class="hero-desc">Polska społeczność fitness wojowników RPG</p>
+    </div>
+
+    <div class="cta-group">
+      <button class="btn-gold">⚔ RZUĆ WYZWANIE</button>
+      <button class="btn-outline">📜 KRONIKI</button>
+    </div>
+
+    <div class="premium-card">
+      <div class="card-title">⚡ WYZWANIA ARENY</div>
+      <div class="challenge-grid">
+        <div class="challenge-item">
+          <span class="challenge-emoji">🏹</span>
+          <div class="challenge-name">ŁOWCA</div>
+          <div class="challenge-xp">+30 XP</div>
+        </div>
+        <div class="challenge-item">
+          <span class="challenge-emoji">🐉</span>
+          <div class="challenge-name">HYDRA</div>
+          <div class="challenge-xp">+50 XP</div>
+        </div>
+        <div class="challenge-item">
+          <span class="challenge-emoji">⚡</span>
+          <div class="challenge-name">ZGNIATACZ</div>
+          <div class="challenge-xp">+40 XP</div>
+        </div>
+        <div class="challenge-item">
+          <span class="challenge-emoji">👻</span>
+          <div class="challenge-name">DUCH</div>
+          <div class="challenge-xp">+100 XP</div>
+        </div>
       </div>
     </div>
 
-    <div id="user-section"></div>
-
-    <div class="feature-grid" id="features">
-      <a href="feed.html" class="feature-card" style="text-decoration: none;">
-        <div class="feature-icon">📝</div>
-        <h3 class="feature-title">Kroniki</h3>
-        <p class="feature-desc">Posty i aktywność</p>
-      </a>
-
-      <a href="challenges.html" class="feature-card" style="text-decoration: none;">
-        <div class="feature-icon">⚔️</div>
-        <h3 class="feature-title">Misje</h3>
-        <p class="feature-desc">Wyzwania & Wojny</p>
-      </a>
-
-      <a href="ranking.html" class="feature-card" style="text-decoration: none;">
-        <div class="feature-icon">🏆</div>
-        <h3 class="feature-title">Ranking</h3>
-        <p class="feature-desc">ELO & Sala Chwały</p>
-      </a>
-
-      <a href="friends.html" class="feature-card" style="text-decoration: none;">
-        <div class="feature-icon">👥</div>
-        <h3 class="feature-title">Znajomi</h3>
-        <p class="feature-desc">Sieć społeczna</p>
-      </a>
-
-      <a href="achievements.html" class="feature-card" style="text-decoration: none;">
-        <div class="feature-icon">🎖️</div>
-        <h3 class="feature-title">Osiągnięcia</h3>
-        <p class="feature-desc">Odznaki & nagrody</p>
-      </a>
-
-      <a href="profile.html" class="feature-card" style="text-decoration: none;">
-        <div class="feature-icon">👤</div>
-        <h3 class="feature-title">Profil</h3>
-        <p class="feature-desc">Twoje dane</p>
-      </a>
-    </div>
-
-    <div class="leaderboard-premium" id="leaderboard">
-      <h2>🥇 TOP 10 WOJOWNIKÓW</h2>
-      <div id="top-users"></div>
+    <div class="premium-card">
+      <div class="card-title">🥇 SALA CHWAŁY</div>
+      <div class="leaderboard">
+        <div class="rank-item">
+          <div class="rank-medal">🥇</div>
+          <div class="rank-info">
+            <h4>Wojownik Legendy</h4>
+            <p>Lvl 25 • Legend</p>
+          </div>
+          <div class="rank-xp">15K XP</div>
+        </div>
+        <div class="rank-item">
+          <div class="rank-medal">🥈</div>
+          <div class="rank-info">
+            <h4>Champion Arena</h4>
+            <p>Lvl 22 • Champion</p>
+          </div>
+          <div class="rank-xp">12K XP</div>
+        </div>
+        <div class="rank-item">
+          <div class="rank-medal">🥉</div>
+          <div class="rank-info">
+            <h4>Mistrz Wojen</h4>
+            <p>Lvl 20 • Champion</p>
+          </div>
+          <div class="rank-xp">10.5K XP</div>
+        </div>
+        <div class="rank-item">
+          <div class="rank-medal">🏆</div>
+          <div class="rank-info">
+            <h4>Strażnik Areny</h4>
+            <p>Lvl 18 • Warrior</p>
+          </div>
+          <div class="rank-xp">9K XP</div>
+        </div>
+      </div>
     </div>
   </main>
 
+  <nav class="bottom-nav">
+    <a class="nav-item-bottom active" href="#arena">
+      <div class="nav-emoji">⚔</div>
+      <div class="nav-label">ARENA</div>
+    </a>
+    <a class="nav-item-bottom" href="feed.html">
+      <div class="nav-emoji">📝</div>
+      <div class="nav-label">KRONIKI</div>
+    </a>
+    <a class="nav-item-bottom" href="challenges.html">
+      <div class="nav-emoji">⚡</div>
+      <div class="nav-label">MISJE</div>
+    </a>
+    <a class="nav-item-bottom" href="ranking.html">
+      <div class="nav-emoji">🏆</div>
+      <div class="nav-label">RANKING</div>
+    </a>
+    <a class="nav-item-bottom" href="profile.html">
+      <div class="nav-emoji">👤</div>
+      <div class="nav-label">PROFIL</div>
+    </a>
+  </nav>
+
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBHwVgFJgsvOp1ZgU4nQetHM_KgzxeXzZI",
@@ -305,98 +561,9 @@
       messagingSenderId: "147800031459",
       appId: "1:147800031459:web:d72e1fc2b81b8b152405d6"
     };
-
     firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-
-    const MOCK_USERS = [
-      { rank: 1, displayName: 'Wojownik Legendy', level: 25, rank: 'Legend', points: 15000 },
-      { rank: 2, displayName: 'Champion Arena', level: 22, rank: 'Champion', points: 12000 },
-      { rank: 3, displayName: 'Mistrz Wojen', level: 20, rank: 'Champion', points: 10500 },
-      { rank: 4, displayName: 'Strażnik Areny', level: 18, rank: 'Warrior', points: 9000 },
-      { rank: 5, displayName: 'Mysliwiec Potworów', level: 17, rank: 'Warrior', points: 8500 },
-      { rank: 6, displayName: 'Łęcznik Nocny', level: 16, rank: 'Warrior', points: 8000 },
-      { rank: 7, displayName: 'Rycerz Światła', level: 15, rank: 'Warrior', points: 7500 },
-      { rank: 8, displayName: 'Ognisty Duch', level: 14, rank: 'Warrior', points: 7000 },
-      { rank: 9, displayName: 'Szara Sowa', level: 13, rank: 'Warrior', points: 6500 },
-      { rank: 10, displayName: 'Mroczny Skoczek', level: 12, rank: 'Warrior', points: 6000 }
-    ];
-
-    auth.onAuthStateChanged(async (user) => {
-      if (!user) {
-        window.location.href = 'login.html';
-        return;
-      }
-
-      try {
-        // User section
-        const userSection = document.getElementById('user-section');
-        userSection.innerHTML = `
-          <div class="user-card">
-            <h2>🏆 Witaj, ${user.displayName}!</h2>
-            <div class="user-stats">
-              <div class="user-stat">
-                <div class="user-stat-value">1</div>
-                <div class="user-stat-label">Lvl</div>
-              </div>
-              <div class="user-stat">
-                <div class="user-stat-value">0</div>
-                <div class="user-stat-label">XP</div>
-              </div>
-              <div class="user-stat">
-                <div class="user-stat-value">1</div>
-                <div class="user-stat-label">Seria</div>
-              </div>
-              <div class="user-stat">
-                <div class="user-stat-value">0</div>
-                <div class="user-stat-label">Znajomi</div>
-              </div>
-            </div>
-          </div>
-        `;
-
-        // Leaderboard
-        const topUsersDiv = document.getElementById('top-users');
-        let leaderboardHTML = '';
-        MOCK_USERS.forEach((u, i) => {
-          const medals = ['🥇', '🥈', '🥉'];
-          const medal = medals[i] || '🏆';
-          leaderboardHTML += `
-            <div class="ranking-entry">
-              <div class="ranking-position">${medal}</div>
-              <div>
-                <h4 style="margin: 0; color: var(--text-primary);">${u.displayName}</h4>
-                <p style="margin: 0.25rem 0 0 0; color: var(--text-muted); font-size: 0.85rem;">Lvl ${u.level} • ${u.rank}</p>
-              </div>
-              <div class="ranking-points">
-                <div class="ranking-value">${u.points.toLocaleString('pl-PL')}</div>
-                <div style="color: var(--text-muted); font-size: 0.85rem;">XP</div>
-              </div>
-            </div>
-          `;
-        });
-        topUsersDiv.innerHTML = leaderboardHTML;
-
-        // Scroll animation
-        const observerOptions = { threshold: 0.1 };
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('visible');
-            }
-          });
-        }, observerOptions);
-
-        document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
-
-      } catch (err) {
-        console.error('Error:', err);
-      }
-    });
-
-    document.getElementById('logout-btn').addEventListener('click', () => {
-      auth.signOut().then(() => window.location.href = 'login.html');
+    firebase.auth().onAuthStateChanged(user => {
+      if (!user) window.location.href = 'login.html';
     });
   </script>
 </body>
