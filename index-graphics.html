@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weekend Warrior Social V5 Premium</title>
+  <link rel="stylesheet" href="css/premium.css">
+  <link rel="stylesheet" href="css/graphics.css">
+  <style>
+    /* HERO SECTION */
+    .hero {
+      position: relative;
+      background: 
+        radial-gradient(circle at 50% 0%, rgba(212,175,55,0.15) 0%, transparent 50%),
+        linear-gradient(180deg, rgba(11,13,18,0.3) 0%, transparent 100%);
+      padding: 4rem 2rem;
+      text-align: center;
+      margin-bottom: 3rem;
+      border-radius: 16px;
+      border: 2px solid rgba(212, 175, 55, 0.2);
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: floatHero 8s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: 5%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(212,175,55,0.08) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: floatHero 10s ease-in-out infinite reverse;
+      pointer-events: none;
+    }
+
+    @keyframes floatHero {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(30px, -30px); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      animation: slideInDown 0.8s ease-out;
+    }
+
+    @keyframes slideInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      animation: fadeIn 1s ease-in 0.3s both;
+    }
+
+    .user-card {
+      display: inline-block;
+      background: linear-gradient(135deg, rgba(31,29,26,0.95) 0%, rgba(21,18,16,0.85) 100%);
+      border: 2px solid rgba(212, 175, 55, 0.3);
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 2rem 0;
+      max-width: 500px;
+      box-shadow: 0 20px 60px rgba(212, 175, 55, 0.2);
+      animation: popIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s both;
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .user-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .user-stat {
+      padding: 1rem;
+      background: rgba(212, 175, 55, 0.05);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .user-stat:hover {
+      background: rgba(212, 175, 55, 0.15);
+      border-color: var(--gold);
+      transform: translateY(-4px);
+    }
+
+    .user-stat-value {
+      font-size: 1.6rem;
+      color: var(--gold);
+      font-weight: 900;
+    }
+
+    .user-stat-label {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      text-transform: uppercase;
+    }
+
+    /* FEATURE GRID */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .feature-card {
+      background: linear-gradient(135deg, rgba(31,29,26,0.9) 0%, rgba(21,18,16,0.8) 100%);
+      border: 2px solid rgba(212, 175, 55, 0.15);
+      border-radius: 12px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at center, rgba(212,175,55,0.2) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .feature-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-8px);
+      box-shadow: 0 16px 40px rgba(212, 175, 55, 0.25);
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      transition: transform 0.3s ease;
+      filter: drop-shadow(0 4px 8px rgba(212, 175, 55, 0.3));
+    }
+
+    .feature-card:hover .feature-icon {
+      transform: scale(1.2) rotate(10deg);
+    }
+
+    .feature-title {
+      color: var(--gold);
+      margin: 0 0 0.5rem 0;
+      font-family: 'Cinzel', serif;
+    }
+
+    .feature-desc {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* LEADERBOARD PREMIUM */
+    .leaderboard-premium {
+      background: 
+        linear-gradient(135deg, rgba(31,29,26,0.95) 0%, rgba(21,18,16,0.85) 100%),
+        radial-gradient(ellipse at top, rgba(212,175,55,0.1) 0%, transparent 50%);
+      border: 2px solid rgba(212, 175, 55, 0.2);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .leaderboard-premium h2 {
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      animation: fadeIn 0.6s ease-in;
+    }
+
+    /* SCROLL ANIMATION */
+    .scroll-reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s ease-out;
+    }
+
+    .scroll-reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-brand">⚔ WEEKEND WARRIOR V5</div>
+    <div class="navbar-menu">
+      <a href="#arena" class="nav-item active">Arena</a>
+      <a href="#feed" class="nav-item">Kroniki</a>
+      <a href="#ranking" class="nav-item">Ranking</a>
+      <a href="#challenges" class="nav-item">Misje</a>
+      <a href="#friends" class="nav-item">Znajomi</a>
+      <a href="#achievements" class="nav-item">Osiągnięcia</a>
+      <a href="#profile" class="nav-item">Profil</a>
+      <button id="logout-btn" class="nav-item" style="border: 1px solid var(--border-light);">Wyloguj</button>
+    </div>
+  </nav>
+
+  <main id="app">
+    <div class="hero">
+      <div class="hero-content">
+        <h1>🏰 Arena Wojowników</h1>
+        <p class="hero-subtitle">Polska społeczność fitness wojowników RPG</p>
+      </div>
+    </div>
+
+    <div id="user-section"></div>
+
+    <div class="feature-grid" id="features">
+      <a href="feed.html" class="feature-card" style="text-decoration: none;">
+        <div class="feature-icon">📝</div>
+        <h3 class="feature-title">Kroniki</h3>
+        <p class="feature-desc">Posty i aktywność</p>
+      </a>
+
+      <a href="challenges.html" class="feature-card" style="text-decoration: none;">
+        <div class="feature-icon">⚔️</div>
+        <h3 class="feature-title">Misje</h3>
+        <p class="feature-desc">Wyzwania & Wojny</p>
+      </a>
+
+      <a href="ranking.html" class="feature-card" style="text-decoration: none;">
+        <div class="feature-icon">🏆</div>
+        <h3 class="feature-title">Ranking</h3>
+        <p class="feature-desc">ELO & Sala Chwały</p>
+      </a>
+
+      <a href="friends.html" class="feature-card" style="text-decoration: none;">
+        <div class="feature-icon">👥</div>
+        <h3 class="feature-title">Znajomi</h3>
+        <p class="feature-desc">Sieć społeczna</p>
+      </a>
+
+      <a href="achievements.html" class="feature-card" style="text-decoration: none;">
+        <div class="feature-icon">🎖️</div>
+        <h3 class="feature-title">Osiągnięcia</h3>
+        <p class="feature-desc">Odznaki & nagrody</p>
+      </a>
+
+      <a href="profile.html" class="feature-card" style="text-decoration: none;">
+        <div class="feature-icon">👤</div>
+        <h3 class="feature-title">Profil</h3>
+        <p class="feature-desc">Twoje dane</p>
+      </a>
+    </div>
+
+    <div class="leaderboard-premium" id="leaderboard">
+      <h2>🥇 TOP 10 WOJOWNIKÓW</h2>
+      <div id="top-users"></div>
+    </div>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBHwVgFJgsvOp1ZgU4nQetHM_KgzxeXzZI",
+      authDomain: "weekend-warrior-social-v2.firebaseapp.com",
+      projectId: "weekend-warrior-social-v2",
+      storageBucket: "weekend-warrior-social-v2.firebasestorage.app",
+      messagingSenderId: "147800031459",
+      appId: "1:147800031459:web:d72e1fc2b81b8b152405d6"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    const MOCK_USERS = [
+      { rank: 1, displayName: 'Wojownik Legendy', level: 25, rank: 'Legend', points: 15000 },
+      { rank: 2, displayName: 'Champion Arena', level: 22, rank: 'Champion', points: 12000 },
+      { rank: 3, displayName: 'Mistrz Wojen', level: 20, rank: 'Champion', points: 10500 },
+      { rank: 4, displayName: 'Strażnik Areny', level: 18, rank: 'Warrior', points: 9000 },
+      { rank: 5, displayName: 'Mysliwiec Potworów', level: 17, rank: 'Warrior', points: 8500 },
+      { rank: 6, displayName: 'Łęcznik Nocny', level: 16, rank: 'Warrior', points: 8000 },
+      { rank: 7, displayName: 'Rycerz Światła', level: 15, rank: 'Warrior', points: 7500 },
+      { rank: 8, displayName: 'Ognisty Duch', level: 14, rank: 'Warrior', points: 7000 },
+      { rank: 9, displayName: 'Szara Sowa', level: 13, rank: 'Warrior', points: 6500 },
+      { rank: 10, displayName: 'Mroczny Skoczek', level: 12, rank: 'Warrior', points: 6000 }
+    ];
+
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      try {
+        // User section
+        const userSection = document.getElementById('user-section');
+        userSection.innerHTML = `
+          <div class="user-card">
+            <h2>🏆 Witaj, ${user.displayName}!</h2>
+            <div class="user-stats">
+              <div class="user-stat">
+                <div class="user-stat-value">1</div>
+                <div class="user-stat-label">Lvl</div>
+              </div>
+              <div class="user-stat">
+                <div class="user-stat-value">0</div>
+                <div class="user-stat-label">XP</div>
+              </div>
+              <div class="user-stat">
+                <div class="user-stat-value">1</div>
+                <div class="user-stat-label">Seria</div>
+              </div>
+              <div class="user-stat">
+                <div class="user-stat-value">0</div>
+                <div class="user-stat-label">Znajomi</div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        // Leaderboard
+        const topUsersDiv = document.getElementById('top-users');
+        let leaderboardHTML = '';
+        MOCK_USERS.forEach((u, i) => {
+          const medals = ['🥇', '🥈', '🥉'];
+          const medal = medals[i] || '🏆';
+          leaderboardHTML += `
+            <div class="ranking-entry">
+              <div class="ranking-position">${medal}</div>
+              <div>
+                <h4 style="margin: 0; color: var(--text-primary);">${u.displayName}</h4>
+                <p style="margin: 0.25rem 0 0 0; color: var(--text-muted); font-size: 0.85rem;">Lvl ${u.level} • ${u.rank}</p>
+              </div>
+              <div class="ranking-points">
+                <div class="ranking-value">${u.points.toLocaleString('pl-PL')}</div>
+                <div style="color: var(--text-muted); font-size: 0.85rem;">XP</div>
+              </div>
+            </div>
+          `;
+        });
+        topUsersDiv.innerHTML = leaderboardHTML;
+
+        // Scroll animation
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+            }
+          });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
+
+      } catch (err) {
+        console.error('Error:', err);
+      }
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      auth.signOut().then(() => window.location.href = 'login.html');
+    });
+  </script>
+</body>
+</html>
