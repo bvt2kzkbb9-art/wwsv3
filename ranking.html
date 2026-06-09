@@ -387,6 +387,7 @@
   <nav class="navbar">
     <div class="navbar-content">
       <button class="navbar-btn" onclick="window.location.href='index.html'">← WRÓĆ</button>
+      <button id="logout-btn" class="navbar-btn">Wyloguj</button>
     </div>
   </nav>
 
@@ -665,6 +666,26 @@
       div.textContent = text;
       return div.innerHTML;
     }
+
+    // ════════════════════════════════════════════════════════════════════════════════
+    // LOGOUT
+    // ════════════════════════════════════════════════════════════════════════════════
+
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      console.log('📊 RANKING.HTML: Logout clicked');
+      auth.signOut().then(() => {
+        console.log('✅ RANKING.HTML: Logged out, redirecting to login.html');
+        window.location.href = 'login.html';
+      }).catch((error) => {
+        console.error('❌ RANKING.HTML: Logout error', {
+          file: 'ranking.html',
+          line: 673,
+          errorCode: error.code,
+          errorMessage: error.message,
+          stack: error.stack
+        });
+      });
+    });
 
     // Cleanup
     window.addEventListener('beforeunload', () => {

@@ -486,6 +486,7 @@
   <nav class="navbar">
     <div class="navbar-content">
       <button class="navbar-btn" onclick="window.location.href='index.html'">← WRÓĆ</button>
+      <button id="logout-btn" class="navbar-btn">Wyloguj</button>
     </div>
   </nav>
 
@@ -617,6 +618,23 @@
         console.log('✅ PROFILE.HTML: User authenticated, loading profile');
         currentUser = user;
         loadProfile();
+      });
+    });
+
+    // Logout handler
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      console.log('📄 PROFILE.HTML: Logout clicked');
+      auth.signOut().then(() => {
+        console.log('✅ PROFILE.HTML: Logged out, redirecting to login.html');
+        window.location.href = 'login.html';
+      }).catch((error) => {
+        console.error('❌ PROFILE.HTML: Logout error', {
+          file: 'profile.html',
+          line: 624,
+          errorCode: error.code,
+          errorMessage: error.message,
+          stack: error.stack
+        });
       });
     });
 
