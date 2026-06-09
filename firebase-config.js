@@ -8,10 +8,36 @@ const firebaseConfig = {
   appId: "1:147800031459:web:d72e1fc2b81b8b152405d6"
 };
 
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
-const storage = firebase.storage();
+console.log('🔥 firebase-config.js: Config loaded', { projectId: firebaseConfig.projectId });
+
+let firebaseApp = null;
+let auth = null;
+let db = null;
+let storage = null;
+
+try {
+  console.log('🔥 firebase-config.js: Calling firebase.initializeApp()...');
+  firebaseApp = firebase.initializeApp(firebaseConfig);
+  console.log('✅ firebase-config.js: firebase.initializeApp() SUCCESS');
+
+  auth = firebase.auth();
+  console.log('✅ firebase-config.js: firebase.auth() initialized:', { exists: !!auth });
+
+  db = firebase.firestore();
+  console.log('✅ firebase-config.js: firebase.firestore() initialized:', { exists: !!db });
+
+  storage = firebase.storage();
+  console.log('✅ firebase-config.js: firebase.storage() initialized:', { exists: !!storage });
+
+  console.log('✅ firebase-config.js: Firebase FULLY initialized and ready');
+} catch (error) {
+  console.error('❌ firebase-config.js: Firebase initialization FAILED', {
+    code: error.code,
+    message: error.message,
+    stack: error.stack
+  });
+  throw error;
+}
 
 // ════════════════════════════════════════════════════════════════════════════════
 // USER MANAGEMENT SERVICE
@@ -21,13 +47,25 @@ class UserService {
   // Create new user profile
   static async createUserProfile(uid, displayName, email, specialization) {
     try {
-      console.log('📄 createUserProfile START:', { uid, displayName, email, specialization });
+      console.log('📄 createUserProfile START:', {
+        uid,
+        displayName,
+        email,
+        specialization,
+        dbExists: !!db,
+        dbType: typeof db
+      });
+
+      if (!db) {
+        throw new Error('db is undefined - Firebase Firestore not initialized');
+      }
 
       const userRef = db.collection('users').doc(uid);
-      console.log('Firestore reference created:', {
+      console.log('📄 createUserProfile: Firestore reference created:', {
         collection: 'users',
         docId: uid,
-        path: `users/${uid}`
+        path: `users/${uid}`,
+        refExists: !!userRef
       });
 
       const userData = {

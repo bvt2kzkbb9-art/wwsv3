@@ -316,9 +316,16 @@ class ProfileService {
       }
 
       console.log('📋 ProfileService.listenToProfile: Setting up onSnapshot listener for users/' + uid);
+      console.log('📋 ProfileService.listenToProfile: About to call db.collection().doc().onSnapshot()...');
+
       const unsubscribe = db.collection('users').doc(uid).onSnapshot(
         (doc) => {
-          console.log('📋 ProfileService.listenToProfile: onSnapshot fired', { exists: doc.exists, uid });
+          console.log('📋 ProfileService.listenToProfile: onSnapshot CALLBACK FIRED!', {
+            exists: doc.exists,
+            uid,
+            docId: doc.id,
+            docExists: !!doc
+          });
           if (doc.exists) {
             const userData = doc.data();
             // Support both old (nickname, avatar, banner) and new (displayName, photoURL, bannerURL) field names
@@ -358,12 +365,14 @@ class ProfileService {
           }
         },
         (error) => {
-          console.error('❌ ProfileService.listenToProfile: onSnapshot error', {
+          console.error('❌ ProfileService.listenToProfile: onSnapshot ERROR CALLBACK FIRED!', {
             code: error.code,
             message: error.message,
+            fullError: error.toString(),
+            stack: error.stack,
             uid
           });
-          callback({ success: false, error: error.message });
+          callback({ success: false, error: 'Firestore error: ' + error.message });
         }
       );
 

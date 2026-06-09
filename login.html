@@ -314,6 +314,13 @@
   <script src="firebase-config.js"></script>
 
   <script>
+    console.log('🏰 LOGIN.HTML: Script started');
+    console.log('🏰 LOGIN.HTML: Checking dependencies...', {
+      AuthService: typeof AuthService !== 'undefined',
+      auth: typeof auth !== 'undefined',
+      firebase: typeof firebase !== 'undefined'
+    });
+
     const form = document.getElementById('login-form');
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
@@ -322,15 +329,24 @@
     const errorMsg = document.getElementById('error-message');
     const successMsg = document.getElementById('success-message');
 
+    console.log('🏰 LOGIN.HTML: DOM elements loaded', {
+      form: !!form,
+      emailInput: !!emailInput,
+      passwordInput: !!passwordInput,
+      btnLogin: !!btnLogin
+    });
+
     // ════════════════════════════════════════════════════════════════════════════════
     // EMAIL/PASSWORD LOGIN
     // ════════════════════════════════════════════════════════════════════════════════
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
+
       const email = emailInput.value.trim();
       const password = passwordInput.value;
+
+      console.log('🏰 LOGIN.HTML: Form submitted', { email, passwordLength: password.length });
 
       if (!email || !password) {
         showError('Wypełnij wszystkie pola');
@@ -342,17 +358,31 @@
       successMsg.classList.remove('show');
 
       try {
+        console.log('🏰 LOGIN.HTML: Calling AuthService.loginUser()...');
         const result = await AuthService.loginUser(email, password);
-        
+
+        console.log('🏰 LOGIN.HTML: AuthService.loginUser() returned:', {
+          success: result.success,
+          error: result.error,
+          uid: result.uid
+        });
+
         if (result.success) {
+          console.log('✅ LOGIN.HTML: Login successful, redirecting to index.html');
           showSuccess('Logowanie udane! Przekierowywanie...');
           setTimeout(() => {
             window.location.href = 'index.html';
           }, 1500);
         } else {
+          console.error('❌ LOGIN.HTML: Login failed:', result.error);
           showError(result.error || 'Błąd logowania. Sprawdź email i hasło.');
         }
       } catch (error) {
+        console.error('❌ LOGIN.HTML: Login exception:', {
+          message: error.message,
+          code: error.code,
+          stack: error.stack
+        });
         showError('Błąd: ' + error.message);
       } finally {
         setLoading(false, btnLogin);

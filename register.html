@@ -312,6 +312,10 @@
   <script src="firebase-config.js"></script>
 
   <script>
+    console.log('📝 REGISTER.HTML: Script started, checking dependencies...');
+    console.log('📝 REGISTER.HTML: AuthService available?', { exists: typeof AuthService !== 'undefined', AuthService });
+    console.log('📝 REGISTER.HTML: firebase available?', { exists: typeof firebase !== 'undefined' });
+
     const form = document.getElementById('register-form');
     const displayNameInput = document.getElementById('displayName');
     const emailInput = document.getElementById('email');
@@ -321,6 +325,14 @@
     const specializationInput = document.getElementById('specialization');
     const errorMsg = document.getElementById('error-message');
     const successMsg = document.getElementById('success-message');
+
+    console.log('📝 REGISTER.HTML: DOM elements loaded', {
+      form: !!form,
+      displayNameInput: !!displayNameInput,
+      emailInput: !!emailInput,
+      passwordInput: !!passwordInput,
+      btnRegister: !!btnRegister
+    });
 
     // ════════════════════════════════════════════════════════════════════════════════
     // SPECIALIZATION PICKER
