@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weekend Warrior Social V4</title>
-  <link rel="manifest" href="manifest.json">
+  <title>Weekend Warrior Social</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -22,13 +21,121 @@
   </nav>
   
   <main id="app">
-    <h1>Loading...</h1>
+    <h1>⚔ Arena Wojowników</h1>
+    <p>Inicjalizacja aplikacji...</p>
   </main>
 
-  <script type="module" src="js/app.js"></script>
-  <script>
+  <!-- FIREBASE & APP INIT -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+    import { getFirestore, collection, getDocs, query, orderBy, limit } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBHwVgFJgsvOp1ZgU4nQetHM_KgzxeXzZI",
+      authDomain: "weekend-warrior-social-v2.firebaseapp.com",
+      projectId: "weekend-warrior-social-v2",
+      storageBucket: "weekend-warrior-social-v2.firebasestorage.app",
+      messagingSenderId: "147800031459",
+      appId: "1:147800031459:web:d72e1fc2b81b8b152405d6"
+    };
+
+    console.log('[App] Initializing...');
+    
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    
+    console.log('[App] ✅ Firebase initialized');
+
+    onAuthStateChanged(auth, async (user) => {
+      const appDiv = document.getElementById('app');
+      
+      if (!user) {
+        console.log('[App] No user, redirect to login');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      console.log('[App] ✅ User authenticated:', user.displayName);
+
+      try {
+        // Get top users
+        const usersRef = collection(db, 'users');
+        const q = query(usersRef, orderBy('points', 'desc'), limit(10));
+        const snapshot = await getDocs(q);
+        
+        const topUsers = [];
+        snapshot.forEach(doc => {
+          topUsers.push({ id: doc.id, ...doc.data() });
+        });
+
+        console.log('[App] Top users:', topUsers.length);
+
+        // Render Arena
+        appDiv.innerHTML = `
+          <div style="margin: 2rem 0;">
+            <h1 style="color: var(--gold); text-align: center;">⚔ Arena Wojowników</h1>
+            
+            <div class="card" style="text-align: center; margin: 2rem 0;">
+              <h2 style="margin-bottom: 1rem;">Witaj, ${user.displayName}!</h2>
+              <p style="color: var(--text-muted);">Polska społeczność treningowa</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+              <div class="card" style="text-align: center; cursor: pointer;" onclick="window.location.href='feed.html'">
+                <div style="font-size: 2rem; margin-bottom: 1rem;">📝</div>
+                <h3>Kroniki</h3>
+                <p style="color: var(--text-muted); margin-top: 0.5rem;">Posty i dyskusje</p>
+              </div>
+
+              <div class="card" style="text-align: center; cursor: pointer;" onclick="window.location.href='challenges.html'">
+                <div style="font-size: 2rem; margin-bottom: 1rem;">⚔️</div>
+                <h3>Misje</h3>
+                <p style="color: var(--text-muted); margin-top: 0.5rem;">Wyzwania</p>
+              </div>
+
+              <div class="card" style="text-align: center; cursor: pointer;" onclick="window.location.href='ranking.html'">
+                <div style="font-size: 2rem; margin-bottom: 1rem;">🏆</div>
+                <h3>Chwała</h3>
+                <p style="color: var(--text-muted); margin-top: 0.5rem;">Ranking XP</p>
+              </div>
+
+              <div class="card" style="text-align: center; cursor: pointer;" onclick="window.location.href='profile.html'">
+                <div style="font-size: 2rem; margin-bottom: 1rem;">👤</div>
+                <h3>Profil</h3>
+                <p style="color: var(--text-muted); margin-top: 0.5rem;">Twoje statystyki</p>
+              </div>
+            </div>
+
+            ${topUsers.length > 0 ? `
+              <div class="card">
+                <h2 style="margin-bottom: 1.5rem;">🏆 Top Wojownicy</h2>
+                ${topUsers.slice(0, 5).map((u, i) => `
+                  <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--border-light);">
+                    <div>
+                      <span style="color: var(--gold); font-weight: bold; font-size: 1.2rem;">#${i + 1}</span>
+                      <span style="margin-left: 1rem; color: var(--text-primary);">${u.displayName || 'Wojownik'}</span>
+                    </div>
+                    <span style="color: var(--gold); font-weight: bold;">${u.points || 0} XP</span>
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+          </div>
+        `;
+
+        console.log('[App] ✅ Arena rendered');
+      } catch (err) {
+        console.error('[App] Render error:', err);
+        appDiv.innerHTML = `<p style="color: red;">Błąd: ${err.message}</p>`;
+      }
+    });
+
+    // Logout button
     document.getElementById('logout-btn').addEventListener('click', async () => {
-      if (window.WWS) await window.WWS.logout();
+      await signOut(auth);
+      window.location.href = 'login.html';
     });
   </script>
 </body>
