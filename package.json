@@ -1,0 +1,7 @@
+{
+  "name": "weekend-warrior-social-v3",
+  "version": "3.0.0",
+  "description": "Polish fitness social app with challenges",
+  "type": "module",
+  "private": true
+}

@@ -1,0 +1,84 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAuth() { 
+      return request.auth != null; 
+    }
+    
+    function isOwner(uid) { 
+      return isAuth() && request.auth.uid == uid; 
+    }
+    
+    // USERS — readable by all authenticated, writable only by owner
+    match /users/{uid} {
+      allow read: if isAuth();
+      allow create: if isOwner(uid);
+      allow update: if isOwner(uid);
+      allow delete: if false;
+    }
+    
+    // POSTS + COMMENTS
+    match /posts/{postId} {
+      allow read: if isAuth();
+      allow create: if isAuth() && request.resource.data.authorId == request.auth.uid;
+      allow update: if isAuth() && resource.data.authorId == request.auth.uid;
+      allow delete: if isAuth() && resource.data.authorId == request.auth.uid;
+      
+      match /comments/{commentId} {
+        allow read: if isAuth();
+        allow create: if isAuth() && request.resource.data.authorId == request.auth.uid;
+        allow update: if isAuth() && resource.data.authorId == request.auth.uid;
+        allow delete: if isAuth() && resource.data.authorId == request.auth.uid;
+      }
+    }
+    
+    // CONVERSATIONS + MESSAGES
+    match /conversations/{convId} {
+      allow read: if isAuth() && request.auth.uid in resource.data.participants;
+      allow create: if isAuth() && request.auth.uid in request.resource.data.participants;
+      allow update: if isAuth() && request.auth.uid in resource.data.participants;
+      
+      match /messages/{msgId} {
+        allow read: if isAuth() && request.auth.uid in get(/databases/$(database)/documents/conversations/$(convId)).data.participants;
+        allow create: if isAuth() && request.resource.data.senderId == request.auth.uid;
+        allow update: if isAuth() && resource.data.senderId == request.auth.uid;
+      }
+    }
+    
+    // NOTIFICATIONS
+    match /notifications/{uid}/items/{notifId} {
+      allow read: if isOwner(uid);
+      allow create: if isAuth();
+      allow update: if isOwner(uid);
+      allow delete: if isOwner(uid);
+    }
+    
+    // CHALLENGE INVITES
+    match /challenge_invites/{docId} {
+      allow read: if isAuth() && (
+        resource.data.challengerId == request.auth.uid || 
+        resource.data.targetId == request.auth.uid
+      );
+      allow create: if isAuth() && request.resource.data.challengerId == request.auth.uid;
+      allow update: if isAuth() && (
+        resource.data.challengerId == request.auth.uid || 
+        resource.data.targetId == request.auth.uid
+      );
+    }
+    
+    // ACTIVE CHALLENGES
+    match /active_challenges/{docId} {
+      allow read: if isAuth() && (
+        resource.data.userId == request.auth.uid || 
+        resource.data.senderId == request.auth.uid
+      );
+      allow create: if isAuth();
+      allow update: if isAuth();
+    }
+    
+    // BLOCK ALL OTHER ACCESS
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
