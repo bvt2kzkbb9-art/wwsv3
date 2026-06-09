@@ -440,12 +440,33 @@
     // ════════════════════════════════════════════════════════════════════════════════
 
     window.addEventListener('DOMContentLoaded', () => {
-      AuthService.onAuthStateChanged((user) => {
-        if (user) {
-          // Already logged in, redirect to home
-          window.location.href = 'index.html';
-        }
-      });
+      // Wait for AuthService to be available (loaded from firebase-config.js)
+      if (typeof AuthService === 'undefined') {
+        console.error('❌ REGISTER.HTML: AuthService not loaded yet, waiting...');
+        const checkInterval = setInterval(() => {
+          if (typeof AuthService !== 'undefined') {
+            clearInterval(checkInterval);
+            console.log('✅ REGISTER.HTML: AuthService now available, setting up auth listener');
+            AuthService.onAuthStateChanged((user) => {
+              if (user) {
+                window.location.href = 'index.html';
+              }
+            });
+          }
+        }, 100);
+        setTimeout(() => {
+          clearInterval(checkInterval);
+          if (typeof AuthService === 'undefined') {
+            console.error('❌ REGISTER.HTML: AuthService failed to load after 5 seconds');
+          }
+        }, 5000);
+      } else {
+        AuthService.onAuthStateChanged((user) => {
+          if (user) {
+            window.location.href = 'index.html';
+          }
+        });
+      }
     });
 
     // ════════════════════════════════════════════════════════════════════════════════

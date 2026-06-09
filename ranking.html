@@ -480,23 +480,45 @@
         });
       });
 
-      AuthService.onAuthStateChanged((user) => {
-        console.log('📊 RANKING.HTML: Auth state changed', {
-          userExists: !!user,
-          uid: user?.uid,
-          email: user?.email
+      // Wait for AuthService to be available
+      if (typeof AuthService === 'undefined') {
+        console.error('❌ RANKING.HTML: AuthService not loaded yet, waiting...');
+        const checkInterval = setInterval(() => {
+          if (typeof AuthService !== 'undefined') {
+            clearInterval(checkInterval);
+            console.log('✅ RANKING.HTML: AuthService now available');
+            setupAuthListener();
+          }
+        }, 100);
+        setTimeout(() => {
+          clearInterval(checkInterval);
+          if (typeof AuthService === 'undefined') {
+            console.error('❌ RANKING.HTML: AuthService failed to load');
+          }
+        }, 5000);
+      } else {
+        setupAuthListener();
+      }
+
+      function setupAuthListener() {
+        AuthService.onAuthStateChanged((user) => {
+          console.log('📊 RANKING.HTML: Auth state changed', {
+            userExists: !!user,
+            uid: user?.uid,
+            email: user?.email
+          });
+
+          if (!user) {
+            console.log('📊 RANKING.HTML: No user, redirecting to login.html');
+            window.location.href = 'login.html';
+            return;
+          }
+
+          console.log('✅ RANKING.HTML: User authenticated, loading rankings');
+          currentUser = user;
+          loadRankings();
         });
-
-        if (!user) {
-          console.log('📊 RANKING.HTML: No user, redirecting to login.html');
-          window.location.href = 'login.html';
-          return;
-        }
-
-        console.log('✅ RANKING.HTML: User authenticated, loading rankings');
-        currentUser = user;
-        loadRankings();
-      });
+      }
     });
 
     // ════════════════════════════════════════════════════════════════════════════════

@@ -636,24 +636,46 @@
         console.error('❌ PROFILE.HTML: logout-btn element not found!');
       }
 
-      AuthService.onAuthStateChanged(async (user) => {
-        console.log('📄 PROFILE.HTML: Auth state changed', {
-          userExists: !!user,
-          uid: user?.uid,
-          email: user?.email,
-          displayName: user?.displayName
+      // Wait for AuthService to be available
+      if (typeof AuthService === 'undefined') {
+        console.error('❌ PROFILE.HTML: AuthService not loaded yet, waiting...');
+        const checkInterval = setInterval(() => {
+          if (typeof AuthService !== 'undefined') {
+            clearInterval(checkInterval);
+            console.log('✅ PROFILE.HTML: AuthService now available');
+            setupAuthListener();
+          }
+        }, 100);
+        setTimeout(() => {
+          clearInterval(checkInterval);
+          if (typeof AuthService === 'undefined') {
+            console.error('❌ PROFILE.HTML: AuthService failed to load');
+          }
+        }, 5000);
+      } else {
+        setupAuthListener();
+      }
+
+      function setupAuthListener() {
+        AuthService.onAuthStateChanged(async (user) => {
+          console.log('📄 PROFILE.HTML: Auth state changed', {
+            userExists: !!user,
+            uid: user?.uid,
+            email: user?.email,
+            displayName: user?.displayName
+          });
+
+          if (!user) {
+            console.log('📄 PROFILE.HTML: No user, redirecting to login.html');
+            window.location.href = 'login.html';
+            return;
+          }
+
+          console.log('✅ PROFILE.HTML: User authenticated, loading profile');
+          currentUser = user;
+          loadProfile();
         });
-
-        if (!user) {
-          console.log('📄 PROFILE.HTML: No user, redirecting to login.html');
-          window.location.href = 'login.html';
-          return;
-        }
-
-        console.log('✅ PROFILE.HTML: User authenticated, loading profile');
-        currentUser = user;
-        loadProfile();
-      });
+      }
     });
 
     // ════════════════════════════════════════════════════════════════════════════════
